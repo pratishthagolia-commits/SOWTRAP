@@ -1,49 +1,5154 @@
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --white: #ffffff;
+  --bg-soft: #f5f7fc;
+  --bg-tint: #eef2fa;
+  --ink: #0d1526;
+  --ink-soft: #56607a;
+  --ink-faint: #8b93a8;
+
+  --blue: #0077b6;
+  --blue-bright: #00c6e0;
+  --blue-glow: rgba(0, 119, 182, 0.28);
+
+  --saffron: #ffc97a;
+  --saffron-bright: #ffd9a0;
+  --saffron-glow: rgba(255, 201, 122, 0.35);
+
+  --border: rgba(13, 21, 38, 0.08);
+  --radius: 18px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-html {
-  height: 100%;
-}
+html { scroll-behavior: smooth; }
 
-html,
 body {
-  max-width: 100vw;
+  font-family: var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
+  color: var(--ink);
+  background: var(--white);
   overflow-x: hidden;
 }
 
-body {
-  min-height: 100%;
+.container {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+.container.narrow { max-width: 780px; }
+
+.center { text-align: center; }
+
+/* ---------- nav ---------- */
+.nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 50;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  backdrop-filter: none;
+  transition: background 0.3s ease, border-color 0.3s ease, backdrop-filter 0.3s ease;
+}
+.nav-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 22px 32px;
   display: flex;
-  flex-direction: column;
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  align-items: center;
+  justify-content: space-between;
+}
+.logo-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 26px;
+  border-radius: 100px;
+  background: #ffffff;
+  border: 2px solid #000000;
+  font-family: var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
+  font-weight: 700;
+  font-size: 1.4rem;
+  color: #000000;
+  letter-spacing: 0;
+  text-decoration: none;
+}
+.nav-links {
+  display: flex;
+  gap: 36px;
+  list-style: none;
+}
+.nav-links a {
+  text-decoration: none;
+  color: #ffffff;
+  font-size: 1.25rem;
+  font-weight: 700;
+  padding-bottom: 3px;
+  border-bottom: 1px solid transparent;
+  transition: color 0.3s ease, border-color 0.2s ease;
+}
+.nav-links a:hover, .nav-links a.active { border-color: currentColor; }
+.nav-cta {
+  text-decoration: none;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  padding: 12px 26px;
+  border-radius: 100px;
+  transition: color 0.3s ease, background 0.3s ease, border-color 0.3s ease;
 }
 
-* {
+/* ---------- hamburger + drawer — replaces the full header past the hero,
+   instead of a header that follows every slide ---------- */
+.nav-hamburger {
+  position: fixed;
+  top: 22px;
+  right: 32px;
+  z-index: 60;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid #000000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  cursor: pointer;
+}
+.nav-hamburger span { width: 20px; height: 2px; background: #000000; }
+
+.nav-drawer-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 65;
+  background: rgba(13, 21, 38, 0.4);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.nav-drawer-scrim.is-open { opacity: 1; pointer-events: auto; }
+
+.nav-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 70;
+  width: min(340px, 85vw);
+  background: #ffffff;
+  padding: 28px 28px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 34px;
+  transform: translateX(100%);
+  transition: transform 0.35s ease;
+  box-shadow: -20px 0 50px -20px rgba(13, 21, 38, 0.3);
+}
+.nav-drawer.is-open { transform: translateX(0); }
+.nav-drawer-close {
+  align-self: flex-end;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: none;
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--ink);
+}
+.nav-drawer-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.nav-drawer-links a {
+  text-decoration: none;
+  font-family: var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+.nav-drawer-links a:hover, .nav-drawer-links a.active { color: var(--blue); }
+.nav-drawer .nav-cta {
+  align-self: flex-start;
+  color: #ffffff;
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+/* ---------- hero (fold + about, sharing one gradient/rain field) ----------
+   the only section explicitly excluded from the sitewide Montserrat rule —
+   everything else inherits Montserrat from body, so this override is what
+   keeps the landing page on its own typography. */
+.hero {
+  position: relative;
+  overflow: hidden;
+  font-family: var(--font-inter), "Helvetica Neue", Arial, sans-serif;
+  /* navy, matching the #003366 used throughout the rest of the site —
+     was a much brighter cyan-to-blue gradient before. Same color set as
+     .pillars-heading-slide's already-established navy gradient, just for
+     consistency. Mouse-interaction blobs and the neon-green accent color
+     are untouched by this. */
+  background: linear-gradient(160deg, #003366 0%, #04407a 45%, #003366 100%);
+  /* pulls Hero's own bottom edge up so About Us's photo visibly overlaps
+     into .hero-about as the user scrolls past — same static-overlap
+     technique as .cmp-section wrapping the pillars chamber. Deliberately
+     modest for now (not trying to cover the whole heading) since large
+     forced overlaps are what went wrong repeatedly on Portfolio Header. */
+  margin-bottom: -160px;
+  z-index: 1;
+}
+#rainCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+.hero-fold {
+  position: relative;
+  z-index: 3;
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 4vh;
+  pointer-events: none;
+}
+.hero-wordmark {
+  position: sticky;
+  top: 28px;
+  z-index: 6;
+  margin: 0;
+  display: block;
+  width: 100%;
+  text-align: center;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0;
+  white-space: nowrap;
+  color: #deff08;
+  font-size: 21vw; /* CSS fallback so it's already ~right-sized before JS fits it exactly */
+}
+
+.hero-about {
+  /* plain relative block again — sticky here was a dead end: its
+     containing block (.hero) ends exactly where this does, so it had no
+     room to actually stick (a stacking-cards setup like Industries needs
+     the containing block to extend well past each individual slide) */
+  position: relative;
+  z-index: 3;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 90px 0;
+}
+.hero-banner-container { max-width: 1400px; }
+.hero-about h2 {
+  color: #ffffff;
+  font-size: clamp(1.9rem, 3.4vw, 2.7rem);
+  line-height: 1.25;
+  white-space: nowrap;
+}
+.hero-about .lead {
+  color: rgba(255, 255, 255, 0.92);
+  font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+  line-height: 1.6;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+  white-space: nowrap;
+}
+
+.hero-banner-cta {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.btn {
+  border: none;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 14px 28px;
+  border-radius: 100px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.btn:hover { transform: translateY(-2px); }
+.btn-primary {
+  color: var(--white);
+  background: linear-gradient(135deg, var(--blue), var(--blue-bright));
+  box-shadow: 0 10px 30px -8px var(--blue-glow);
+}
+.btn-lime {
+  color: #141a05;
+  background: #deff08;
+  box-shadow: 0 10px 30px -10px rgba(222, 255, 8, 0.55);
+}
+.btn-outline-light {
+  color: #ffffff;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+}
+.btn-outline-light:hover { border-color: #deff08; color: #deff08; }
+.btn-outline-dark {
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--ink);
+}
+.btn-outline-dark:hover { background: var(--ink); color: #ffffff; }
+
+/* ---------- sections ---------- */
+.section {
+  padding: 150px 0;
+}
+.section-tint { background: var(--bg-soft); }
+
+.kicker {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin-bottom: 14px;
+}
+.kicker.center { text-align: center; }
+
+h2 {
+  font-size: clamp(1.6rem, 3vw, 2.3rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  margin-bottom: 22px;
+}
+.lead {
+  font-size: 1.15rem;
+  color: var(--ink-soft);
+  margin-bottom: 20px;
+}
+.lead.center { max-width: 620px; margin-left: auto; margin-right: auto; text-align: center; }
+.body-text {
+  font-size: 1rem;
+  line-height: 1.75;
+  color: var(--ink-soft);
+  margin-bottom: 24px;
+}
+
+.pull-quote {
+  font-size: clamp(1.3rem, 2.4vw, 1.7rem);
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--ink);
+  border-left: 3px solid var(--saffron);
+  padding-left: 24px;
+  margin: 28px 0 32px;
+  font-style: italic;
+}
+
+/* ---------- about us — expanding folder-style panel over a static photo ----------
+   Pinned scroll-jack (same wrapper/sticky pattern as the horizontal
+   carousels). .about-v2-image is a plain full-bleed background that never
+   moves — only .about-v2-panel's own width/height grow (bottom-left
+   anchored), progressively covering more of the static photo as the user
+   scrolls. Progress is continuous (rAF + getBoundingClientRect) so the
+   growth reads as one smooth motion rather than stepped states. */
+.about-v2-wrapper {
+  position: relative;
+  /* higher than .hero-about's z-index:3, so it actually wraps over it
+     instead of Hero's explicit z-index accidentally winning by default */
+  z-index: 4;
+  /* shorter travel (was 250vh) — the extra scroll distance ran well past
+     where the eased animation visually finished, so the section felt
+     "stuck" for a stretch before releasing to the next one */
+  height: 190vh;
+}
+.about-v2-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  background: #ffffff;
+}
+.about-v2-image {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.about-v2-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+/* the notch + panel are one fixed-shape unit in normal document flow —
+   notch stacked directly above panel, neither one ever resizes itself —
+   giving the real folder-tab silhouette permanently. .about-v2-slide is
+   the only thing that moves: a single translateY takes the whole unit
+   from fully hidden below the viewport to its resting position, so there
+   is exactly one driving value and nothing can move independently. */
+.about-v2-slide {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100vw;
+  z-index: 1;
+  will-change: transform;
+}
+.about-v2-notch {
+  width: min(46vw, 620px);
+  height: 118px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  padding: 0 64px;
   box-sizing: border-box;
-  padding: 0;
+}
+.about-v2-heading {
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: clamp(2.4rem, 4.6vw, 4rem);
+  color: var(--ink);
+  white-space: nowrap;
+}
+.about-v2-panel {
+  width: 100%;
+  height: 78vh;
+  background: #ffffff;
+  padding: 48px 64px;
+  box-sizing: border-box;
+  /* pulls up 1px to overlap the notch above it — the parent's transform
+     can round their fractional pixel heights slightly differently,
+     leaving a hairline sub-pixel gap that shows the image through it */
+  margin-top: -1px;
+}
+.about-v2-body {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  max-width: 640px;
+  /* pushes the paragraphs into the right side of the panel, clear of the
+     heading's column on the left */
+  margin-left: 40vw;
+}
+.about-v2-body p {
+  font-family: var(--font-prata), serif;
+  font-size: 1rem;
+  line-height: 1.75;
+  color: var(--ink);
+  text-align: justify;
+  hyphens: auto;
+}
+
+@media (max-width: 860px) {
+  .about-v2-notch { width: 78vw; height: 100px; padding: 0 28px; }
+  .about-v2-heading { font-size: 2.2rem; }
+  .about-v2-panel { padding: 24px 28px 32px; }
+  .about-v2-body { margin-left: 0; max-width: 100%; }
+}
+
+/* ---------- research gap v2 — same slide-up mechanic as about us, over
+   the macro close-up bead photo ---------- */
+.research-v2-wrapper {
+  position: relative;
+  height: 190vh;
+}
+.research-v2-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  background: #ffffff;
+}
+.research-v2-image {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.research-v2-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.research-v2-slide {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100vw;
+  z-index: 1;
+  will-change: transform;
+}
+.research-v2-notch {
+  width: min(46vw, 620px);
+  height: 190px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  padding: 0 64px;
+  box-sizing: border-box;
+}
+.research-v2-heading {
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  line-height: 1.15;
+  font-size: clamp(2.2rem, 4.2vw, 3.4rem);
+  color: var(--ink);
+}
+.research-v2-panel {
+  width: 100%;
+  min-height: 52vh;
+  background: #ffffff;
+  padding: 48px 64px;
+  box-sizing: border-box;
+  margin-top: -1px;
+}
+.research-v2-quote {
+  max-width: 720px;
+  margin: 0 0 28px auto;
+  text-align: right;
+  font-family: var(--font-prata), serif;
+  font-size: clamp(1.2rem, 1.8vw, 1.5rem);
+  font-weight: 600;
+  line-height: 1.5;
+}
+.research-v2-para {
+  max-width: 720px;
+  margin: 0 0 0 auto;
+  text-align: right;
+  font-family: var(--font-prata), serif;
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+@media (max-width: 860px) {
+  .research-v2-notch { width: 78vw; height: 130px; padding: 0 28px; }
+  .research-v2-heading { font-size: 2rem; }
+  .research-v2-panel { padding: 28px; }
+  .research-v2-quote,
+  .research-v2-para { max-width: 100%; }
+}
+
+/* ---------- our core expertise ----------
+   .expertise-notch is NOT a separate scroll-jack — it's attached as the
+   last child inside .about-v2-slide (see AboutUsV2.tsx), moving with the
+   About Us panel as one rigid piece. .expertise-panel below is plain
+   static page content with no pin/animation of its own at all. */
+.expertise-notch {
+  width: min(50vw, 520px);
+  height: 210px;
+  /* pushes this fixed-width block to the right within .about-v2-slide's
+     normal block flow (About Us's notch/panel are full-width or left) */
+  margin-left: auto;
+  /* pulls up 1px to overlap the panel above it — same sub-pixel seam fix
+     used between the About Us notch and its own panel */
+  margin-top: -1px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  padding: 0 56px;
+  box-sizing: border-box;
+}
+.expertise-heading {
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: clamp(2rem, 3.8vw, 3.1rem);
+  line-height: 1.2;
+  color: var(--ink);
+}
+.expertise-panel {
+  width: 100%;
+  background: #ffffff;
+  padding: 64px;
+  box-sizing: border-box;
+}
+.expertise-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  max-width: 900px;
+}
+.expertise-list li {
+  position: relative;
+  padding: 16px 0 16px 26px;
+  border-bottom: 1px solid rgba(13, 21, 38, 0.18);
+  font-family: var(--font-prata), serif;
+  font-size: 1.05rem;
+  line-height: 1.5;
+  color: var(--ink);
+}
+.expertise-list li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  top: 16px;
+  color: #deff08;
+}
+.expertise-closing {
+  margin: 48px auto 0;
+  max-width: 780px;
+  text-align: center;
+  font-family: var(--font-prata), serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: var(--ink);
+}
+
+@media (max-width: 860px) {
+  .expertise-notch { width: 82vw; height: 150px; padding: 0 28px; }
+  .expertise-heading { font-size: 2rem; }
+  .expertise-panel { padding: 32px 28px; }
+}
+
+/* ---------- why current supplements fail — same "chamber" pattern as
+   .pillars-chamber: heading top-right, white card on the left shows the
+   active point's detail, two-column grid of clickable pointers on the
+   right. Static, no scroll-jack, no pin. */
+.fail-v2-chamber {
+  position: relative;
+  min-height: 100vh;
+  background: #003366;
+  /* top padding cleared to fit the notch (230px, starting 90px above
+     the chamber's own edge) without it overlapping the body content
+     below it */
+  padding: 160px 64px 100px;
+}
+/* folder-notch tab, same silhouette as the About Us / Research Gap
+   notches — white box poking up above the chamber's own top edge — but
+   inverted for this section: blue text on white, instead of ink-on-white
+   sitting on top of an image */
+.fail-v2-heading {
+  position: absolute;
+  top: -90px;
+  /* flush with the true screen edge — was inset 64px, leaving a gap of
+     white showing past the tab's right side */
+  right: 0;
+  /* bigger on both axes — the text was overflowing the box's bottom edge
+     at the box's previous size; +64px here keeps the left edge where it
+     was instead of the whole box just shifting right */
+  width: calc(min(56vw, 680px) + 64px);
+  z-index: 2;
+  /* the tab itself is blue, sitting on the white area above the chamber —
+     not a white tab with blue text */
+  background: #003366;
+  padding: 15px 56px 0;
+  height: 230px;
+  box-sizing: border-box;
+  text-align: right;
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  line-height: 1.2;
+  font-size: clamp(1.8rem, 3.4vw, 2.6rem);
+  color: #ffffff;
+}
+.fail-v2-body {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: flex-start;
+  gap: 70px;
+}
+.fail-v2-card {
+  /* was a fixed 380px — now roughly half the chamber's content width */
+  flex: 0 0 50%;
+  min-height: 460px;
+  background: #ffffff;
+  padding: 48px 44px;
+  box-sizing: border-box;
+}
+.fail-v2-card h3 {
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: 1.5rem;
+  line-height: 1.3;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+.fail-v2-card p {
+  font-family: var(--font-prata), serif;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+.fail-v2-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-auto-flow: column;
+  grid-template-rows: repeat(4, auto);
+  column-gap: 60px;
+}
+.fail-v2-item {
+  text-align: left;
+  background: none;
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.25);
+  padding: 22px 0;
+  font-family: var(--font-prata), serif;
+  font-size: 1.05rem;
+  color: rgba(255, 255, 255, 0.75);
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+.fail-v2-item.is-active,
+.fail-v2-item:hover { color: #ffffff; }
+
+@media (max-width: 900px) {
+  .fail-v2-chamber { padding: 24px 24px 80px; }
+  .fail-v2-heading {
+    position: static;
+    width: 100%;
+    height: auto;
+    margin-bottom: 40px;
+    padding: 24px;
+    font-size: 1.8rem;
+  }
+  .fail-v2-body { flex-direction: column; gap: 40px; }
+  .fail-v2-card { flex: none; width: 100%; min-height: auto; }
+  .fail-v2-grid { grid-auto-flow: row; grid-template-rows: none; grid-template-columns: 1fr; column-gap: 0; }
+}
+
+/* ---------- 4S framework — statement page, then the pillar "chamber" ----------
+   .pillars-heading-slide is a plain static page. Below it, .pillars-chamber
+   is a static two-panel layout (not a scroll-jack): a white card on the
+   left shows the active pillar's full description, and a list of
+   clickable pointers on the right swaps which pillar is active. */
+.pillars-heading-slide {
+  position: relative;
+  /* was 100vh — left a large stretch of empty navy above the kicker text
+     since the text itself (a few lines, bottom-aligned) never needed
+     anywhere near a full screen of height */
+  height: 50vh;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  /* starts at the exact navy .fail-v2-chamber ends on and ends at the
+     same flat navy .pillars-chamber uses, so both section boundaries are
+     seamless instead of showing a visible hard seam */
+  background: linear-gradient(180deg, #003366 0%, #04407a 45%, #003366 100%);
+  padding-bottom: 13vh;
+}
+.pillars-heading-slide .pillars-kicker {
+  position: relative;
+  z-index: 2;
+  text-align: left;
+}
+.pillars-kicker-light { font-weight: 400; }
+.pillars-kicker-big { display: inline-block; font-size: 2em; }
+.pillars-kicker {
+  position: relative;
+  z-index: 2;
+  padding: 0 60px;
+  font-size: clamp(2.8rem, 4.8vw, 4.5rem);
+  font-weight: 700;
+  line-height: 1.1;
+  color: #ffffff;
+  max-width: 900px;
+}
+
+.pillars-chamber {
+  display: flex;
+  min-height: 100vh;
+  background: #003366;
+}
+.pillars-chamber-left {
+  flex: 0 0 42%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: #ffffff;
+  padding: 80px 64px;
+}
+.pillars-chamber-code {
+  font-family: var(--font-prata), serif;
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  color: var(--ink-faint);
+  margin-bottom: 10px;
+}
+.pillars-chamber-title {
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: clamp(2rem, 3.4vw, 2.9rem);
+  line-height: 1.2;
+  color: var(--ink);
+}
+.pillars-chamber-divider {
+  display: block;
+  width: 64px;
+  height: 1px;
+  background: rgba(13, 21, 38, 0.3);
+  margin: 24px 0;
+}
+.pillars-chamber-tagline {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--ink);
+  margin-bottom: 18px;
+}
+.pillars-chamber-body {
+  font-size: 0.98rem;
+  line-height: 1.75;
+  color: var(--ink-soft);
+}
+
+.pillars-chamber-grid {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 72px;
+}
+.pillars-chamber-item {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  width: 100%;
+  padding: 28px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+  background: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
+  cursor: pointer;
+  text-align: left;
+}
+.pillars-chamber-item:last-child { border-bottom: 1px solid rgba(255, 255, 255, 0.18); }
+.pillars-chamber-plus {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  color: #ffffff;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+.pillars-chamber-item.is-active .pillars-chamber-plus {
+  background: #deff08;
+  border-color: #deff08;
+  color: #003366;
+}
+.pillars-chamber-label {
+  font-family: var(--font-prata), serif;
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.75);
+  transition: color 0.2s ease;
+}
+.pillars-chamber-item.is-active .pillars-chamber-label,
+.pillars-chamber-item:hover .pillars-chamber-label { color: #ffffff; }
+
+@media (max-width: 900px) {
+  .pillars-chamber { flex-direction: column; }
+  .pillars-chamber-left { padding: 56px 28px; }
+  .pillars-chamber-grid { padding: 20px 28px 56px; }
+}
+
+/* ---------- comparison — chamber-style header, then two staggered rows
+   (photo + navy pill list, alternating sides) — plain static content,
+   no scroll-jack, spans roughly three viewport-heights worth of content
+   like the reference. */
+.cmp-section {
+  background: #ffffff;
+  padding-bottom: 0;
+  /* pulls the header up so it pokes into (wraps over) the bottom of the
+     pillars chamber above it — same folder-tab overlap motif used
+     elsewhere on the site. The actual -340px is applied by the component
+     itself, as an inline margin-top driven by scroll position, so the
+     overlap grows in as the section scrolls into view instead of always
+     being fixed at its final amount — see ComparisonSection.tsx. Both
+     sections are plain static blocks (no sticky/scroll-jack involved),
+     so animating a plain margin-top here is safe and predictable, unlike
+     the sticky-related fragility elsewhere on this site. */
+  position: relative;
+  z-index: 2;
+  /* no margin-bottom overlap here — this row plays out fully and
+     undisturbed; the "wrap" onto portfolio header's photo happens entirely
+     within portfolio header's own pinned section right after this one
+     ends, not by reaching back into this row's content */
+}
+.cmp-header {
+  display: flex;
+  align-items: stretch;
+  min-height: 220px;
+}
+.cmp-header-block {
+  /* matches .cmp-row-image's own 44% exactly, so the white/navy boundary
+     lines up vertically with the photo column directly below it, instead
+     of stepping sideways at the seam */
+  flex: 0 0 44%;
+  background: #003366;
+}
+.cmp-header-text {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding: 40px 60px;
+}
+.cmp-heading {
+  text-align: right;
+  width: 100%;
+  font-family: var(--font-prata), serif;
+  line-height: 1.25;
+}
+.cmp-heading-sm { font-size: clamp(1.2rem, 2vw, 1.6rem); font-weight: 400; color: var(--ink); }
+.cmp-heading-lg { font-size: clamp(1.9rem, 3.4vw, 2.6rem); font-weight: 700; color: var(--ink); }
+
+/* now lives inside .cmp-row-content, alongside the image, instead of
+   its own separate block above the row */
+.cmp-intro {
+  max-width: 560px;
+  /* left padding only here — the banner/pills below still touch the
+     image, but the intro text gets some breathing room from it */
+  padding: 0 0 40px 40px;
+  text-align: left;
+}
+.cmp-tagline {
+  font-family: var(--font-prata), serif;
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: var(--ink);
+  margin-bottom: 14px;
+}
+.cmp-intro-body {
+  font-family: var(--font-prata), serif;
+  font-size: 0.98rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+
+/* no horizontal padding on .cmp-row-content's inner (image-facing) side —
+   the banner and the pills both start flush against the image, and the
+   banner is sized to the same column width as the pills (not full-bleed)
+   so its left edge lines up with them exactly */
+.cmp-row {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 1520px;
+  margin-bottom: 40px;
+}
+.cmp-row-con { margin-left: 0; margin-right: auto; }
+/* staggers the encapsulated row diagonally, matching the reference — DOM
+   order is already content-then-image, so normal flex order already
+   puts the image on the right; pushing the row itself to the right
+   (margin-left:auto) puts that image flush against the viewport edge */
+/* zeroes out the trailing margin-bottom that .cmp-row normally carries —
+   this is the last row before portfolio header's photo begins, and any
+   gap here shows up as unwanted whitespace between the two images */
+.cmp-row-pro { margin-left: auto; margin-right: 0; margin-bottom: 0; }
+
+.cmp-row-image {
+  flex: 0 0 44%;
+  overflow: hidden;
+  box-shadow: 0 30px 60px -30px rgba(13, 21, 38, 0.35);
+}
+.cmp-row-image img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+}
+.cmp-row-content {
+  flex: 1;
+  /* pushes the intro + banner + pills further down within the row,
+     without moving .cmp-row-image at all (it's a separate flex sibling) */
+  padding: 10px 60px 0 0;
+}
+.cmp-row-pro .cmp-row-content { padding: 0 0 0 60px; }
+.cmp-row-banner {
+  /* wider than the content column by exactly its 60px right padding, so
+     it reaches the true screen edge instead of stopping short of it —
+     a plain width:100% stays inside that padding */
+  width: calc(100% + 60px);
+  box-sizing: border-box;
+  background: #003366;
+  color: #ffffff;
+  font-family: var(--font-prata), serif;
+  font-size: 1.875rem;
+  /* thicker highlight box */
+  padding: 28px 28px;
+  margin-bottom: 26px;
+}
+/* mirrored — the encapsulated row's content sits on the left, so its
+   banner grows toward the left screen edge instead (negative margin-left
+   shifts the extra width onto that side rather than the right) */
+.cmp-row-pro .cmp-row-banner {
+  /* box stays fully stretched (back to -60px) — only the text inside
+     shifts right, via extra left padding */
+  margin-left: -60px;
+  padding-left: 260px;
+}
+.cmp-row-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 560px;
+  /* shifts the pills down toward the vertical center of the row instead
+     of sitting flush under the banner */
+  margin-top: 110px;
+}
+/* in the encapsulated row, content sits to the LEFT of the image, so the
+   pill list's default left-anchored max-width left it floating near the
+   outer edge — pushing it to the right of its own column puts it flush
+   against the image instead, matching the conventional row's behavior */
+.cmp-row-pro .cmp-row-list {
+  margin-left: auto;
+  margin-right: 0;
+}
+.cmp-pill {
+  background: #003366;
+  color: #ffffff;
+  font-family: var(--font-prata), serif;
+  font-size: 1.19rem;
+  line-height: 1.5;
+  padding: 14px 22px;
+}
+
+@media (max-width: 900px) {
+  .cmp-header { flex-direction: column; min-height: auto; }
+  .cmp-header-block { flex: none; height: 60px; }
+  .cmp-header-text { padding: 32px 24px; }
+  .cmp-heading { text-align: left; }
+  .cmp-intro { margin: 0; padding: 40px 24px 10px; text-align: left; }
+  .cmp-row-banner { padding: 16px 24px; }
+  .cmp-row { flex-direction: column; padding: 0 24px; margin: 0 0 0 0 !important; }
+  .cmp-row-image { flex: none; width: 100%; }
+  .cmp-row-content,
+  .cmp-row-pro .cmp-row-content { padding: 24px 0 0; }
+}
+
+/* ---------- ingredient portfolio — horizontal scroll-jacking cards ----------
+   Same mechanic as .pillars-track (see PortfolioCarousel.tsx, unchanged):
+   page scroll drives translateX while the section stays pinned, card 1
+   centered at scroll-progress 0. Each card is now a compact navy ribbon
+   tab over plain, unboxed text — no border/background card shape at all,
+   matching the reference exactly. */
+.pf-wrapper { position: relative; }
+.pf-sticky {
+  --pf-card-w: 480px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+}
+.pf-track {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 60px;
+  padding: 0 60px 0 calc((100vw - var(--pf-card-w)) / 2);
+  will-change: transform;
+}
+.pf-card {
+  flex: 0 0 var(--pf-card-w);
+  width: var(--pf-card-w);
+  min-width: var(--pf-card-w);
+  max-width: var(--pf-card-w);
+  position: relative;
+}
+/* per the figma source (Rectangle 52/53): the tab is its own fully
+   bordered rounded rectangle — SAME border weight and corner radius as
+   the box below — not a borderless fill relying on covering the box's
+   border underneath. Its width is ~94.5% of the card (2582/2731 in the
+   figma export), overlapping the box's top-left corner. */
+.pf-card-tab {
+  position: absolute;
+  top: -18px;
+  left: 0;
+  /* behind the white card, not in front of it — where the box's own
+     rounded corner/border overlaps the tab, the box wins; the tab only
+     shows through in the small area outside the box's own boundary */
+  z-index: 0;
+  width: calc(var(--pf-card-w) * 0.945);
+  box-sizing: border-box;
+  background: #003366;
+  border: 1.5px solid var(--ink);
+  color: #ffffff;
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: 0.98rem;
+  line-height: 1.3;
+  padding: 12px 20px;
+  /* sharp (not rounded) at bottom-left — that's the corner touching the
+     card, so the box's own rounded corner reads as the boundary there
+     instead of the tab having a second, competing curve */
+  border-radius: 10px 10px 10px 0;
+}
+.pf-card-body {
+  position: relative;
+  z-index: 1;
+  margin-top: 24px;
+  /* fixed (not min-) height so every card box is an identical rectangle
+     regardless of how long its own body copy runs — a min-height let
+     longer cards grow taller than shorter ones, breaking the uniform
+     shape across the row */
+  height: 320px;
+  overflow: hidden;
+  box-sizing: border-box;
+  background: #ffffff;
+  border: 1.5px solid var(--ink);
+  border-radius: 10px;
+  /* a bit more top clearance now that the tab's full ~44px height sits
+     inside the box (it used to only overlap the box by half that) */
+  padding: 58px 24px 30px;
+}
+.pf-card-body p {
+  font-family: var(--font-prata), serif;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--ink);
+}
+.pf-arrow {
+  position: absolute;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 2rem;
+  color: var(--ink);
+  pointer-events: none;
+}
+
+@media (max-width: 860px) {
+  .pf-sticky { --pf-card-w: 78vw; }
+  .pf-track { gap: 30px; padding: 0 24px 0 calc((100vw - var(--pf-card-w)) / 2); }
+  .pf-arrow { display: none; }
+}
+
+/* ---------- what makes SowTrap different — molecule + heading, straight timeline ---------- */
+.dt-section {
+  background: #003366;
+  padding: 0 60px 130px;
+}
+/* ---------- differentiators header — plain static heading, no scroll-jack,
+   no decorative molecule image; one line over the section's solid navy
+   fill ---------- */
+.dt-header-plain {
+  padding: 110px 60px 60px;
+  text-align: center;
+}
+.dt-heading {
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: clamp(1.5rem, 3vw, 2.6rem);
+  line-height: 1.2;
+  white-space: nowrap;
+  color: #ffffff;
+}
+
+.dt-timeline {
+  position: relative;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding-top: 60px;
+}
+.dt-timeline-line {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  margin-left: -1px;
+  background: rgba(255, 255, 255, 0.3);
+  transform-origin: top;
+}
+.dt-row {
+  position: relative;
+  display: flex;
+  margin-bottom: 50px;
+}
+.dt-row.is-left { justify-content: flex-start; }
+.dt-row.is-right { justify-content: flex-end; }
+/* box width and connector width are both defined relative to the same
+   50% center line so they always meet exactly, regardless of the row's
+   actual pixel width — a fixed box % plus a fixed connector px (the old
+   approach) only lined up by coincidence at one particular width */
+.dt-box {
+  position: relative;
+  width: calc(50% - 24px);
+  /* fixed height so every box is identically sized regardless of how
+     long its body copy is — same reasoning as .pf-card-body above.
+     No overflow:hidden here — that clipped the ::after connector line,
+     which sits just outside the box at a negative offset. */
+  height: 260px;
+  background: #ffffff;
+  border: 1.5px solid var(--ink);
+  border-radius: 14px;
+  padding: 22px 26px;
+}
+.dt-row.is-left .dt-box::after,
+.dt-row.is-right .dt-box::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 24px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.3);
+}
+.dt-row.is-left .dt-box::after { right: -24px; }
+.dt-row.is-right .dt-box::after { left: -24px; }
+/* driven directly by the timeline component's line-growth state (not the
+   generic ScrollReveal observer) so a box only appears once the growing
+   center line has actually reached its position */
+.dt-reveal-left,
+.dt-reveal-right {
+  opacity: 0;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.dt-reveal-left { transform: translateX(-50px); }
+.dt-reveal-right { transform: translateX(50px); }
+.dt-reveal-left.is-visible,
+.dt-reveal-right.is-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+.dt-box h4 { font-size: 1rem; font-weight: 700; margin-bottom: 10px; color: var(--ink); }
+.dt-box p { font-size: 0.88rem; line-height: 1.65; color: var(--ink); }
+
+@media (max-width: 860px) {
+  .dt-section { padding: 90px 24px 100px; }
+  .dt-header-plain { padding: 70px 24px 40px; }
+  .dt-heading { font-size: 1.4rem; white-space: normal; }
+  .dt-timeline::before { left: 20px; }
+  .dt-row.is-left, .dt-row.is-right { justify-content: flex-start; padding-left: 50px; }
+  .dt-box { width: 100%; }
+  .dt-row.is-left .dt-box::after,
+  .dt-row.is-right .dt-box::after { left: -40px; right: auto; }
+}
+
+/* ---------- ingredient portfolio header — same slide-up mechanic as
+   about us / research gap, over the gloved-hand macro photo ---------- */
+.portfolio-header-wrapper {
+  position: relative;
+  height: 190vh;
+}
+.portfolio-header-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  background: #ffffff;
+}
+.portfolio-header-image {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.portfolio-header-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.portfolio-header-slide {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100vw;
+  z-index: 1;
+  will-change: transform;
+}
+.portfolio-heading {
+  /* no white notch box this time (exception to the usual pattern) — plain
+     text sitting directly over the static photo, still part of the single
+     sliding unit so it moves up with the panel */
+  width: min(46vw, 620px);
+  min-height: 190px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 64px;
+  box-sizing: border-box;
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  line-height: 1.1;
+  font-size: clamp(2.2rem, 4.2vw, 3.4rem);
+  color: #ffffff;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.35);
+}
+.portfolio-header-panel {
+  width: 100%;
+  /* no min-height — now that the paragraph is widened to 2-3 lines, a
+     fixed 52vh left a large empty stretch below the text before the
+     carousel's own cards began */
+  background: #ffffff;
+  padding: 48px 64px;
+  box-sizing: border-box;
+  margin-top: -1px;
+}
+.portfolio-header-para {
+  /* widened so the paragraph wraps to ~2-3 lines instead of many narrow
+     ones */
+  max-width: 1400px;
+  /* centers the block within the panel */
+  margin: 0 auto;
+  /* justified so both edges line up evenly, forming a uniform rectangle
+     rather than a ragged edge */
+  text-align: justify;
+  text-align-last: center;
+  /* pulls a lone trailing word (e.g. "acceptability.") back up into the
+     line above instead of leaving it stranded on its own line */
+  text-wrap: pretty;
+  font-family: var(--font-prata), serif;
+  font-size: 1rem;
+  line-height: 1.75;
+}
+.portfolio-header-cta {
+  display: block;
+  width: fit-content;
+  margin: 28px auto 0;
+  text-decoration: none;
+  text-align: center;
+}
+
+@media (max-width: 860px) {
+  .portfolio-heading { width: 78vw; min-height: 130px; padding: 0 28px; font-size: 2rem; }
+  .portfolio-header-panel { padding: 28px; }
+  .portfolio-header-para { text-align: left; max-width: 100%; }
+  .portfolio-header-cta { margin: 24px 0 0; }
+}
+
+/* ---------- industries we serve — stacked overlapping photo slides ----------
+   Each .ind-slide is a plain position:sticky, top:0, 100vh block — nothing
+   else. No scroll-jack JS, no negative margins on any ancestor. Later
+   slides simply come later in the DOM (painting on top by default; an
+   explicit z-index per slide makes that unambiguous), so as the user
+   scrolls each new slide pins at the top and completely covers the one
+   before it — a full picture-over-picture overlap with zero custom
+   animation code, so there's nothing here that can go subtly wrong the
+   way the sticky+margin combinations elsewhere did. */
+.ind-section {
+  background: #003366;
+  padding: 120px 0 0;
+}
+.ind-heading {
+  /* shifted left: no auto-centering, sits flush at the section's own
+     left padding instead of centered on the page — padding-left reduced
+     further to push it closer to the true screen edge */
+  margin: 0 0 60px;
+  padding: 0 60px 0 24px;
+  font-size: clamp(2.2rem, 4vw, 3.4rem);
+  font-weight: 400;
+  line-height: 1.15;
+  white-space: nowrap;
+  color: #ffffff;
+}
+.ind-heading strong { font-weight: 800; }
+
+.ind-stack {
+  position: relative;
+}
+.ind-slide {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  /* no overflow:hidden here — the left column is deliberately taller than
+     this row (see .ind-slide-half:first-child) and needs to be free to
+     extend past its top edge; each column still clips its own image via
+     its own overflow:hidden below */
+  background: #ffffff;
+}
+.ind-slide-half {
+  position: relative;
+  flex: 1 1 50%;
+  height: 100%;
+  overflow: hidden;
+}
+.ind-slide-half img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+/* the left column itself sits half an inch (48px) higher than the right
+   one — its box is 48px taller, pulled up by the same amount, so its
+   bottom edge still lines up exactly with the right column's (no gap);
+   the extra height pokes out above this row's own top edge, which is
+   what makes it visibly "arrive" earlier than the right column while
+   scrolling past — a real position difference, not an image crop trick */
+.ind-slide-half:first-child {
+  margin-top: -48px;
+  height: calc(100% + 48px);
+}
+.ind-slide-divider {
+  flex: 0 0 6px;
+  background: #003366;
+}
+/* the actual folder-tab shape: a narrower notch (heading) sitting flush
+   above a wider, blank panel — same "notch stacked directly above a wider
+   box" silhouette as About Us / Research Gap, just with no body copy in
+   the panel here, only its shape */
+.ind-slide-card {
+  position: absolute;
+  left: 40px;
+  top: 38%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+/* mirrored for the right-side photo: anchored from the right edge, and
+   the (narrower) notch aligns to the panel's right edge instead of its
+   left, so it reads as a folder tab opening from the right */
+.ind-slide-card--right {
+  left: auto;
+  right: 40px;
+  align-items: flex-end;
+}
+/* Nutraceutical & Dietary Supplements card only — shifted up an inch */
+.ind-slide:first-child .ind-slide-half:first-child .ind-slide-card {
+  top: calc(38% - 96px);
+}
+/* Functional Foods & Beverages card only — shifted down an inch */
+.ind-slide:first-child .ind-slide-half:last-child .ind-slide-card {
+  top: calc(38% + 96px);
+}
+/* Sports Nutrition card only — shifted down 1.5 inches */
+.ind-slide:nth-child(2) .ind-slide-half:first-child .ind-slide-card {
+  top: calc(38% + 144px);
+}
+/* Pharmaceutical & Healthcare card only — shifted up half an inch */
+.ind-slide:nth-child(2) .ind-slide-half:last-child .ind-slide-card {
+  top: calc(38% - 48px);
+}
+/* Ingredient Manufacturers & Suppliers card only — shifted down an inch */
+.ind-slide:nth-child(3) .ind-slide-half:last-child .ind-slide-card {
+  top: calc(38% + 96px);
+}
+/* Botanical Growers & Extract Producers card only — shifted down 1.5 inches */
+.ind-slide:nth-child(4) .ind-slide-half:first-child .ind-slide-card {
+  top: calc(38% + 144px);
+}
+/* Contract Manufacturers & Formulators card only — net shifted up half an inch */
+.ind-slide:nth-child(4) .ind-slide-half:last-child .ind-slide-card {
+  top: calc(38% - 48px);
+}
+.ind-slide-notch {
+  display: inline-flex;
+  align-items: flex-start;
+  background: #ffffff;
+  /* only tall enough for the heading's first line — any wrapped lines
+     after that overflow downward, past this box's own background, onto
+     the wider panel directly beneath it (no bottom padding, since there's
+     no room for it inside this shorter box) */
+  height: 52px;
+  padding: 20px 24px 0;
+  max-width: 300px;
+  box-sizing: border-box;
+  overflow: visible;
+  /* the panel comes right after this in the DOM, so without this it
+     would paint over (and hide) whatever text overflows below this
+     box's own 52px — especially once the panel started carrying a logo
+     image, which made the covered text obvious */
+  position: relative;
+  z-index: 1;
+}
+.ind-slide-notch p {
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: 1.3rem;
+  line-height: 1.25;
+  color: var(--ink);
+}
+.ind-slide-card--right .ind-slide-notch p {
+  text-align: right;
+}
+.ind-slide-panel {
+  width: 380px;
+  height: 220px;
+  background: #ffffff;
+  /* pulls up 1px to overlap the notch above it, closing the hairline
+     sub-pixel gap that can otherwise show between the two boxes */
+  margin-top: -1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ind-slide-logo {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+}
+/* Sports Nutrition logo only */
+.ind-slide:nth-child(2) .ind-slide-half:first-child .ind-slide-logo {
+  width: 255px;
+  height: 255px;
+}
+/* Contract Manufacturers & Formulators logo only */
+.ind-slide:nth-child(4) .ind-slide-half:last-child .ind-slide-logo {
+  width: 188px;
+  height: 188px;
+}
+
+@media (max-width: 860px) {
+  .ind-section { padding: 90px 0 0; }
+  .ind-heading { padding: 0 24px; white-space: normal; font-size: 1.8rem; }
+  .ind-slide { flex-direction: column; }
+  .ind-slide-half { height: 50%; }
+  /* the left/right offset only makes sense side-by-side */
+  .ind-slide-half:first-child { margin-top: 0; height: 50%; }
+  .ind-slide-divider { flex: 0 0 6px; width: 100%; }
+  .ind-slide-card { left: 24px; }
+  .ind-slide-card--right { left: auto; right: 24px; }
+  .ind-slide-notch { padding: 14px 18px; max-width: 170px; }
+  .ind-slide-notch p { font-size: 1.05rem; }
+  .ind-slide-panel { width: 220px; height: 110px; }
+}
+
+/* ---------- closing gradient footer (Nebius-style) ---------- */
+.cta-footer {
+  /* used on every page (home, /science, /technology) as the very last
+     section — z-index high enough to paint on top of whichever section
+     precedes it there, now that it wraps up over it via a negative margin */
+  position: relative;
+  z-index: 5;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 60px;
+  padding: 90px 32px 40px;
+  /* navy, matching Hero's own updated background — see the comment there */
+  background: linear-gradient(160deg, #003366 0%, #04407a 45%, #003366 100%);
+}
+.cta-blob {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  width: 50vw;
+  height: 50vw;
+  max-width: 620px;
+  max-height: 620px;
+  border-radius: 50%;
+  filter: blur(90px);
+  pointer-events: none;
+  will-change: transform;
+}
+.cta-blob.b1 { background: #a9d9f0; opacity: 0.8; }
+.cta-blob.b2 { background: #013a5c; opacity: 0.75; }
+.cta-blob.b3 { background: #6fb8e0; opacity: 0.65; }
+.cta-blob.b4 { background: #0060a0; opacity: 0.6; }
+
+/* light variant — white / light-lilac / neon-lime, used on the rest of the site */
+.cta-blob.light.b1 { background: #ffffff; opacity: 0.9; }
+.cta-blob.light.b2 { background: #cfeaf7; opacity: 0.8; }
+.cta-blob.light.b3 { background: #6fb8e0; opacity: 0.4; }
+.cta-blob.light.b4 { background: #0077b6; opacity: 0.28; }
+
+/* ---------- light wave zone (Research Gap ... Industries) ---------- */
+.light-wave-zone {
+  position: relative;
+  overflow: hidden;
+  background: #ffffff;
+}
+.light-wave-content {
+  position: relative;
+  z-index: 1;
+}
+.light-wave-zone .section,
+.light-wave-zone .section-tint {
+  background: transparent;
+}
+
+.footer-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1.3fr;
+  gap: 56px;
+  text-align: left;
+}
+.footer-col-brand { display: flex; flex-direction: column; align-items: flex-start; }
+.footer-logo { margin-bottom: 22px; }
+.footer-tagline {
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  max-width: 320px;
+  margin-bottom: 26px;
+}
+
+.footer-newsletter { width: 100%; max-width: 380px; }
+.footer-newsletter-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.footer-newsletter input {
+  flex: 1;
+  min-width: 0;
+  padding: 12px 16px;
+  border-radius: 100px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  font-size: 0.9rem;
+}
+.footer-newsletter input::placeholder { color: rgba(255, 255, 255, 0.65); }
+.footer-newsletter input:focus {
+  outline: none;
+  border-color: #deff08;
+}
+.footer-subscribe { width: 100%; }
+
+.footer-col h4 {
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+.footer-links {
+  list-style: none;
+  display: grid;
+  gap: 13px;
+}
+.footer-links a {
+  color: rgba(255, 255, 255, 0.82);
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: color 0.2s ease;
+}
+.footer-links a:hover { color: #deff08; }
+.footer-contact-list li {
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+.footer-contact-list strong { color: #ffffff; font-weight: 600; }
+
+.footer-social {
+  display: flex;
+  gap: 14px;
+  margin-top: 22px;
+}
+.footer-social a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  color: #ffffff;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+.footer-social a:hover { border-color: #deff08; color: #deff08; }
+
+.footer-legal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 28px;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 28px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.85rem;
+}
+.footer-legal-links { display: flex; flex-wrap: wrap; gap: 20px; }
+.footer-legal-links a {
+  color: rgba(255, 255, 255, 0.65);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+.footer-legal-links a:hover { color: #deff08; }
+
+.cta-wordmark {
+  position: relative;
+  z-index: 2;
+  margin: 0;
+  /* break out of .cta-footer's side padding for true edge-to-edge width */
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  width: 100vw;
+  display: block;
+  text-align: center;
+  white-space: nowrap;
+  font-size: 20vw; /* CSS fallback before the JS fit runs */
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  /* dulled, higher-contrast gradient within the same lime hue — pale/dusty
+     at the top easing down through the brand lime into a muted dark olive,
+     rather than a flat bright fill */
+  background: linear-gradient(180deg, #edf0a6 0%, #c7d400 38%, #8b9612 72%, #4a5208 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@media (max-width: 900px) {
+  .footer-grid { grid-template-columns: 1fr; gap: 44px; }
+}
+
+/* ---------- scroll reveal ---------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.reveal.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-left,
+.reveal-right {
+  opacity: 0;
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.reveal-right { transform: translateX(70px); }
+.reveal-left { transform: translateX(-70px); }
+.reveal-left.in-view,
+.reveal-right.in-view {
+  opacity: 1;
+  transform: translateX(0);
+}
+.reveal-up {
+  opacity: 0;
+  transform: translateY(70px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.reveal-up.in-view { opacity: 1; transform: translateY(0); }
+.reveal-d1 { transition-delay: 0s; }
+.reveal-d2 { transition-delay: 0.18s; }
+.reveal-d3 { transition-delay: 0.36s; }
+
+@media (max-width: 860px) {
+  .nav-links { display: none; }
+}
+
+/* ---------- science page — opening statement ---------- */
+.science-intro {
+  position: relative;
+  padding: 130px 60px 120px;
+  background: #ffffff;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+.science-intro-heading {
+  text-align: left;
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: clamp(1.1rem, 2.4vw, 2.4rem);
+  color: var(--ink);
+  white-space: nowrap;
+  margin: 0 0 70px;
+}
+.science-intro-block {
+  background: #003366;
+  padding: 26px 34px;
+  box-sizing: border-box;
+}
+.science-intro-block p {
+  font-family: var(--font-prata), serif;
+  font-size: 1.5rem;
+  line-height: 1.6;
+  color: #ffffff;
+  margin: 0;
+}
+/* breaks out of .science-intro's own padded, max-width:1300px container
+   to reach the true left edge of the viewport — right edge stays put at
+   the container's own boundary */
+.science-intro-block-1 {
+  margin-left: calc(50% - 50vw);
+  width: calc(50vw + 50%);
+  margin-bottom: 60px;
+}
+.science-intro-sub {
+  text-align: right;
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  color: var(--ink);
+  margin: 0 0 30px;
+}
+/* mirrored — reaches the true right edge of the viewport instead, left
+   edge stays at the container's own boundary (no margin needed: a plain
+   block already starts there, and this width reaches exactly to the
+   viewport's right edge from that point) */
+.science-intro-block-2 {
+  width: calc(50vw + 50%);
+  margin-bottom: 90px;
+}
+.science-intro-tagline {
+  text-align: center;
+  font-family: var(--font-prata), serif;
+  font-size: 1.65rem;
+  color: var(--ink);
+}
+.science-intro-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 50px;
+}
+.science-intro-cta .btn { text-decoration: none; }
+
+@media (max-width: 860px) {
+  .science-intro { padding: 90px 24px 80px; }
+  .science-intro-heading { white-space: normal; width: 100%; margin: 0 0 40px; }
+  .science-intro-block-1,
+  .science-intro-block-2 { width: 100%; margin: 0 0 40px; }
+  .science-intro-sub { text-align: left; }
+  .science-intro-cta { flex-direction: column; }
+}
+
+.science-scroll {
+  position: relative;
+  z-index: 3;
+  background: #003366;
+}
+.science-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+.science-canvas-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.science-canvas-wrap canvas { display: block; }
+
+.science-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+}
+/* alternating left/right placement (odd checkpoints on the right, even
+   on the left) so a transitioning pair never occupies the same spot —
+   with a distance-based crossfade this still read as double-exposed,
+   overlapping text even with the two sides, so this is now a hard
+   active/inactive switch (only the current checkpoint is ever visible)
+   rather than blending opacity by scroll distance. */
+/* white card instead of plain text floating on the navy scene, same
+   Prata-serif/ink coloring convention as the rest of the site's cards
+   (e.g. .sci-factors-card) — dark text since the card itself is white */
+.science-checkpoint {
+  position: absolute;
+  top: 50%;
+  max-width: 380px;
+  background: #ffffff;
+  padding: 32px 36px;
+  border-radius: 4px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+.science-checkpoint.is-active { opacity: 1; }
+/* fades/slides in from whichever side the card itself sits on and is
+   aligned to — left-aligned cards enter from the left, right-aligned
+   ones from the right — instead of a plain fade in place */
+.science-checkpoint--left { left: 0; text-align: left; transform: translate(-40px, -50%); }
+.science-checkpoint--right { right: 0; text-align: right; transform: translate(40px, -50%); }
+.science-checkpoint--left.is-active,
+.science-checkpoint--right.is-active { transform: translate(0, -50%); }
+.science-checkpoint-eyebrow {
+  display: block;
+  color: var(--ink-soft);
+  font-family: var(--font-prata), serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.science-checkpoint h3 {
+  color: var(--ink);
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+  letter-spacing: -0.01em;
+  margin-bottom: 14px;
+}
+.science-checkpoint p {
+  color: var(--ink-soft);
+  font-family: var(--font-prata), serif;
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+.science-progress {
+  position: absolute;
+  right: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.science-progress-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.science-progress-dot.active {
+  background: #deff08;
+  transform: scale(1.4);
+}
+
+@media (max-width: 860px) {
+  .science-progress { display: none; }
+  .science-checkpoint { max-width: 80%; }
+}
+
+/* ---------- watermark — same pill styling as the real nav .logo-badge,
+   positioned exactly where it sits in the nav bar (top-left, matching
+   .nav-inner's own padding), just very low opacity. Fixed so it persists
+   across every section after Hero — the real logo-badge is only rendered
+   pre-scroll; past Hero, Nav.tsx swaps to a bare hamburger with no logo
+   visible at all, which is the gap this fills. ---------- */
+.watermark {
+  position: fixed;
+  top: 22px;
+  left: 32px;
+  z-index: 40;
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 26px;
+  border-radius: 100px;
+  background: #ffffff;
+  border: 2px solid #000000;
+  font-family: var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
+  font-weight: 700;
+  font-size: 1.4rem;
+  color: #000000;
+  letter-spacing: 0;
+  line-height: normal;
+  margin: 0;
+  opacity: 0;
+  pointer-events: none;
+  user-select: none;
+  transition: opacity 0.6s ease;
+}
+.watermark.is-visible { opacity: 0.18; }
+
+@media (max-width: 860px) {
+  .watermark { top: 16px; left: 16px; padding: 5px 20px; font-size: 1.15rem; }
+}
+
+/* ---------- science page — "what are bioactive ingredients?" intro,
+   then the "key classes of bioactives" click-to-expand list ---------- */
+/* ---------- science hero (lab photo banner) ----------
+   sits behind BioactivesIntro, which wraps up over its bottom edge via a
+   static negative margin — same overlap technique as Hero -> About Us. */
+.science-hero {
+  position: relative;
+  height: 100vh;
+  background-image: url("/images/science-hero.jpeg");
+  background-size: cover;
+  background-position: center;
+  z-index: 1;
+}
+.science-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 51, 102, 0.35) 0%, rgba(0, 51, 102, 0.15) 45%, rgba(0, 51, 102, 0.75) 100%);
+}
+
+.bioactives-intro {
+  position: relative;
+  z-index: 2;
+  background: #ffffff;
+  /* extra top padding to make up for .bioactives-title no longer taking
+     up flow space now that it's an absolutely positioned tab */
+  padding: 260px 60px 120px;
+}
+/* folder-notch tab, same motif as .tech-hero-tab on the Technology page —
+   anchored to this panel and poking up above its own top edge, so it
+   rides up together with the panel's wrap animation instead of sitting
+   as a plain heading in the white space below the hero photo */
+.bioactives-title {
+  position: absolute;
+  left: 0;
+  top: -84px;
+  margin: 0;
+  background: #ffffff;
+  color: var(--ink);
+  padding: 20px 50px;
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: clamp(1.8rem, 3.4vw, 2.6rem);
+  z-index: 2;
+}
+
+.bioactives-what {
+  display: flex;
+  align-items: flex-start;
+  gap: 60px;
+  max-width: 1300px;
+  margin: 0 auto 110px;
+}
+.bioactives-what-heading {
+  flex: 0 0 38%;
+  text-align: right;
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: clamp(1.7rem, 2.6vw, 2.3rem);
+  line-height: 1.35;
+  color: var(--ink);
+  margin: 20px 0 0;
+}
+.bioactives-what-panel { flex: 1; }
+.bioactives-what-tab {
+  background: #003366;
+  padding: 22px 32px;
+  margin-bottom: 20px;
+}
+.bioactives-what-tab p {
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: 1.15rem;
+  line-height: 1.5;
+  color: #ffffff;
+  margin: 0;
+}
+.bioactives-what-body {
+  max-width: 620px;
+  font-family: var(--font-prata), serif;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--ink-soft);
+  text-align: justify;
+  hyphens: auto;
+}
+
+.bioactives-classes {
+  max-width: 1300px;
+  margin: 0 auto;
+}
+.bioactives-classes-banner {
+  /* breaks out of .bioactives-classes's max-width:1300px container to
+     reach the true left edge of the screen — left side only, the right
+     edge stays at the container's own boundary instead of also reaching
+     the viewport's right edge */
+  margin-left: calc(50% - 50vw);
+  /* shortened from the right side */
+  width: calc(50vw + 50% - 150px);
+  background: #003366;
+  color: #ffffff;
+  text-align: left;
+  /* text itself starts a bit further left than before (was 40vw) */
+  padding: 24px 40px 24px 34vw;
+  box-sizing: border-box;
+  margin-bottom: 40px;
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: clamp(1.5rem, 2.6vw, 2rem);
+}
+.bioactives-classes-banner-accent { font-size: 1.5em; }
+
+.bioactives-classes-body {
+  display: flex;
+  align-items: flex-start;
+  gap: 40px;
+}
+.bioactives-list {
+  flex: 0 0 50%;
+  display: flex;
+  flex-direction: column;
+  padding: 0 40px;
+}
+
+/* ---------- floating photo stack (kommakomma.is-referenced motif) ----------
+   the active class's photo sits sharp and centered with a tag pinned to
+   its corner; its neighbours peek out blurred to either side; every other
+   photo in the set of 11 stays fully hidden rather than cluttering the
+   frame with all of them at once. */
+.bioactives-gallery {
+  position: sticky;
+  top: 120px;
+  flex: 1;
+  align-self: flex-start;
+  height: 690px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1000px;
+}
+.bioactives-gallery-photo {
+  position: absolute;
+  width: 360px;
+  height: 510px;
+  object-fit: cover;
+  border-radius: 4px;
+  box-shadow: 0 30px 60px rgba(13, 21, 38, 0.18);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease, transform 0.5s ease, filter 0.5s ease;
+}
+.bioactives-gallery-photo--active {
+  opacity: 1;
+  filter: none;
+  transform: translateX(0) rotate(0deg) scale(1);
+  z-index: 3;
+  /* transform itself is NOT transitioned — the tilt is already smoothed
+     frame-by-frame in JS (a damped lerp toward the cursor), so a CSS
+     transition on top of an already-interpolating value would just fight
+     it and lag. opacity/filter still transition for the state-switch
+     crossfade. */
+  transition: opacity 0.5s ease, filter 0.5s ease;
+}
+.bioactives-gallery-photo--prev {
+  opacity: 0.45;
+  filter: blur(4px);
+  transform: translateX(-195px) rotate(-6deg) scale(0.85);
+  z-index: 1;
+}
+.bioactives-gallery-photo--next {
+  opacity: 0.45;
+  filter: blur(4px);
+  transform: translateX(195px) rotate(6deg) scale(0.85);
+  z-index: 1;
+}
+.bioactives-gallery-photo--hidden {
+  opacity: 0;
+  transform: scale(0.85);
+  z-index: 0;
+}
+.bioactives-gallery-tag {
+  position: absolute;
+  top: 24px;
+  right: calc(50% - 225px);
+  z-index: 4;
+  background: #003366;
+  color: #ffffff;
+  font-family: var(--font-prata), serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 8px 18px;
+  border-radius: 100px;
+  pointer-events: none;
+}
+/* divider under each point only stretches halfway across, instead of
+   running the item's full width */
+.bioactives-item { position: relative; }
+.bioactives-item::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 50%;
+  height: 1px;
+  background: rgba(13, 21, 38, 0.15);
+}
+.bioactives-item-head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 18px 0;
+  text-align: left;
+  cursor: pointer;
+}
+.bioactives-item-title {
+  font-family: var(--font-prata), serif;
+  font-size: 1.3rem;
+  /* lighter until clicked open — dark only marks the points that have
+     actually been expanded, not just hovered */
+  color: var(--ink-faint);
+  transition: color 0.2s ease;
+}
+.bioactives-item-head:hover .bioactives-item-title { color: #003366; }
+.bioactives-item.is-open .bioactives-item-title { color: var(--ink); }
+/* the "curtain/blind" reveal — grid-template-rows 0fr -> 1fr animates to
+   the exact content height (whatever it is), instead of guessing a
+   max-height value that would make short and long descriptions animate
+   at visibly different speeds */
+.bioactives-item-desc-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.4s ease;
+}
+.bioactives-item.is-open .bioactives-item-desc-wrap { grid-template-rows: 1fr; }
+.bioactives-item-desc-inner { overflow: hidden; }
+.bioactives-item-desc {
+  max-width: 720px;
+  margin: 0 0 22px;
+  padding-left: calc(0.75rem + 14px);
+  font-family: var(--font-prata), serif;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--ink-soft);
+}
+
+@media (max-width: 900px) {
+  .bioactives-intro { padding: 200px 24px 90px; }
+  .bioactives-title { left: 0; padding: 14px 28px; }
+  .bioactives-what { flex-direction: column; gap: 24px; }
+  .bioactives-what-heading { flex: none; text-align: left; margin: 0; }
+  .bioactives-classes-banner { padding: 24px; }
+  .bioactives-classes-body { flex-direction: column; }
+  .bioactives-list { flex: none; padding: 0; width: 100%; }
+  .bioactives-gallery { position: static; width: 100%; height: 320px; margin-top: 20px; }
+  .bioactives-gallery-photo { width: 170px; height: 240px; }
+  .bioactives-gallery-photo--prev { transform: translateX(-80px) rotate(-6deg) scale(0.85); }
+  .bioactives-gallery-photo--next { transform: translateX(80px) rotate(6deg) scale(0.85); }
+}
+
+/* ---------- science page — "why science matters" factors chamber ----------
+   same click-to-select pattern as PillarsSection/SupplementsFail, mirrored
+   (navy list on the left, white card on the right) ---------- */
+.sci-factors {
+  position: relative;
+  z-index: 4;
+  background: #ffffff;
+  padding: 90px 60px 120px;
+}
+.sci-factors-kicker {
+  font-family: var(--font-prata), serif;
+  font-size: 1.7rem;
+  color: var(--ink-soft);
+  margin: 0 0 30px;
+}
+.sci-factors-heading {
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: clamp(1.6rem, 2.8vw, 2.3rem);
+  color: var(--ink);
+  max-width: 760px;
+  margin: 0 0 50px;
+}
+.sci-factors-intro {
+  max-width: 760px;
+  margin: 0 0 60px auto;
+  text-align: justify;
+  text-align-last: right;
+  hyphens: auto;
+  font-family: var(--font-prata), serif;
+  font-size: 0.95rem;
+  line-height: 1.85;
+  color: var(--ink-soft);
+}
+
+/* the three layered elements: white page background (outer), this navy
+   box, and the white card floating inset within it — not two flush
+   flex siblings filling the box edge-to-edge */
+.sci-factors-chamber {
+  display: flex;
+  align-items: stretch;
+  gap: 32px;
+  background: #003366;
+  padding: 32px;
+  min-height: 480px;
+  max-width: 1300px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+.sci-factors-list {
+  flex: 0 0 45%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 32px;
+  box-sizing: border-box;
+}
+.sci-factors-item {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  background: none;
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+  padding: 22px 0;
+  text-align: left;
+  cursor: pointer;
+}
+.sci-factors-list .sci-factors-item:last-child { border-bottom: 1px solid rgba(255, 255, 255, 0.18); }
+.sci-factors-item-title {
+  font-family: var(--font-prata), serif;
+  font-size: 1.5rem;
+  color: rgba(255, 255, 255, 0.75);
+  transition: color 0.2s ease;
+}
+.sci-factors-item.is-active .sci-factors-item-title,
+.sci-factors-item:hover .sci-factors-item-title { color: #ffffff; }
+
+.sci-factors-card {
+  flex: 1;
+  background: #ffffff;
+  border: 1.5px solid var(--ink);
+  padding: 48px 44px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+.sci-factors-card h3 {
+  flex: 0 0 auto;
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: 1.4rem;
+  color: var(--ink);
+  margin: 0;
+}
+/* everything below the heading (description + "influenced by") is
+   vertically centered in the remaining card height, instead of the
+   description sitting right under the heading and pushing "influenced
+   by" all the way down to the bottom */
+.sci-factors-card-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.sci-factors-card-desc {
+  font-family: var(--font-prata), serif;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  margin: 0;
+}
+.sci-factors-card-label {
+  font-family: var(--font-prata), serif;
+  font-size: 0.85rem;
+  color: var(--ink);
+  margin: 30px 0 8px;
+}
+.sci-factors-card-tags {
+  font-family: var(--font-prata), serif;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
   margin: 0;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+@media (max-width: 900px) {
+  .sci-factors { padding: 70px 24px 90px; }
+  .sci-factors-intro { text-align: left; margin: 0 0 40px; }
+  .sci-factors-chamber { flex-direction: column; min-height: auto; }
+  .sci-factors-list { padding: 40px 28px; }
+  .sci-factors-card { padding: 32px 28px; }
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
+/* ================= technology page ================= */
+
+/* ---------- technology hero (lab photo banner) ----------
+   same pattern as .science-hero — full 100vh photo, TechIntro wraps up
+   over its bottom edge via a scroll-tracked negative margin. */
+.tech-hero {
+  position: relative;
+  height: 100vh;
+  background-image: url("/images/technology-hero.jpeg");
+  background-size: cover;
+  background-position: center;
+  z-index: 1;
+}
+.tech-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 51, 102, 0.25) 0%, rgba(0, 51, 102, 0.1) 45%, rgba(0, 51, 102, 0.55) 100%);
+}
+
+.tech-intro {
+  position: relative;
+  z-index: 2;
+  background: #ffffff;
+  padding: 90px 60px 140px;
+  text-align: center;
+}
+/* the "TECHNOLOGY" title tab is anchored to this panel (not the hero
+   behind it) and pokes up above the panel's own top edge, so it rides
+   up together with the wrap animation instead of staying pinned to the
+   hero and getting cut off mid-scroll */
+.tech-hero-tab {
+  position: absolute;
+  right: 0;
+  top: -84px;
+  margin: 0;
+  background: #ffffff;
+  color: var(--ink);
+  padding: 20px 50px;
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: clamp(1.8rem, 3.4vw, 2.6rem);
+  z-index: 2;
+}
+.tech-intro-body {
+  max-width: 760px;
+  margin: 0 auto;
+  font-family: var(--font-prata), serif;
+  font-size: 1rem;
+  line-height: 1.9;
+  color: #000000;
+}
+
+/* ---------- technology selection philosophy ---------- */
+.tech-philosophy {
+  position: relative;
+  z-index: 2;
+  background: #ffffff;
+  padding: 40px 60px 110px;
+}
+.tech-philosophy-kicker {
+  display: inline-block;
+  background: #003366;
+  color: #ffffff;
+  font-family: var(--font-prata), serif;
+  font-size: 0.95rem;
+  padding: 10px 24px;
+  margin: 0 0 40px;
+}
+.tech-philosophy-body {
+  display: flex;
+  align-items: flex-start;
+  gap: 60px;
+}
+.tech-philosophy-heading {
+  flex: 0 0 45%;
+  text-align: right;
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: clamp(1.6rem, 2.8vw, 2.2rem);
+  line-height: 1.3;
+  color: var(--ink);
+  margin: 0;
+}
+.tech-philosophy-intro {
+  flex: 1;
+  text-align: left;
+  font-family: var(--font-prata), serif;
+  font-size: 1rem;
+  line-height: 1.85;
+  color: var(--ink-soft);
+}
+
+/* ---------- ingredient challenge / what we create cards ----------
+   horizontal scrolling row, navy header (the challenge) over a white
+   body (the delivery system SowTrap creates to solve it) — same
+   two-part card silhouette as the reference screenshot. */
+.tech-philo-cards {
+  display: flex;
+  gap: 32px;
+  overflow-x: auto;
+  padding: 70px 60px 20px;
+  scrollbar-width: thin;
+}
+.tech-philo-card {
+  flex: 0 0 420px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(13, 21, 38, 0.12);
+}
+.tech-philo-card-header {
+  background: #003366;
+  padding: 22px 28px;
+  box-sizing: border-box;
+}
+.tech-philo-card-header h4 {
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: 1.3rem;
+  color: #ffffff;
+  margin: 0;
+}
+.tech-philo-card-body {
+  flex: 1;
+  background: #ffffff;
+  padding: 32px 28px 40px;
+  box-sizing: border-box;
+}
+.tech-philo-card-eyebrow {
+  display: block;
+  font-family: var(--font-prata), serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.65);
+  margin-bottom: 8px;
+}
+.tech-philo-card-eyebrow--dark { color: var(--ink-faint); }
+.tech-philo-card-solution {
+  font-family: var(--font-prata), serif;
+  font-size: 1.05rem;
+  color: var(--ink);
+  margin: 0 0 16px;
+}
+.tech-philo-card-benefit {
+  font-family: var(--font-prata), serif;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+/* ---------- technology stages (pinned scroll-jack) ----------
+   same mechanic as .science-scroll/.science-sticky — a tall wrapper with
+   a pinned inner view. The navy/white bands, column headers, and divider
+   are fixed for the whole scroll range; only the photo, evaluate list,
+   and stage-name caption crossfade between stages. */
+.tech-stages-scroll {
+  position: relative;
+  z-index: 2;
+}
+.tech-stages-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  background: #003366;
+}
+.tech-stages-header {
+  position: absolute;
+  top: 130px;
+  left: 0;
+  right: 0;
+  z-index: 4;
+  font-family: var(--font-prata), serif;
+  font-size: 1.6rem;
+  color: #ffffff;
+}
+.tech-stages-header span:first-child { position: absolute; left: 30vw; }
+.tech-stages-header span:last-child { position: absolute; left: 40vw; }
+
+.tech-stages-white-band {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 36%;
+  height: 28%;
+  background: #ffffff;
+  z-index: 1;
+}
+.tech-stages-divider {
+  position: absolute;
+  left: 40vw;
+  top: 22%;
+  height: 56%;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.25);
+  z-index: 3;
+}
+
+.tech-stages-photo-col {
+  position: absolute;
+  left: 11vw;
+  top: 22%;
+  width: 360px;
+  height: 56%;
+  z-index: 2;
+  overflow: hidden;
+}
+/* only the active stage's photo/caption/evaluate item is ever visible —
+   base state fully hidden, .is-active fades it in, so exactly one stage
+   is on screen at a time instead of two overlapping mid-crossfade */
+.tech-stages-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.tech-stages-photo.is-active { opacity: 1; }
+
+.tech-stages-caption {
+  position: absolute;
+  left: 11vw;
+  width: 360px;
+  top: calc(22% + 56% + 26px);
+  text-align: center;
+  z-index: 3;
+}
+.tech-stages-caption-item {
+  position: absolute;
+  left: 0;
+  right: 0;
+  font-family: var(--font-prata), serif;
+  font-size: 1.05rem;
+  color: #ffffff;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.tech-stages-caption-item.is-active { opacity: 1; }
+
+.tech-stages-evaluate-col {
+  position: absolute;
+  left: 40vw;
+  width: 45vw;
+  max-width: 640px;
+  top: 36%;
+  height: 28%;
+  z-index: 2;
+}
+.tech-stages-evaluate-item {
+  position: absolute;
+  left: 32px;
+  right: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.tech-stages-evaluate-item.is-active { opacity: 1; }
+.tech-stages-evaluate-heading {
+  font-family: var(--font-prata), serif;
+  font-size: 1rem;
+  color: var(--ink);
+  margin: 0 0 14px;
+}
+.tech-stages-evaluate-list {
+  font-family: var(--font-prata), serif;
+  font-size: 0.85rem;
+  line-height: 1.7;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+.tech-stages-progress {
+  position: absolute;
+  right: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.tech-stages-progress-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.tech-stages-progress-dot.active {
+  background: #deff08;
+  transform: scale(1.4);
+}
+
+@media (max-width: 900px) {
+  .tech-hero-tab { right: 0; padding: 14px 28px; }
+  .tech-intro { padding: 70px 24px 100px; }
+  .tech-philosophy { padding: 30px 24px 80px; }
+  .tech-philosophy-body { flex-direction: column; gap: 24px; }
+  .tech-philosophy-heading { flex: none; text-align: left; }
+  .tech-philosophy-intro { flex: none; text-align: left; margin: 0; }
+  .tech-philo-cards { padding: 40px 24px 20px; gap: 20px; }
+  .tech-philo-card { flex: 0 0 80vw; }
+
+  .tech-stages-header { display: none; }
+  .tech-stages-divider { display: none; }
+  .tech-stages-progress { display: none; }
+  .tech-stages-white-band { top: 42%; height: 40%; }
+  .tech-stages-photo-col { left: 24px; top: 14%; width: 45vw; height: 34%; }
+  .tech-stages-caption { left: 24px; width: 45vw; top: calc(14% + 34% + 16px); }
+  .tech-stages-caption-item { font-size: 0.85rem; }
+  .tech-stages-evaluate-col { left: calc(24px + 45vw + 24px); width: calc(100vw - 45vw - 72px); top: 42%; height: 40%; }
+  .tech-stages-evaluate-heading { font-size: 0.9rem; }
+  .tech-stages-evaluate-list { font-size: 0.78rem; }
+}
+
+/* ---------- our technology platform (heading left, body right) ---------- */
+.tech-platform {
+  position: relative;
+  z-index: 2;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 90px;
+  padding: 140px 60px;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+.tech-platform-heading {
+  flex: 0 0 38%;
+  text-align: right;
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: clamp(2rem, 3.6vw, 2.8rem);
+  line-height: 1.25;
+  color: var(--ink);
+  margin: 0;
+}
+.tech-platform-body {
+  flex: 0 0 45%;
+  font-family: var(--font-prata), serif;
+  font-size: 1.15rem;
+  line-height: 1.6;
+  color: var(--ink);
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .tech-platform { flex-direction: column; gap: 32px; padding: 90px 24px; text-align: left; }
+  .tech-platform-heading { flex: none; text-align: left; }
+  .tech-platform-body { flex: none; }
+}
+
+/* ---------- key encapsulation technologies ----------
+   exact same pattern as .bioactives-classes on the Science page — navy
+   left-breakout banner, exclusive accordion list, floating tilt-toward-
+   cursor photo gallery on the right. Reused here with new class names
+   (tech-encap-*) for the 4 encapsulation technologies. */
+.tech-encap {
+  position: relative;
+  z-index: 2;
+  background: #ffffff;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 0 120px;
+}
+.tech-encap-banner {
+  margin-left: calc(50% - 50vw);
+  width: calc(50vw + 50% - 150px);
+  background: #003366;
+  color: #ffffff;
+  text-align: left;
+  padding: 24px 40px 24px 34vw;
+  box-sizing: border-box;
+  margin-bottom: 40px;
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: clamp(1.5rem, 2.6vw, 2rem);
+}
+.tech-encap-banner-accent { font-size: 1.5em; }
+
+.tech-encap-body {
+  display: flex;
+  align-items: flex-start;
+  gap: 40px;
+}
+.tech-encap-list {
+  flex: 0 0 50%;
+  min-height: 690px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 40px;
+}
+
+.tech-encap-gallery {
+  position: sticky;
+  top: 120px;
+  flex: 1;
+  align-self: flex-start;
+  height: 690px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1000px;
+}
+.tech-encap-gallery-photo {
+  position: absolute;
+  width: 360px;
+  height: 510px;
+  object-fit: cover;
+  border-radius: 4px;
+  box-shadow: 0 30px 60px rgba(13, 21, 38, 0.18);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease, transform 0.5s ease, filter 0.5s ease;
+}
+.tech-encap-gallery-photo--active {
+  opacity: 1;
+  filter: none;
+  transform: translateX(0) rotate(0deg) scale(1);
+  z-index: 3;
+  transition: opacity 0.5s ease, filter 0.5s ease;
+}
+.tech-encap-gallery-photo--prev {
+  opacity: 0.45;
+  filter: blur(4px);
+  transform: translateX(-195px) rotate(-6deg) scale(0.85);
+  z-index: 1;
+}
+.tech-encap-gallery-photo--next {
+  opacity: 0.45;
+  filter: blur(4px);
+  transform: translateX(195px) rotate(6deg) scale(0.85);
+  z-index: 1;
+}
+.tech-encap-gallery-photo--hidden {
+  opacity: 0;
+  transform: scale(0.85);
+  z-index: 0;
+}
+.tech-encap-gallery-tag {
+  position: absolute;
+  top: 24px;
+  right: calc(50% - 225px);
+  z-index: 4;
+  background: #003366;
+  color: #ffffff;
+  font-family: var(--font-prata), serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 8px 18px;
+  border-radius: 100px;
+  pointer-events: none;
+}
+
+.tech-encap-item { position: relative; }
+.tech-encap-item::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 50%;
+  height: 1px;
+  background: rgba(13, 21, 38, 0.15);
+}
+.tech-encap-item-head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 18px 0;
+  text-align: left;
+  cursor: pointer;
+}
+.tech-encap-item-title {
+  font-family: var(--font-prata), serif;
+  font-size: 1.2rem;
+  color: var(--ink-faint);
+  transition: color 0.2s ease;
+}
+.tech-encap-item-head:hover .tech-encap-item-title { color: #003366; }
+.tech-encap-item.is-open .tech-encap-item-title { color: var(--ink); }
+.tech-encap-item-desc-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.4s ease;
+}
+.tech-encap-item.is-open .tech-encap-item-desc-wrap { grid-template-rows: 1fr; }
+.tech-encap-item-desc-inner { overflow: hidden; }
+.tech-encap-item-desc {
+  max-width: 720px;
+  margin: 0 0 16px;
+  padding-left: calc(0.75rem + 14px);
+  font-family: var(--font-prata), serif;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--ink-soft);
+}
+.tech-encap-item-features-label {
+  max-width: 720px;
+  margin: 0 0 8px;
+  padding-left: calc(0.75rem + 14px);
+  font-family: var(--font-prata), serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+.tech-encap-item-features {
+  max-width: 720px;
+  margin: 0 0 22px;
+  padding-left: calc(0.75rem + 14px + 18px);
+  list-style: disc;
+  font-family: var(--font-prata), serif;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+.tech-encap-item-features li { margin-bottom: 4px; }
+
+@media (max-width: 900px) {
+  .tech-encap-banner { padding: 24px; }
+  .tech-encap-body { flex-direction: column; }
+  .tech-encap-list { flex: none; min-height: auto; justify-content: flex-start; padding: 0; width: 100%; }
+  .tech-encap-gallery { position: static; width: 100%; height: 320px; margin-top: 20px; }
+  .tech-encap-gallery-photo { width: 170px; height: 240px; }
+  .tech-encap-gallery-photo--prev { transform: translateX(-80px) rotate(-6deg) scale(0.85); }
+  .tech-encap-gallery-photo--next { transform: translateX(80px) rotate(6deg) scale(0.85); }
+}
+
+/* ---------- scientific validation ----------
+   exact same "chamber" pattern as .fail-v2-chamber (SupplementsFail on
+   the home page) — folder-notch tab, white card + two-column grid of
+   clickable pointers, hover-to-preview/click-to-pin — plus a "From
+   Encapsulation to Evidence" statement between the tab and the chamber. */
+.sci-validation-chamber {
+  /* higher than .tech-encap's z-index:2 — without this, now that this
+     section wraps up over .tech-encap via a negative margin, .tech-encap's
+     own trailing white space painted OVER this section's navy tab in
+     their overlap zone instead of under it, showing as a stray white box */
+  position: relative;
+  z-index: 3;
+  min-height: 100vh;
+  background: #003366;
+  padding: 160px 64px 100px;
+}
+.sci-validation-tab {
+  /* partial-width, right-anchored — same silhouette as .fail-v2-heading
+     ("Why current supplements fail"), navy only behind the heading
+     itself with white showing through on the left, not a full-width bar */
+  position: absolute;
+  top: -90px;
+  right: 0;
+  width: calc(min(56vw, 680px) + 64px);
+  z-index: 2;
+  background: #003366;
+  padding: 15px 56px 0;
+  height: 230px;
+  box-sizing: border-box;
+  text-align: right;
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  line-height: 1.2;
+  font-size: clamp(1.8rem, 3.4vw, 2.6rem);
+  color: #ffffff;
+  margin: 0;
+}
+
+.sci-validation-intro {
+  max-width: 1200px;
+  margin: 0 auto 90px;
+  display: flex;
+  align-items: flex-start;
+  gap: 70px;
+}
+.sci-validation-heading {
+  flex: 0 0 45%;
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: clamp(2rem, 3.6vw, 2.8rem);
+  line-height: 1.25;
+  color: #ffffff;
+  margin: 0;
+}
+.sci-validation-intro-body {
+  flex: 1;
+  font-family: var(--font-prata), serif;
+  font-size: 1.15rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0;
+}
+
+.sci-validation-body {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: flex-start;
+  gap: 70px;
+}
+.sci-validation-card {
+  flex: 0 0 50%;
+  min-height: 460px;
+  background: #ffffff;
+  padding: 48px 44px;
+  box-sizing: border-box;
+}
+.sci-validation-card h3 {
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: 1.5rem;
+  line-height: 1.3;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+.sci-validation-card p {
+  font-family: var(--font-prata), serif;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+.sci-validation-cta {
+  margin-top: 20px;
+  font-size: 0.85rem;
+  padding: 10px 22px;
+}
+.sci-validation-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-auto-flow: column;
+  grid-template-rows: repeat(3, auto);
+  column-gap: 60px;
+}
+.sci-validation-item {
+  text-align: left;
+  background: none;
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.25);
+  padding: 22px 0;
+  font-family: var(--font-prata), serif;
+  font-size: 1.05rem;
+  color: rgba(255, 255, 255, 0.75);
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+.sci-validation-item.is-active,
+.sci-validation-item:hover { color: #ffffff; }
+
+@media (max-width: 900px) {
+  .sci-validation-chamber { padding: 24px 24px 80px; }
+  .sci-validation-tab {
+    position: static;
+    width: 100%;
+    height: auto;
+    margin-bottom: 40px;
+    padding: 24px;
+    font-size: 1.8rem;
   }
+  .sci-validation-intro { flex-direction: column; gap: 24px; margin-bottom: 40px; }
+  .sci-validation-heading { flex: none; }
+  .sci-validation-body { flex-direction: column; gap: 40px; }
+  .sci-validation-card { flex: none; width: 100%; min-height: auto; }
+  .sci-validation-grid { grid-auto-flow: row; grid-template-rows: none; grid-template-columns: 1fr; column-gap: 0; }
+}
+
+/* ---------- evidence that moves with the active ----------
+   full-bleed photo, 80% opacity white wash over it, paragraph
+   right-aligned on the left, heading left-aligned on the right, both
+   vertically centered over the image. */
+.tech-evidence {
+  position: relative;
+  min-height: 90vh;
+  background-image: url("/images/tech-evidence.jpeg");
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+}
+.tech-evidence-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.8);
+}
+.tech-evidence-content {
+  position: relative;
+  z-index: 1;
+  max-width: 1300px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 60px;
+  padding: 0 60px;
+}
+.tech-evidence-body {
+  flex: 0 0 45%;
+  text-align: right;
+  font-family: var(--font-prata), serif;
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: var(--ink);
+  margin: 0;
+}
+.tech-evidence-heading {
+  flex: 1;
+  text-align: left;
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: clamp(2rem, 3.6vw, 2.8rem);
+  line-height: 1.25;
+  color: var(--ink);
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .tech-evidence { min-height: auto; padding: 90px 0; }
+  .tech-evidence-content { flex-direction: column; gap: 32px; padding: 0 24px; }
+  .tech-evidence-body { flex: none; text-align: left; }
+  .tech-evidence-heading { flex: none; text-align: left; }
+}
+
+/* ---------- materials that shape delivery ----------
+   same exclusive-accordion curtain/blind pattern as .tech-encap-item and
+   .bioactives-item, text-only (no photo gallery column — no matching
+   image set exists yet for these 4 material classes). */
+.tech-materials {
+  position: relative;
+  z-index: 2;
+  background: #ffffff;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 90px 60px 120px;
+}
+.tech-materials-intro {
+  max-width: 820px;
+  margin: 0 auto 60px;
+  text-align: center;
+  font-family: var(--font-prata), serif;
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: var(--ink);
+}
+.tech-materials-banner {
+  margin-left: calc(50% - 50vw);
+  width: calc(50vw + 50% - 150px);
+  background: #003366;
+  color: #ffffff;
+  text-align: left;
+  padding: 24px 40px 24px 34vw;
+  box-sizing: border-box;
+  margin-bottom: 40px;
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: clamp(1.5rem, 2.6vw, 2rem);
+}
+.tech-materials-banner-accent { font-size: 1em; }
+
+.tech-materials-list {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  padding: 0 40px;
+}
+.tech-materials-item { position: relative; border-bottom: 1px solid rgba(13, 21, 38, 0.15); }
+.tech-materials-item-head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 22px 0;
+  text-align: left;
+  cursor: pointer;
+}
+.tech-materials-item-title {
+  font-family: var(--font-prata), serif;
+  font-size: 1.3rem;
+  color: var(--ink-faint);
+  transition: color 0.2s ease;
+}
+.tech-materials-item-head:hover .tech-materials-item-title { color: #003366; }
+.tech-materials-item.is-open .tech-materials-item-title { color: var(--ink); }
+.tech-materials-item-desc-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.4s ease;
+}
+.tech-materials-item.is-open .tech-materials-item-desc-wrap { grid-template-rows: 1fr; }
+.tech-materials-item-desc-inner { overflow: hidden; }
+.tech-materials-item-materials {
+  max-width: 720px;
+  margin: 0 0 16px;
+  padding-left: calc(0.75rem + 14px);
+  font-family: var(--font-prata), serif;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--ink-soft);
+}
+.tech-materials-item-materials strong { color: var(--ink); font-weight: 700; }
+.tech-materials-item-overview-label {
+  max-width: 720px;
+  margin: 0 0 8px;
+  padding-left: calc(0.75rem + 14px);
+  font-family: var(--font-prata), serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+.tech-materials-item-overview {
+  max-width: 720px;
+  margin: 0 0 26px;
+  padding-left: calc(0.75rem + 14px + 18px);
+  list-style: disc;
+  font-family: var(--font-prata), serif;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+.tech-materials-item-overview li { margin-bottom: 4px; }
+
+@media (max-width: 900px) {
+  .tech-materials { padding: 70px 24px 90px; }
+  .tech-materials-banner { padding: 24px; }
+  .tech-materials-list { padding: 0; }
+}
+
+/* ---------- our approach to ingredient innovation ----------
+   same click-to-select chamber pattern as .sci-factors-chamber — navy
+   list of stages on the left, white card with the active stage's full
+   description on the right. */
+.tech-approach {
+  position: relative;
+  z-index: 2;
+  background: #ffffff;
+  padding: 90px 60px 120px;
+}
+.tech-approach-heading {
+  max-width: 1300px;
+  margin: 0 auto 60px;
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: clamp(1.8rem, 3.2vw, 2.6rem);
+  color: var(--ink);
+}
+.tech-approach-chamber {
+  display: flex;
+  align-items: stretch;
+  gap: 32px;
+  background: #003366;
+  padding: 32px;
+  min-height: 480px;
+  max-width: 1300px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+.tech-approach-list {
+  flex: 0 0 45%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 32px;
+  box-sizing: border-box;
+}
+.tech-approach-item {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  background: none;
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+  padding: 22px 0;
+  text-align: left;
+  cursor: pointer;
+}
+.tech-approach-list .tech-approach-item:last-child { border-bottom: 1px solid rgba(255, 255, 255, 0.18); }
+.tech-approach-item-title {
+  font-family: var(--font-prata), serif;
+  font-size: 1.4rem;
+  color: rgba(255, 255, 255, 0.75);
+  transition: color 0.2s ease;
+}
+.tech-approach-item.is-active .tech-approach-item-title,
+.tech-approach-item:hover .tech-approach-item-title { color: #ffffff; }
+
+.tech-approach-card {
+  flex: 1;
+  background: #ffffff;
+  border: 1.5px solid var(--ink);
+  padding: 48px 44px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.tech-approach-card h3 {
+  flex: 0 0 auto;
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: 1.4rem;
+  color: var(--ink);
+  margin: 0 0 20px;
+}
+.tech-approach-card p {
+  font-family: var(--font-prata), serif;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .tech-approach { padding: 70px 24px 90px; }
+  .tech-approach-chamber { flex-direction: column; min-height: auto; }
+  .tech-approach-list { padding: 24px; }
+  .tech-approach-card { padding: 32px 28px; }
+}
+
+/* ================= partnership page ================= */
+
+/* ---------- partnership hero (photo banner) ----------
+   same pattern as .science-hero/.tech-hero — full 100vh photo,
+   PartnershipIntro wraps up over its bottom edge via a scroll-tracked
+   negative margin. */
+.partnership-hero {
+  position: relative;
+  height: 100vh;
+  background-image: url("/images/partnership-hero.jpeg");
+  background-size: cover;
+  background-position: center;
+  z-index: 1;
+}
+.partnership-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 51, 102, 0.25) 0%, rgba(0, 51, 102, 0.1) 45%, rgba(0, 51, 102, 0.55) 100%);
+}
+
+.partnership-intro {
+  position: relative;
+  z-index: 2;
+  background: #ffffff;
+  padding: 260px 60px 120px;
+}
+/* folder-notch tab, same motif as .tech-hero-tab/.bioactives-title —
+   anchored to this panel and poking up above its own top edge, so it
+   rides up together with the panel's wrap animation */
+.partnership-hero-tab {
+  position: absolute;
+  right: 0;
+  top: -84px;
+  margin: 0;
+  background: #ffffff;
+  color: var(--ink);
+  padding: 20px 50px;
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: clamp(1.8rem, 3.4vw, 2.6rem);
+  z-index: 2;
+}
+
+/* same two-column layout as .bioactives-what */
+.partnership-what {
+  display: flex;
+  align-items: flex-start;
+  gap: 60px;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+.partnership-what-heading {
+  flex: 0 0 38%;
+  text-align: right;
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: clamp(1.7rem, 2.6vw, 2.3rem);
+  line-height: 1.35;
+  color: var(--ink);
+  margin: 20px 0 0;
+}
+.partnership-what-panel { flex: 1; }
+.partnership-what-body {
+  max-width: 620px;
+  font-family: var(--font-prata), serif;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--ink-soft);
+  text-align: justify;
+  hyphens: auto;
+  margin: 0 0 32px;
+}
+.partnership-cta { display: inline-block; text-decoration: none; }
+
+@media (max-width: 900px) {
+  .partnership-intro { padding: 200px 24px 90px; }
+  .partnership-hero-tab { right: 0; padding: 14px 28px; }
+  .partnership-what { flex-direction: column; gap: 24px; }
+  .partnership-what-heading { flex: none; text-align: left; margin: 0; }
+}
+
+/* ---------- who we partner with ----------
+   three points on either side of a centered photo. */
+.partnership-who {
+  position: relative;
+  z-index: 2;
+  background: #ffffff;
+  padding: 100px 60px 120px;
+  text-align: center;
+}
+.partnership-who-heading {
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: clamp(2rem, 3.6vw, 2.8rem);
+  color: var(--ink);
+  margin: 0 0 20px;
+}
+.partnership-who-subheading {
+  font-family: var(--font-prata), serif;
+  font-size: 1.15rem;
+  color: var(--ink-soft);
+  margin: 0 0 80px;
+}
+.partnership-who-body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 50px;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+.partnership-who-points {
+  flex: 0 0 27%;
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+}
+.partnership-who-points--left { text-align: right; }
+.partnership-who-points--right { text-align: left; }
+.partnership-who-point h4 {
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: 1.15rem;
+  color: var(--ink);
+  margin: 0 0 10px;
+}
+.partnership-who-point p {
+  font-family: var(--font-prata), serif;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  margin: 0;
+}
+.partnership-who-image-wrap {
+  flex: 0 0 26%;
+}
+.partnership-who-image {
+  display: block;
+  width: 100%;
+  height: 560px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+@media (max-width: 900px) {
+  .partnership-who { padding: 70px 24px 90px; }
+  .partnership-who-subheading { margin-bottom: 50px; }
+  .partnership-who-body { flex-direction: column; gap: 40px; }
+  .partnership-who-points { flex: none; width: 100%; }
+  .partnership-who-points--left,
+  .partnership-who-points--right { text-align: center; }
+  .partnership-who-image-wrap { flex: none; width: 100%; }
+  .partnership-who-image { height: 320px; }
+}
+
+/* ---------- our partnership models ----------
+   top heading, then the same two-column pattern as .tech-platform. */
+.partnership-models {
+  position: relative;
+  z-index: 2;
+  background: #ffffff;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 100px 60px 140px;
+}
+.partnership-models-title {
+  text-align: center;
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: clamp(2rem, 3.6vw, 2.8rem);
+  color: var(--ink);
+  margin: 0 0 80px;
+}
+.partnership-models-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 90px;
+}
+.partnership-models-heading {
+  flex: 0 0 38%;
+  text-align: right;
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: clamp(1.7rem, 3vw, 2.3rem);
+  line-height: 1.25;
+  color: var(--ink);
+  margin: 0;
+}
+.partnership-models-body {
+  flex: 0 0 45%;
+  font-family: var(--font-prata), serif;
+  font-size: 1.15rem;
+  line-height: 1.6;
+  color: var(--ink);
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .partnership-models { padding: 70px 24px 90px; }
+  .partnership-models-title { margin-bottom: 50px; }
+  .partnership-models-row { flex-direction: column; gap: 24px; }
+  .partnership-models-heading { flex: none; text-align: left; }
+  .partnership-models-body { flex: none; }
+}
+
+/* ---------- partnership engagement models (pinned scroll-jack) ----------
+   exact same mechanic as .tech-stages-* — navy/white band layout stays
+   fixed, only the photo, tagline/description, and model-name caption
+   crossfade between the 5 engagement models. */
+.partnership-stages-scroll {
+  position: relative;
+  z-index: 2;
+}
+.partnership-stages-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  background: #003366;
+}
+.partnership-stages-header {
+  position: absolute;
+  top: 130px;
+  left: 0;
+  right: 0;
+  z-index: 4;
+  font-family: var(--font-prata), serif;
+  font-size: 1.6rem;
+  color: #ffffff;
+}
+.partnership-stages-header span:first-child { position: absolute; left: 30vw; }
+.partnership-stages-header span:last-child { position: absolute; left: 40vw; }
+
+.partnership-stages-white-band {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 36%;
+  height: 28%;
+  background: #ffffff;
+  z-index: 1;
+}
+.partnership-stages-divider {
+  position: absolute;
+  left: 40vw;
+  top: 22%;
+  height: 56%;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.25);
+  z-index: 3;
+}
+
+.partnership-stages-photo-col {
+  position: absolute;
+  left: 11vw;
+  top: 22%;
+  width: 360px;
+  height: 56%;
+  z-index: 2;
+  overflow: hidden;
+}
+.partnership-stages-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.partnership-stages-photo.is-active { opacity: 1; }
+
+.partnership-stages-caption {
+  position: absolute;
+  left: 11vw;
+  width: 360px;
+  top: calc(22% + 56% + 26px);
+  text-align: center;
+  z-index: 3;
+}
+.partnership-stages-caption-item {
+  position: absolute;
+  left: 0;
+  right: 0;
+  font-family: var(--font-prata), serif;
+  font-size: 1.05rem;
+  color: #ffffff;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.partnership-stages-caption-item.is-active { opacity: 1; }
+
+.partnership-stages-evaluate-col {
+  position: absolute;
+  left: 40vw;
+  width: 45vw;
+  max-width: 640px;
+  top: 36%;
+  height: 28%;
+  z-index: 2;
+}
+.partnership-stages-evaluate-item {
+  position: absolute;
+  left: 32px;
+  right: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.partnership-stages-evaluate-item.is-active { opacity: 1; }
+.partnership-stages-evaluate-heading {
+  font-family: var(--font-prata), serif;
+  font-size: 1rem;
+  color: var(--ink);
+  margin: 0 0 14px;
+}
+.partnership-stages-evaluate-desc {
+  font-family: var(--font-prata), serif;
+  font-size: 0.85rem;
+  line-height: 1.7;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+.partnership-stages-progress {
+  position: absolute;
+  right: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.partnership-stages-progress-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.partnership-stages-progress-dot.active {
+  background: #deff08;
+  transform: scale(1.4);
+}
+
+/* ---------- partnership closing statement + CTAs ---------- */
+.partnership-closing {
+  position: relative;
+  z-index: 2;
+  background: #ffffff;
+  padding: 120px 60px;
+  text-align: center;
+}
+.partnership-closing-statement {
+  max-width: 780px;
+  margin: 0 auto 40px;
+  font-family: var(--font-prata), serif;
+  font-size: clamp(1.3rem, 2.4vw, 1.7rem);
+  line-height: 1.5;
+  color: var(--ink);
+}
+.partnership-closing-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+.partnership-closing-cta .btn { text-decoration: none; }
+
+@media (max-width: 900px) {
+  .partnership-stages-header { display: none; }
+  .partnership-stages-divider { display: none; }
+  .partnership-stages-progress { display: none; }
+  .partnership-stages-white-band { top: 42%; height: 40%; }
+  .partnership-stages-photo-col { left: 24px; top: 14%; width: 45vw; height: 34%; }
+  .partnership-stages-caption { left: 24px; width: 45vw; top: calc(14% + 34% + 16px); }
+  .partnership-stages-caption-item { font-size: 0.85rem; }
+  .partnership-stages-evaluate-col { left: calc(24px + 45vw + 24px); width: calc(100vw - 45vw - 72px); top: 42%; height: 40%; }
+  .partnership-stages-evaluate-heading { font-size: 0.9rem; }
+  .partnership-stages-evaluate-desc { font-size: 0.78rem; }
+
+  .partnership-closing { padding: 70px 24px; }
+  .partnership-closing-cta { flex-direction: column; }
+}
+
+/* ================= contact page ================= */
+
+/* full-screen photo banner — .contact-hero (the next section) wraps up
+   over its bottom edge via a scroll-tracked margin, same as
+   .partnership-hero / .partnership-intro */
+.contact-hero-photo {
+  position: relative;
+  height: 100vh;
+  background-image: url("/images/contact-hero.jpeg");
+  background-size: cover;
+  background-position: center;
+  z-index: 1;
+}
+.contact-hero-photo-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 51, 102, 0.25) 0%, rgba(0, 51, 102, 0.1) 45%, rgba(0, 51, 102, 0.55) 100%);
+}
+
+.contact-hero {
+  position: relative;
+  z-index: 2;
+  background: #003366;
+  padding: 260px 60px 100px;
+  text-align: center;
+}
+/* folder-notch tab, same motif as .tech-hero-tab/.partnership-hero-tab —
+   anchored to this panel and poking up above its own top edge, so it
+   rides up together with the panel's wrap animation */
+.contact-hero-tab {
+  position: absolute;
+  right: 0;
+  top: -84px;
+  margin: 0;
+  background: #003366;
+  color: #ffffff;
+  padding: 20px 50px;
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: clamp(1.8rem, 3.4vw, 2.6rem);
+  z-index: 2;
+}
+.contact-hero-kicker {
+  font-family: var(--font-prata), serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #deff08;
+  margin: 0 0 24px;
+}
+.contact-hero-heading {
+  max-width: 780px;
+  margin: 0 auto 24px;
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.25;
+  color: #ffffff;
+}
+.contact-hero-intro {
+  max-width: 680px;
+  margin: 0 auto;
+  font-family: var(--font-prata), serif;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* ---------- the three forms — shared layout, white by default,
+   a navy alternate for the middle ("prefer to speak directly") form ---------- */
+.contact-form-section {
+  position: relative;
+  z-index: 2;
+  background: #ffffff;
+  padding: 100px 60px;
+}
+.contact-form-section--alt { background: #003366; }
+.contact-form-kicker {
+  text-align: center;
+  font-family: var(--font-prata), serif;
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #003366;
+  margin: 0 0 20px;
+}
+.contact-form-section--alt .contact-form-kicker { color: #deff08; }
+.contact-form-heading {
+  max-width: 700px;
+  margin: 0 auto 20px;
+  text-align: center;
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: clamp(1.7rem, 3vw, 2.4rem);
+  line-height: 1.3;
+  color: var(--ink);
+}
+.contact-form-section--alt .contact-form-heading { color: #ffffff; }
+.contact-form-intro {
+  max-width: 640px;
+  margin: 0 auto 20px;
+  text-align: center;
+  font-family: var(--font-prata), serif;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--ink-soft);
+}
+.contact-form-section--alt .contact-form-intro { color: rgba(255, 255, 255, 0.8); }
+.contact-form-subheading {
+  text-align: center;
+  font-family: var(--font-prata), serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--ink);
+  margin: 0 0 40px;
+}
+.contact-form-section--alt .contact-form-subheading { color: #ffffff; }
+
+.contact-form {
+  max-width: 800px;
+  margin: 40px auto 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+.contact-field { display: flex; flex-direction: column; gap: 8px; }
+.contact-field--full { grid-column: 1 / -1; }
+.contact-field label {
+  font-family: var(--font-prata), serif;
+  font-size: 0.9rem;
+  color: var(--ink);
+}
+.contact-form-section--alt .contact-field label { color: #ffffff; }
+.contact-field input[type="text"],
+.contact-field input[type="email"],
+.contact-field input[type="tel"],
+.contact-field textarea {
+  font-family: var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.95rem;
+  padding: 12px 16px;
+  border-radius: 6px;
+  border: 1px solid rgba(13, 21, 38, 0.25);
+  background: #ffffff;
+  color: var(--ink);
+  resize: vertical;
+}
+.contact-field input[type="text"]:focus,
+.contact-field input[type="email"]:focus,
+.contact-field input[type="tel"]:focus,
+.contact-field textarea:focus {
+  outline: none;
+  border-color: #003366;
+}
+.contact-form-section--alt .contact-field input[type="text"],
+.contact-form-section--alt .contact-field input[type="email"],
+.contact-form-section--alt .contact-field input[type="tel"],
+.contact-form-section--alt .contact-field textarea {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #ffffff;
+}
+.contact-form-section--alt .contact-field input::placeholder,
+.contact-form-section--alt .contact-field textarea::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+.contact-form-section--alt .contact-field input:focus,
+.contact-form-section--alt .contact-field textarea:focus {
+  border-color: #deff08;
+}
+.contact-field input[type="file"] {
+  font-family: var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+.contact-form-section--alt .contact-field input[type="file"] { color: rgba(255, 255, 255, 0.8); }
+
+/* ---------- custom dropdown (replaces native <select>) ----------
+   a browser's native option-list popup can't be restyled — its
+   background, blur, hover colour, and scrollbar are all OS-drawn, which
+   is why this rendered as a glassy, blue-highlighted native menu instead
+   of the site's own navy/white/lime palette. This is a fully custom
+   listbox instead: same trigger-button styling as the plain text inputs,
+   a popover styled to match, and a real always-visible custom scrollbar
+   instead of the native "keep tapping to see more" affordance. */
+.dropdown { position: relative; }
+.dropdown-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.95rem;
+  padding: 12px 16px;
+  border-radius: 6px;
+  border: 1px solid rgba(13, 21, 38, 0.25);
+  background: #ffffff;
+  color: var(--ink);
+  cursor: pointer;
+  text-align: left;
+}
+.dropdown-placeholder { color: var(--ink-soft); }
+.dropdown.is-open .dropdown-trigger { border-color: #003366; }
+.dropdown-chevron {
+  flex: 0 0 auto;
+  color: var(--ink-soft);
+  transition: transform 0.2s ease;
+}
+.dropdown.is-open .dropdown-chevron { transform: rotate(180deg); }
+
+.dropdown-list {
+  /* position:fixed + its actual top/left/width are set inline in JS from
+     the trigger's real screen coordinates (see Dropdown.tsx) — it's
+     rendered through a portal straight into <body>, escaping the
+     section's own stacking context entirely, so a plain position:absolute
+     here would be wrong (nothing left to be "absolute" relative to) */
+  z-index: 999;
+  /* short lists (5-8 options) should just show in full rather than
+     landing right at the cap and pushing the last item into a
+     barely-visible scroll area — this only kicks in for genuinely long
+     lists like the 195-country phone code list */
+  max-height: 360px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  background: #ffffff;
+  border: 1px solid #003366;
+  border-radius: 8px;
+  box-shadow: 0 20px 40px rgba(13, 21, 38, 0.2);
+  scrollbar-width: auto;
+  scrollbar-color: #003366 #eef1f5;
+}
+.dropdown-list::-webkit-scrollbar { width: 12px; }
+.dropdown-list::-webkit-scrollbar-track { background: #eef1f5; border-radius: 6px; }
+.dropdown-list::-webkit-scrollbar-thumb {
+  background: #003366;
+  border-radius: 6px;
+  border: 3px solid #eef1f5;
+}
+.dropdown-option {
+  display: block;
+  width: 100%;
+  font-family: var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.9rem;
+  text-align: left;
+  padding: 10px 12px;
+  border-radius: 4px;
+  border: none;
+  background: none;
+  color: var(--ink);
+  cursor: pointer;
+}
+.dropdown-option:hover { background: #eef1f5; }
+.dropdown-option.is-selected { background: #003366; color: #ffffff; }
+
+/* the navy-section variant only needs the closed trigger to invert — the
+   open list stays white/navy/lime regardless of section, for a
+   consistent, always-legible popover */
+.contact-form-section--alt .dropdown-trigger {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #ffffff;
+}
+.contact-form-section--alt .dropdown-placeholder { color: rgba(255, 255, 255, 0.6); }
+.contact-form-section--alt .dropdown.is-open .dropdown-trigger { border-color: #deff08; }
+.contact-form-section--alt .dropdown-chevron { color: rgba(255, 255, 255, 0.7); }
+
+/* country-code (with flag) dropdown paired with the phone number field */
+.phone-input {
+  display: flex;
+  gap: 8px;
+}
+.phone-input-code { flex: 0 0 150px; }
+.phone-input-number {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.95rem;
+  padding: 12px 16px;
+  border-radius: 6px;
+  border: 1px solid rgba(13, 21, 38, 0.25);
+  background: #ffffff;
+  color: var(--ink);
+}
+.phone-input-number:focus { outline: none; border-color: #003366; }
+.contact-form-section--alt .phone-input-number {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #ffffff;
+}
+.contact-form-section--alt .phone-input-number:focus { border-color: #deff08; }
+
+.contact-submit {
+  grid-column: 1 / -1;
+  justify-self: center;
+  margin-top: 20px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+}
+
+@media (max-width: 900px) {
+  .contact-hero { padding: 200px 24px 70px; }
+  .contact-hero-tab { right: 0; padding: 14px 28px; }
+  .contact-form-section { padding: 70px 24px; }
+  .contact-form { grid-template-columns: 1fr; }
+}
+
+/* ---------- we care how we evaluate your ingredients ---------- */
+.partnership-eval {
+  position: relative;
+  z-index: 2;
+  background: #ffffff;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 100px 60px 140px;
+}
+.partnership-eval-heading {
+  max-width: 640px;
+  margin: 0 0 60px auto;
+  text-align: right;
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: clamp(1.8rem, 3.2vw, 2.6rem);
+  line-height: 1.3;
+  color: var(--ink);
+}
+.partnership-eval-intro {
+  max-width: 520px;
+  margin: 0 0 20px;
+  font-family: var(--font-prata), serif;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--ink-soft);
+}
+
+.partnership-eval-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  margin: 90px 0;
+}
+/* real 3D card flip (front = photo, back = info panel) instead of an
+   overlay fading in on top of the photo — the classic flip-card
+   technique: an outer perspective container, an inner element that
+   actually rotates 180deg, and two faces both hidden from the back via
+   backface-visibility so only one is ever visible at a time. */
+.partnership-eval-card {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  border: none;
+  padding: 0;
+  background: none;
+  border-radius: 4px;
+  cursor: pointer;
+  perspective: 1200px;
+}
+.partnership-eval-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.7s cubic-bezier(0.4, 0.2, 0.2, 1);
+  transform-style: preserve-3d;
+}
+.partnership-eval-card:hover .partnership-eval-card-inner,
+.partnership-eval-card.is-active .partnership-eval-card-inner {
+  transform: rotateY(180deg);
+}
+.partnership-eval-card-front,
+.partnership-eval-card-back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.partnership-eval-photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.partnership-eval-card-back {
+  transform: rotateY(180deg);
+  border: 1px solid rgba(13, 21, 38, 0.15);
+}
+/* translucent white wash over the same photo, instead of a plain white
+   back — the picture stays visible behind the info text */
+.partnership-eval-card-back-wash {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+  padding: 32px;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.88);
+}
+.partnership-eval-card-back h4 {
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: 1.15rem;
+  line-height: 1.3;
+  color: var(--ink);
+  margin: 0 0 12px;
+}
+.partnership-eval-card-back p {
+  font-family: var(--font-prata), serif;
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+.partnership-eval-closing {
+  max-width: 640px;
+  margin: 0 0 0 auto;
+  text-align: right;
+  font-family: var(--font-prata), serif;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--ink);
+}
+
+@media (max-width: 900px) {
+  .partnership-eval { padding: 70px 24px 90px; }
+  .partnership-eval-heading { text-align: left; margin: 0 0 40px; }
+  .partnership-eval-intro { max-width: none; }
+  .partnership-eval-grid { grid-template-columns: 1fr 1fr; gap: 16px; margin: 50px 0; }
+  .partnership-eval-card-back-wash { padding: 18px; }
+  .partnership-eval-card-back h4 { font-size: 0.9rem; }
+  .partnership-eval-card-back p { font-size: 0.72rem; }
+  .partnership-eval-closing { text-align: left; margin: 0; }
+}
+
+/* ---------- for brands ----------
+   navy panel throughout — the 5-item list below is laid out exactly like
+   .tech-encap (Key encapsulation technologies on /technology): exclusive
+   click-to-expand accordion on the left, floating tilt-toward-cursor
+   photo gallery on the right — reused here with partnership-brands-*
+   class names, with the colour tokens flipped for a dark background
+   (white/rgba-white text and dividers, lime hover/tag accents) instead
+   of tech-encap's dark-on-white. */
+.partnership-brands {
+  position: relative;
+  z-index: 2;
+  background: #003366;
+  padding: 110px 60px 120px;
+}
+.partnership-brands-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 60px;
+  max-width: 1300px;
+  margin: 0 auto 80px;
+}
+.partnership-brands-heading-col { flex: 0 0 38%; }
+.partnership-brands-heading {
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: clamp(2rem, 3.6vw, 2.8rem);
+  color: #ffffff;
+  margin: 0 0 18px;
+}
+.partnership-brands-subheading {
+  max-width: 360px;
+  font-family: var(--font-prata), serif;
+  font-size: 1.05rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.75);
+  margin: 0;
+}
+.partnership-brands-intro-col { flex: 1; padding-top: 8px; }
+.partnership-brands-intro-body {
+  max-width: 640px;
+  margin: 0 0 22px;
+  font-family: var(--font-prata), serif;
+  font-size: 0.95rem;
+  line-height: 1.75;
+  color: rgba(255, 255, 255, 0.8);
+}
+.partnership-brands-intro-body:last-child { margin-bottom: 0; }
+
+.partnership-brands-body {
+  max-width: 1300px;
+  margin: 0 auto;
+  display: flex;
+  align-items: flex-start;
+  gap: 40px;
+}
+.partnership-brands-list {
+  flex: 0 0 50%;
+  min-height: 690px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 40px;
+}
+.partnership-brands-item { position: relative; }
+.partnership-brands-item::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 50%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.18);
+}
+.partnership-brands-item-head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 18px 0;
+  text-align: left;
+  cursor: pointer;
+}
+.partnership-brands-item-title {
+  font-family: var(--font-prata), serif;
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.6);
+  transition: color 0.2s ease;
+}
+.partnership-brands-item-head:hover .partnership-brands-item-title { color: #deff08; }
+.partnership-brands-item.is-open .partnership-brands-item-title { color: #ffffff; }
+
+.partnership-brands-item-desc-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.4s ease;
+}
+.partnership-brands-item.is-open .partnership-brands-item-desc-wrap { grid-template-rows: 1fr; }
+.partnership-brands-item-desc-inner { overflow: hidden; }
+.partnership-brands-item-tagline {
+  max-width: 720px;
+  margin: 0 0 12px;
+  padding-left: calc(0.75rem + 14px);
+  font-family: var(--font-prata), serif;
+  font-size: 0.95rem;
+  font-style: italic;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
+}
+.partnership-brands-item-body {
+  max-width: 720px;
+  margin: 0 0 16px;
+  padding-left: calc(0.75rem + 14px);
+  font-family: var(--font-prata), serif;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.75);
+}
+.partnership-brands-item-support-label {
+  max-width: 720px;
+  margin: 0 0 8px;
+  padding-left: calc(0.75rem + 14px);
+  font-family: var(--font-prata), serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+.partnership-brands-item-support {
+  max-width: 720px;
+  margin: 0 0 22px;
+  padding-left: calc(0.75rem + 14px + 18px);
+  list-style: disc;
+  font-family: var(--font-prata), serif;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.75);
+}
+.partnership-brands-item-support li { margin-bottom: 4px; }
+.partnership-brands-item-outcome {
+  max-width: 720px;
+  margin: 0 0 16px;
+  padding-left: calc(0.75rem + 14px);
+  font-family: var(--font-prata), serif;
+  font-size: 0.88rem;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.85);
+}
+.partnership-brands-item-outcome strong { color: #ffffff; font-weight: 700; }
+
+.partnership-brands-gallery {
+  position: sticky;
+  top: 120px;
+  flex: 1;
+  align-self: flex-start;
+  height: 690px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1000px;
+}
+.partnership-brands-gallery-photo {
+  position: absolute;
+  width: 360px;
+  height: 510px;
+  object-fit: cover;
+  border-radius: 4px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease, transform 0.5s ease, filter 0.5s ease;
+}
+.partnership-brands-gallery-photo--active {
+  opacity: 1;
+  filter: none;
+  transform: translateX(0) rotate(0deg) scale(1);
+  z-index: 3;
+  transition: opacity 0.5s ease, filter 0.5s ease;
+}
+.partnership-brands-gallery-photo--prev {
+  opacity: 0.45;
+  filter: blur(4px);
+  transform: translateX(-195px) rotate(-6deg) scale(0.85);
+  z-index: 1;
+}
+.partnership-brands-gallery-photo--next {
+  opacity: 0.45;
+  filter: blur(4px);
+  transform: translateX(195px) rotate(6deg) scale(0.85);
+  z-index: 1;
+}
+.partnership-brands-gallery-photo--hidden {
+  opacity: 0;
+  transform: scale(0.85);
+  z-index: 0;
+}
+.partnership-brands-gallery-tag {
+  position: absolute;
+  top: 24px;
+  right: calc(50% - 225px);
+  z-index: 4;
+  background: #deff08;
+  color: #141a05;
+  font-family: var(--font-prata), serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 8px 18px;
+  border-radius: 100px;
+  pointer-events: none;
+}
+
+.partnership-brands-strategist {
+  max-width: 900px;
+  margin: 90px auto 0;
+  text-align: center;
+}
+.partnership-brands-strategist-heading {
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: clamp(1.5rem, 2.8vw, 2.1rem);
+  line-height: 1.4;
+  color: #ffffff;
+  margin: 0 0 30px;
+}
+.partnership-brands-strategist-body {
+  font-family: var(--font-prata), serif;
+  font-size: 0.95rem;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.75);
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .partnership-brands { padding: 70px 24px 90px; }
+  .partnership-brands-top { flex-direction: column; gap: 24px; margin-bottom: 50px; }
+  .partnership-brands-heading-col { flex: none; }
+  .partnership-brands-intro-col { padding-top: 0; }
+  .partnership-brands-body { flex-direction: column; }
+  .partnership-brands-list { flex: none; min-height: auto; justify-content: flex-start; padding: 0; width: 100%; }
+  .partnership-brands-gallery { position: static; width: 100%; height: 320px; margin-top: 20px; }
+  .partnership-brands-gallery-photo { width: 170px; height: 240px; }
+  .partnership-brands-gallery-photo--prev { transform: translateX(-80px) rotate(-6deg) scale(0.85); }
+  .partnership-brands-gallery-photo--next { transform: translateX(80px) rotate(6deg) scale(0.85); }
+  .partnership-brands-strategist { margin-top: 60px; }
+}
+
+/* ---------- get in touch & book an appointment ----------
+   generic mid-page contact CTA banner sitting between the two
+   audience-specific ("For Brands" / "For Growers & Suppliers") sections. */
+/* full-screen illustration banner — .partnership-touch (the content panel
+   right after it) wraps up over its bottom edge via a scroll-tracked
+   margin, same as .partnership-hero / .partnership-intro */
+.partnership-touch-hero {
+  position: relative;
+  height: 100vh;
+  background-image: url("/images/partnership-get-in-touch.jpeg");
+  background-size: cover;
+  background-position: center;
+  z-index: 1;
+}
+.partnership-touch-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 51, 102, 0.05) 0%, rgba(0, 51, 102, 0.05) 55%, rgba(0, 51, 102, 0.4) 100%);
+}
+
+.partnership-touch {
+  position: relative;
+  z-index: 2;
+  background: #ffffff;
+  padding: 100px 60px 120px;
+  text-align: center;
+}
+.partnership-touch-heading {
+  position: relative;
+  display: inline-block;
+  margin: 0 0 26px;
+  padding-bottom: 18px;
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: clamp(1.6rem, 2.8vw, 2.2rem);
+  color: var(--ink);
+}
+.partnership-touch-heading::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 1px;
+  background: rgba(13, 21, 38, 0.3);
+}
+.partnership-touch-body {
+  max-width: 620px;
+  margin: 0 auto 80px;
+  font-family: var(--font-prata), serif;
+  font-size: 0.95rem;
+  line-height: 1.75;
+  color: var(--ink-soft);
+}
+.partnership-touch-links {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.partnership-touch-link {
+  flex: 1;
+  padding: 0 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+  border-left: 1px solid rgba(13, 21, 38, 0.15);
+}
+.partnership-touch-link:first-child { border-left: none; }
+.partnership-touch-link p {
+  /* reserves the same 2-line block regardless of how many lines this
+     column's text actually wraps to, so the buttons below always land
+     on the same baseline instead of drifting up on shorter columns */
+  min-height: 3em;
+  margin: 0;
+  font-family: var(--font-prata), serif;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--ink);
+}
+.partnership-touch-link .btn { text-decoration: none; white-space: nowrap; }
+
+@media (max-width: 900px) {
+  .partnership-touch { padding: 70px 24px 90px; }
+  .partnership-touch-links { flex-direction: column; gap: 40px; }
+  .partnership-touch-link { border-left: none; padding: 0; }
+}
+
+/* ---------- for growers & suppliers ----------
+   same click-to-select chamber pattern as .sci-factors-chamber — but here
+   only the detail panel is a navy card; the chamber itself and the list
+   sit on plain white, with dark ink text instead of white-on-navy. Hover
+   previews the active item; a click pins it (.is-pinned) so further
+   hovering elsewhere is ignored until the pin is moved or cleared. */
+.partnership-growers {
+  position: relative;
+  z-index: 2;
+  background: #ffffff;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 90px 60px 120px;
+}
+.partnership-growers-heading {
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: clamp(1.8rem, 3.2vw, 2.4rem);
+  color: var(--ink);
+  margin: 0 0 50px;
+}
+.partnership-growers-chamber {
+  display: flex;
+  align-items: stretch;
+  gap: 50px;
+  min-height: 480px;
+}
+/* fixed height (not just stretched-to-match) so the card stays the same
+   uniform size for every point instead of growing/shrinking the whole
+   chamber to fit whichever point's text happens to be longest — sized to
+   comfortably fit the longest of the six, with a scroll fallback just in
+   case any of them still runs over */
+.partnership-growers-detail {
+  flex: 0 0 40%;
+  height: 480px;
+  background: #003366;
+  border-radius: 4px;
+  padding: 48px 44px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow-y: auto;
+}
+.partnership-growers-detail h3 {
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: 1.4rem;
+  line-height: 1.35;
+  color: #ffffff;
+  margin: 0 0 20px;
+}
+.partnership-growers-detail p {
+  font-family: var(--font-prata), serif;
+  font-size: 0.92rem;
+  line-height: 1.75;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+}
+.partnership-growers-list {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px 44px;
+  align-content: center;
+  box-sizing: border-box;
+}
+.partnership-growers-list-item {
+  background: none;
+  border: none;
+  border-bottom: 1px solid rgba(13, 21, 38, 0.2);
+  padding: 0 0 14px;
+  text-align: left;
+  cursor: pointer;
+  font-family: var(--font-prata), serif;
+  font-size: 1rem;
+  line-height: 1.4;
+  color: var(--ink-soft);
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+.partnership-growers-list-item:hover { color: var(--ink); border-color: rgba(13, 21, 38, 0.4); }
+.partnership-growers-list-item.is-active { color: #003366; border-color: #003366; }
+
+@media (max-width: 900px) {
+  .partnership-growers { padding: 70px 24px 90px; }
+  .partnership-growers-chamber { flex-direction: column; gap: 30px; }
+  .partnership-growers-detail { flex: none; width: 100%; height: 360px; }
+  .partnership-growers-list { grid-template-columns: 1fr; gap: 26px; }
+}
+
+/* ---------- from farm to functional ingredient (closing) ---------- */
+.partnership-farm {
+  position: relative;
+  z-index: 2;
+  background: #ffffff;
+  padding: 110px 60px 140px;
+  text-align: center;
+}
+.partnership-farm-heading {
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: clamp(1.8rem, 3.2vw, 2.4rem);
+  color: var(--ink);
+  margin: 0 0 22px;
+}
+.partnership-farm-path {
+  max-width: 760px;
+  margin: 0 auto 30px;
+  padding-bottom: 26px;
+  border-bottom: 1px solid rgba(13, 21, 38, 0.15);
+  font-family: var(--font-prata), serif;
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+}
+.partnership-farm-body {
+  max-width: 640px;
+  margin: 0 auto 60px;
+  font-family: var(--font-prata), serif;
+  font-size: 0.95rem;
+  line-height: 1.75;
+  color: var(--ink-soft);
+}
+.partnership-farm-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+}
+.partnership-farm-cta .btn { text-decoration: none; text-align: center; }
+
+@media (max-width: 900px) {
+  .partnership-farm { padding: 70px 24px 90px; }
+  .partnership-farm-cta { flex-direction: column; gap: 18px; }
+}
+
+/* ---------- who/achieve/value wrap chain ----------
+   .partnership-achieve wraps up over .partnership-who, and
+   .partnership-value wraps up over .partnership-achieve in turn — each
+   needs a z-index higher than the one it overlaps, plus extra top padding
+   so its own heading has room to breathe once pulled up. */
+.partnership-achieve {
+  z-index: 3;
+  padding-top: 40px;
+}
+.partnership-value {
+  z-index: 4;
+  padding-top: 40px;
+}
+
+@media (max-width: 900px) {
+  .partnership-achieve { padding-top: 30px; }
+  .partnership-value { padding-top: 30px; }
+}
+
+/* ================= products page ================= */
+
+/* full-screen photo banner — .products-hero (the next section) wraps up
+   over its bottom edge via a scroll-tracked margin, same as
+   .contact-hero-photo / .contact-hero */
+.products-hero-photo {
+  position: relative;
+  height: 100vh;
+  background-image: url("/images/products-hero.jpeg");
+  background-size: cover;
+  background-position: center;
+  z-index: 1;
+}
+.products-hero-photo-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 51, 102, 0.25) 0%, rgba(0, 51, 102, 0.1) 45%, rgba(0, 51, 102, 0.55) 100%);
+}
+
+/* ---------- hero intro panel ---------- */
+.products-hero {
+  position: relative;
+  z-index: 2;
+  background: #003366;
+  padding: 260px 40px 90px 16px;
+}
+/* folder-notch tab, same motif as .contact-hero-tab — anchored to this
+   panel and poking up above its own top edge, so it rides up together
+   with the panel's wrap animation */
+.products-hero-tab {
+  position: absolute;
+  right: 0;
+  top: -84px;
+  margin: 0;
+  background: #003366;
+  color: #ffffff;
+  padding: 20px 50px;
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: clamp(1.8rem, 3.4vw, 2.6rem);
+  z-index: 2;
+}
+.products-hero-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 30px;
+  font-family: var(--font-prata), serif;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+.products-hero-breadcrumb a { color: rgba(255, 255, 255, 0.75); text-decoration: none; }
+.products-hero-breadcrumb a:hover { color: #ffffff; }
+.products-hero-breadcrumb span:last-child { color: #ffffff; }
+.products-hero-heading {
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: clamp(2rem, 3.8vw, 2.9rem);
+  color: #ffffff;
+  margin: 0 0 22px;
+}
+.products-hero-body {
+  max-width: 720px;
+  font-family: var(--font-prata), serif;
+  font-size: 0.98rem;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+}
+
+/* ---------- browser: sidebar filter + toolbar + grid ---------- */
+.products-browser {
+  position: relative;
+  z-index: 2;
+  background: #ffffff;
+  margin: 0;
+  padding: 70px 64px 120px 48px;
+  display: flex;
+  align-items: flex-start;
+  gap: 56px;
+}
+.products-filters {
+  flex: 0 0 220px;
+  position: sticky;
+  top: 120px;
+  max-height: calc(100vh - 150px);
+  overflow-y: auto;
+  padding-right: 44px;
+}
+.products-filter-group { margin-bottom: 40px; }
+.products-filter-group:last-of-type { margin-bottom: 24px; }
+.products-filter-label {
+  font-family: var(--font-prata), serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-faint);
+  margin: 0 0 16px;
+}
+.products-filter-list { list-style: none; margin: 0; padding: 0; }
+.products-filter-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 10px 0;
+  text-align: left;
+  cursor: pointer;
+  font-family: var(--font-prata), serif;
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+  transition: color 0.2s ease;
+}
+.products-filter-item:hover { color: var(--ink); }
+.products-filter-item.is-active { color: #003366; font-weight: 700; }
+
+/* Bioactives-only "Product Type" sub-filter, nested under it while
+   Bioactives is the active category */
+.products-filter-sublist {
+  list-style: none;
+  margin: 0 0 6px;
+  padding: 0 0 0 16px;
+  border-left: 1px solid rgba(13, 21, 38, 0.15);
+}
+.products-filter-subitem {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 6px 0;
+  text-align: left;
+  cursor: pointer;
+  font-family: var(--font-prata), serif;
+  font-size: 0.85rem;
+  color: var(--ink-faint);
+  transition: color 0.2s ease;
+}
+.products-filter-subitem:hover { color: var(--ink-soft); }
+.products-filter-subitem.is-active { color: #003366; font-weight: 700; }
+
+/* health-benefit facet — multi-select checkboxes, since a product can
+   carry several indications at once (unlike category, which is exclusive) */
+.products-filter-list--checkbox { display: flex; flex-direction: column; gap: 2px; }
+.products-filter-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 0;
+  cursor: pointer;
+  font-family: var(--font-prata), serif;
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+}
+.products-filter-checkbox input {
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  accent-color: #003366;
+  cursor: pointer;
+  flex: none;
+}
+.products-filter-checkbox span:first-of-type { flex: 1; }
+.products-filter-checkbox.is-active { color: var(--ink); font-weight: 700; }
+
+.products-filter-clear {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: var(--font-prata), serif;
+  font-size: 0.85rem;
+  color: #003366;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.products-active-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+.products-active-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #003366;
+  color: #ffffff;
+  border: none;
+  border-radius: 100px;
+  padding: 6px 14px;
+  font-family: var(--font-prata), serif;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+.products-active-pill span { font-size: 1rem; line-height: 1; }
+
+.products-results { flex: 1; min-width: 0; }
+.products-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 50px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(13, 21, 38, 0.12);
+}
+.products-search {
+  flex: 1;
+  max-width: 360px;
+  padding: 12px 16px;
+  border: 1px solid rgba(13, 21, 38, 0.2);
+  border-radius: 100px;
+  font-family: var(--font-prata), serif;
+  font-size: 0.9rem;
+  color: var(--ink);
+  background: #ffffff;
+}
+.products-search:focus { outline: none; border-color: #003366; }
+.products-sort { flex: 0 0 auto; }
+.products-sort .dropdown-trigger {
+  width: auto;
+  padding: 12px 20px;
+  border-radius: 100px;
+  border-color: rgba(13, 21, 38, 0.2);
+  font-family: var(--font-prata), serif;
+  font-size: 0.85rem;
+}
+.products-sort .dropdown-chevron { font-size: 0.8em; }
+.products-sort-list .dropdown-option { font-family: var(--font-prata), serif; }
+.products-empty {
+  padding: 60px 0;
+  text-align: center;
+  font-family: var(--font-prata), serif;
+  color: var(--ink-soft);
+}
+
+.products-section { margin-bottom: 70px; }
+.products-section:last-child { margin-bottom: 0; }
+.products-section-heading {
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: 1.4rem;
+  color: var(--ink);
+  margin: 0 0 30px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(13, 21, 38, 0.15);
+}
+
+/* remounted (via a `key` on the filter/sort signature) every time the
+   category, indication, search, or sort changes — the fresh mount is
+   what replays this fade/rise-in instead of the new cards just
+   snapping into place */
+@keyframes productsGridIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.products-grid-wrap { animation: productsGridIn 0.45s ease; }
+@media (prefers-reduced-motion: reduce) {
+  .products-grid-wrap { animation: none; }
+}
+
+/* ---------- product cards (shared: grid + related) ---------- */
+.products-grid,
+.product-detail-related-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px;
+}
+.product-card {
+  display: block;
+  text-decoration: none;
+}
+.product-card-image-wrap {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #eceef2;
+  margin-bottom: 14px;
+}
+.product-card-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+.product-card:hover .product-card-image { transform: scale(1.05); }
+.product-card-placeholder {
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    135deg,
+    #e6e8ec,
+    #e6e8ec 12px,
+    #dee1e6 12px,
+    #dee1e6 24px
+  );
+}
+.product-card-category {
+  margin: 0 0 4px;
+  font-family: var(--font-prata), serif;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+}
+.product-card-name {
+  margin: 0;
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: 1.02rem;
+  line-height: 1.35;
+  color: var(--ink);
+  transition: color 0.2s ease;
+}
+.product-card:hover .product-card-name { color: #003366; }
+
+@media (max-width: 900px) {
+  .products-hero { padding: 200px 24px 70px; }
+  .products-hero-tab { right: 0; padding: 14px 28px; }
+  .products-browser { flex-direction: column; padding: 50px 24px 90px; gap: 40px; }
+  .products-filters { position: static; width: 100%; }
+  .products-filter-list { display: flex; flex-wrap: wrap; gap: 0 20px; }
+  .products-filter-item { width: auto; padding: 6px 0; }
+  .products-filter-list--checkbox { flex-direction: row; flex-wrap: wrap; gap: 0 20px; }
+  .products-toolbar { flex-direction: column; align-items: stretch; }
+  .products-search { max-width: none; }
+  .products-grid, .product-detail-related-grid { grid-template-columns: repeat(2, 1fr); gap: 20px 16px; }
+}
+
+/* ---------- product detail page ---------- */
+.product-detail {
+  position: relative;
+  z-index: 2;
+  background: #ffffff;
+  max-width: 1500px;
+  margin: 0;
+  padding: 160px 40px 60px 32px;
+}
+.product-detail-breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 50px;
+  font-family: var(--font-prata), serif;
+  font-size: 0.85rem;
+  color: var(--ink-faint);
+}
+.product-detail-breadcrumb a { color: var(--ink-soft); text-decoration: none; }
+.product-detail-breadcrumb a:hover { color: #003366; }
+.product-detail-breadcrumb span:last-child { color: var(--ink); }
+
+/* ---------- indication page (one per health benefit) ---------- */
+.indication-hero {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 20px;
+}
+.indication-hero-icon { width: 88px; height: 88px; flex: none; object-fit: contain; }
+.indication-description {
+  max-width: 780px;
+  margin: 0 0 20px;
+  font-family: var(--font-prata), serif;
+  font-size: 1rem;
+  line-height: 1.85;
+  color: var(--ink-soft);
+  text-align: justify;
+  hyphens: auto;
+}
+
+.product-detail-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 60px;
+}
+.product-detail-image-wrap {
+  flex: 0 0 40%;
+  aspect-ratio: 3 / 4;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #eceef2;
+}
+.product-detail-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.product-detail-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: repeating-linear-gradient(
+    135deg,
+    #e6e8ec,
+    #e6e8ec 12px,
+    #dee1e6 12px,
+    #dee1e6 24px
+  );
+}
+.product-detail-placeholder span {
+  font-family: var(--font-prata), serif;
+  font-size: 0.85rem;
+  color: var(--ink-faint);
+}
+.product-detail-info { flex: 1; }
+.product-detail-category {
+  margin: 0 0 14px;
+  font-family: var(--font-prata), serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #003366;
+}
+.product-detail-name {
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  line-height: 1.25;
+  color: var(--ink);
+  margin: 0 0 24px;
+}
+.product-detail-description {
+  font-family: var(--font-prata), serif;
+  font-size: 0.98rem;
+  line-height: 1.85;
+  color: var(--ink-soft);
+  margin: 0 0 34px;
+  text-align: justify;
+  hyphens: auto;
+}
+.product-detail-cta { display: inline-block; text-decoration: none; }
+
+.product-detail-sections {
+  display: flex;
+  align-items: flex-start;
+  gap: 60px;
+  margin-top: 70px;
+  padding-top: 50px;
+  border-top: 1px solid rgba(13, 21, 38, 0.12);
+}
+.product-detail-section { flex: 1; }
+.product-detail-section-heading {
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: 1.15rem;
+  color: var(--ink);
+  margin: 0 0 20px;
+}
+.product-detail-tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.product-detail-tag {
+  padding: 7px 16px;
+  border: 1px solid rgba(13, 21, 38, 0.2);
+  border-radius: 100px;
+  font-family: var(--font-prata), serif;
+  font-size: 1.05rem;
+  color: var(--ink-soft);
+}
+/* Key Bioactives/Natural Sources, in the info column below the CTA */
+.product-detail-tag-list--info { margin-top: 40px; }
+.product-detail-tag-list--info .product-detail-section-heading { font-size: 1.4rem; }
+
+/* health benefits: an icon-led row list (per Native Extracts' "Phyto
+   Compounds" attribute rows) rather than pill tags, since each icon
+   deserves room to actually read at a glance instead of shrinking to
+   fit inside a badge. Two columns so a long list reads as a compact
+   block rather than running down as one long single-file column. Each
+   row links to that benefit's own dedicated page (all ingredients that
+   share it), rather than expanding in place. */
+.product-detail-benefit-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: start;
+  gap: 0 24px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.product-detail-benefit-item { border-bottom: 1px solid rgba(13, 21, 38, 0.12); }
+.product-detail-benefit-list .product-detail-benefit-item:last-child,
+.product-detail-benefit-list .product-detail-benefit-item:nth-last-child(2) {
+  border-bottom: none;
+}
+.product-detail-benefit-row {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  width: 100%;
+  padding: 16px 0;
+  text-decoration: none;
+  font-family: var(--font-prata), serif;
+  font-size: 1rem;
+  color: var(--ink);
+  transition: color 0.2s ease;
+}
+.product-detail-benefit-row:hover { color: #003366; }
+.product-detail-benefit-icon { width: 112px; height: 112px; flex: none; object-fit: contain; }
+.product-detail-benefit-arrow {
+  margin-left: auto;
+  flex: none;
+  font-size: 1.1rem;
+  color: var(--ink-faint);
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+.product-detail-benefit-row:hover .product-detail-benefit-arrow {
+  transform: translateX(4px);
+  color: #003366;
+}
+
+.product-detail-related {
+  margin-top: 90px;
+  padding-top: 50px;
+  border-top: 1px solid rgba(13, 21, 38, 0.12);
+}
+.product-detail-related-heading {
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: 1.4rem;
+  color: var(--ink);
+  margin: 0 0 30px;
+}
+
+.product-detail-back {
+  display: inline-block;
+  margin-top: 60px;
+  font-family: var(--font-prata), serif;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+  text-decoration: none;
+}
+.product-detail-back:hover { color: #003366; }
+
+@media (max-width: 900px) {
+  .product-detail { padding: 140px 24px 60px; }
+  .product-detail-top { flex-direction: column; gap: 30px; }
+  .product-detail-image-wrap { flex: none; width: 100%; }
+  .product-detail-sections { flex-direction: column; gap: 40px; }
+  .product-detail-benefit-list { grid-template-columns: 1fr; }
+  .product-detail-benefit-list .product-detail-benefit-item:nth-last-child(2) { border-bottom: 1px solid rgba(13, 21, 38, 0.12); }
+  .product-detail-benefit-icon { width: 64px; height: 64px; }
+  .product-detail-related-grid { grid-template-columns: repeat(2, 1fr); }
 }
