@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import useIsMobile from "@/lib/useIsMobile";
 
 type ComparisonRow = { con: string; pro: string };
 
@@ -43,6 +44,7 @@ const MAX_OVERLAP = 340;
 // no position:sticky anywhere in this component, so this doesn't touch
 // any of the fragile sticky/pin mechanics used elsewhere on the site.
 export default function ComparisonSection() {
+  const isMobile = useIsMobile();
   const sectionRef = useRef<HTMLElement>(null);
   const naturalTopRef = useRef<number | null>(null);
   const [overlap, setOverlap] = useState(0);
@@ -91,10 +93,12 @@ export default function ComparisonSection() {
       </div>
 
       <div className="cmp-row cmp-row-con">
-        <div className="cmp-row-image">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/comparison-conventional.jpeg" alt="Loose capsules spilled on a grey surface" />
-        </div>
+        {!isMobile && (
+          <div className="cmp-row-image">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/comparison-conventional.jpeg" alt="Loose capsules spilled on a grey surface" />
+          </div>
+        )}
         <div className="cmp-row-content">
           <div className="cmp-intro">
             <p className="cmp-tagline reveal">Make Every Molecule Work Smarter.</p>
@@ -127,10 +131,12 @@ export default function ComparisonSection() {
             ))}
           </div>
         </div>
-        <div className="cmp-row-image">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/comparison-encapsulated.jpeg" alt="Glass vial filled with encapsulated beads" />
-        </div>
+        {!isMobile && (
+          <div className="cmp-row-image">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/comparison-encapsulated.jpeg" alt="Glass vial filled with encapsulated beads" />
+          </div>
+        )}
       </div>
     </section>
   );

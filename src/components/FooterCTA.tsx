@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import GradientBlobs from "./GradientBlobs";
+import useIsMobile from "@/lib/useIsMobile";
 
 // overlap is a fraction of the viewport height — wraps the footer up over
 // whatever section precedes it (different on every page this is used on:
@@ -38,6 +39,7 @@ function FacebookIcon() {
 }
 
 export default function FooterCTA() {
+  const isMobile = useIsMobile();
   const sectionRef = useRef<HTMLElement>(null);
   const wordRef = useRef<HTMLHeadingElement>(null);
   const naturalTopRef = useRef<number | null>(null);
@@ -89,7 +91,7 @@ export default function FooterCTA() {
 
   return (
     <footer className="cta-footer" id="contact" ref={sectionRef} style={{ marginTop: `${-overlapPx}px` }}>
-      <GradientBlobs targetRef={sectionRef} />
+      {!isMobile && <GradientBlobs targetRef={sectionRef} />}
 
       <div className="footer-content container">
         <div className="footer-grid">

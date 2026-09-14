@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import ChamberAccordion from "@/components/ChamberAccordion";
+import useIsMobile from "@/lib/useIsMobile";
 
 type Factor = { num: string; title: string; desc: string; influencedBy: string[] };
 
@@ -42,6 +44,7 @@ const MAX_OVERLAP_RATIO = 0.4;
 // mirrored (navy list on the left, white card on the right instead of the
 // other way around) to match this section's reference layout.
 export default function ScienceFactors() {
+  const isMobile = useIsMobile();
   const [active, setActive] = useState(0);
   const current = FACTORS[active];
   const sectionRef = useRef<HTMLElement>(null);
@@ -86,31 +89,42 @@ export default function ScienceFactors() {
         fundamental factors:
       </p>
 
-      <div className="sci-factors-chamber">
-        <div className="sci-factors-list">
-          {FACTORS.map((f, i) => (
-            <button
-              key={f.title}
-              type="button"
-              className={`sci-factors-item${i === active ? " is-active" : ""}`}
-              onClick={() => setActive(i)}
-            >
-              <span className="sci-factors-item-title">{f.title}</span>
-            </button>
-          ))}
+      {isMobile ? (
+        <div className="chamber-mobile-wrap">
+          <ChamberAccordion
+            points={FACTORS.map((f) => ({
+              title: f.title,
+              detail: `${f.desc} Influenced by: ${f.influencedBy.join(" • ")}`,
+            }))}
+          />
         </div>
+      ) : (
+        <div className="sci-factors-chamber">
+          <div className="sci-factors-list">
+            {FACTORS.map((f, i) => (
+              <button
+                key={f.title}
+                type="button"
+                className={`sci-factors-item${i === active ? " is-active" : ""}`}
+                onClick={() => setActive(i)}
+              >
+                <span className="sci-factors-item-title">{f.title}</span>
+              </button>
+            ))}
+          </div>
 
-        <div className="sci-factors-card">
-          <h3>{current.title} :</h3>
-          <div className="sci-factors-card-content">
-            <p className="sci-factors-card-desc">{current.desc}</p>
-            <div>
-              <p className="sci-factors-card-label">Influenced by:</p>
-              <p className="sci-factors-card-tags">{current.influencedBy.join(" • ")}</p>
+          <div className="sci-factors-card">
+            <h3>{current.title} :</h3>
+            <div className="sci-factors-card-content">
+              <p className="sci-factors-card-desc">{current.desc}</p>
+              <div>
+                <p className="sci-factors-card-label">Influenced by:</p>
+                <p className="sci-factors-card-tags">{current.influencedBy.join(" • ")}</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </section>
   );
 }

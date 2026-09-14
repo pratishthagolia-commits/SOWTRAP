@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import useIsMobile from "@/lib/useIsMobile";
 
 const QUOTE =
   "“Most nutrients don’t fail because they are ineffective— they fail because they never reach where they’re needed.”";
@@ -53,6 +54,7 @@ function RevealWords({
 // (rather than the text's own live viewport position) since the panel is
 // pinned in place for most of the scroll once it slides into view.
 export default function ResearchGapV2() {
+  const isMobile = useIsMobile();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0);
 
@@ -104,11 +106,22 @@ export default function ResearchGapV2() {
             </h2>
           </div>
           <div className="research-v2-panel">
-            <blockquote className="research-v2-quote" style={{ opacity: textOpacity }}>
-              <RevealWords words={QUOTE_WORDS} startIndex={0} activeCount={activeCount} />
+            {/* phone drops the per-word colour reveal (a style recalc on
+                every word on every scroll frame) and just shows the text;
+                the panel's own slide/overlap motion is untouched */}
+            <blockquote className="research-v2-quote" style={isMobile ? undefined : { opacity: textOpacity }}>
+              {isMobile ? (
+                QUOTE_WORDS.join(" ")
+              ) : (
+                <RevealWords words={QUOTE_WORDS} startIndex={0} activeCount={activeCount} />
+              )}
             </blockquote>
-            <p className="research-v2-para" style={{ opacity: textOpacity }}>
-              <RevealWords words={PARA_WORDS} startIndex={QUOTE_WORDS.length} activeCount={activeCount} />
+            <p className="research-v2-para" style={isMobile ? undefined : { opacity: textOpacity }}>
+              {isMobile ? (
+                PARA_WORDS.join(" ")
+              ) : (
+                <RevealWords words={PARA_WORDS} startIndex={QUOTE_WORDS.length} activeCount={activeCount} />
+              )}
             </p>
           </div>
         </div>

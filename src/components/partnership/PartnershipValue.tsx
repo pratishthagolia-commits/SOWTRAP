@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import useIsMobile from "@/lib/useIsMobile";
 
 // pixels pulled up for every pixel the section naturally enters from the
 // trigger line — gentler than Achieve's own rate since even a small
@@ -53,6 +54,7 @@ const RIGHT_POINTS: Point[] = [
 // side of a centered photo (3 left / 2 right, since this list has 5
 // stages instead of 6).
 export default function PartnershipValue() {
+  const isMobile = useIsMobile();
   const sectionRef = useRef<HTMLElement>(null);
   const currentOverlapRef = useRef(0);
   const [overlapPx, setOverlapPx] = useState(0);
@@ -105,14 +107,16 @@ export default function PartnershipValue() {
           ))}
         </div>
 
-        <div className="partnership-who-image-wrap">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/images/partnership-value.jpeg"
-            alt="SowTrap's concept-to-commercialization development pathway"
-            className="partnership-who-image"
-          />
-        </div>
+        {!isMobile && (
+          <div className="partnership-who-image-wrap">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/partnership-value.jpeg"
+              alt="SowTrap's concept-to-commercialization development pathway"
+              className="partnership-who-image"
+            />
+          </div>
+        )}
 
         <div className="partnership-who-points partnership-who-points--right reveal-right">
           {RIGHT_POINTS.map((p) => (

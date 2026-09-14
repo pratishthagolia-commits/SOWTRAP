@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import ChamberAccordion from "./ChamberAccordion";
+import useIsMobile from "@/lib/useIsMobile";
 
 type FailPoint = { title: string; detail: string };
 
@@ -57,6 +59,7 @@ const FAIL_POINTS: FailPoint[] = [
 // back to invisible. Keeping "revealed" as React state and folding it
 // into the same className string React already computes avoids that.
 export default function SupplementsFail() {
+  const isMobile = useIsMobile();
   const [pinned, setPinned] = useState(0);
   const [hovered, setHovered] = useState<number | null>(null);
   const [revealed, setRevealed] = useState(false);
@@ -92,28 +95,34 @@ export default function SupplementsFail() {
         supplements fail
       </p>
 
-      <div className="fail-v2-body">
-        <div className={`fail-v2-card reveal${revealClass}`} style={{ transitionDelay: "0.15s" }}>
-          <h3>{current.title}</h3>
-          {current.detail && <p>{current.detail}</p>}
+      {isMobile ? (
+        <div className="chamber-mobile-wrap">
+          <ChamberAccordion points={FAIL_POINTS} />
         </div>
+      ) : (
+        <div className="fail-v2-body">
+          <div className={`fail-v2-card reveal${revealClass}`} style={{ transitionDelay: "0.15s" }}>
+            <h3>{current.title}</h3>
+            {current.detail && <p>{current.detail}</p>}
+          </div>
 
-        <div className="fail-v2-grid">
-          {FAIL_POINTS.map((point, i) => (
-            <button
-              key={point.title}
-              type="button"
-              className={`fail-v2-item${i === active ? " is-active" : ""} reveal${revealClass}`}
-              style={{ transitionDelay: `${0.15 + (i + 1) * 0.1}s` }}
-              onClick={() => setPinned(i)}
-              onMouseEnter={() => setHovered(i)}
-              onMouseLeave={() => setHovered(null)}
-            >
-              {point.title}
-            </button>
-          ))}
+          <div className="fail-v2-grid">
+            {FAIL_POINTS.map((point, i) => (
+              <button
+                key={point.title}
+                type="button"
+                className={`fail-v2-item${i === active ? " is-active" : ""} reveal${revealClass}`}
+                style={{ transitionDelay: `${0.15 + (i + 1) * 0.1}s` }}
+                onClick={() => setPinned(i)}
+                onMouseEnter={() => setHovered(i)}
+                onMouseLeave={() => setHovered(null)}
+              >
+                {point.title}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </section>
   );
 }

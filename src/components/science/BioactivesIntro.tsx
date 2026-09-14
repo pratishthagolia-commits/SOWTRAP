@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import useIsMobile from "@/lib/useIsMobile";
 
 type BioactiveClass = { num: string; title: string; desc: string; image: string };
 
@@ -84,6 +85,7 @@ const MAX_OVERLAP_RATIO = 0.55;
 // so it animates to the exact content height (the "curtain/blind" reveal)
 // regardless of how long any given description is.
 export default function BioactivesIntro() {
+  const isMobile = useIsMobile();
   const [open, setOpen] = useState<number | null>(null);
   // which class's photo is fronted in the gallery — set (not toggled) on
   // every click, so the picture stays put even after its curtain closes,
@@ -115,6 +117,9 @@ export default function BioactivesIntro() {
   // stagger/rocking right around the center where the sign of x/y flips
   // on the smallest hand tremor.
   useEffect(() => {
+    // no cursor to follow on a phone, and the photo stack this drives
+    // isn't rendered there — skip the permanent rAF loop entirely
+    if (isMobile) return;
     function handlePointerMove(e: globalThis.MouseEvent) {
       const el = galleryRef.current;
       if (!el) return;
@@ -145,7 +150,7 @@ export default function BioactivesIntro() {
       window.removeEventListener("mousemove", handlePointerMove);
       cancelAnimationFrame(frameId);
     };
-  }, []);
+  }, [isMobile]);
 
   // scroll-tracked wrap: capture this section's natural (unshifted) top
   // once on the first frame (before any margin is ever applied, to avoid
@@ -230,7 +235,10 @@ export default function BioactivesIntro() {
           {/* floating photo stack — the active class's photo comes to the
               front sharp and tagged with its name, its neighbours peek out
               blurred behind it, same motif as kommakomma.is's project
-              gallery (referenced by the user). */}
+              gallery (referenced by the user). Phone drops it entirely:
+              the list beside it already carries the same content as
+              tap-to-expand rows. */}
+          {!isMobile && (
           <div className="bioactives-gallery" ref={galleryRef}>
             {CLASSES.map((item, i) => {
               const prevIndex = (activeImage - 1 + CLASSES.length) % CLASSES.length;
@@ -257,6 +265,7 @@ export default function BioactivesIntro() {
             })}
             <span className="bioactives-gallery-tag">{CLASSES[activeImage].title}</span>
           </div>
+          )}
         </div>
       </div>
     </section>

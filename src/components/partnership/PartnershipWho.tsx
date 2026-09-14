@@ -49,11 +49,15 @@ export default function PartnershipWho() {
         </div>
 
         <div className="partnership-who-image-wrap">
+          {/* lazy so that when the phone breakpoint hides its wrapper, the
+              browser never fetches it either — this is a server component,
+              so it can't branch on useIsMobile without shipping JS for it */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/images/partnership-who.jpeg"
             alt="Raw botanical ingredients alongside a lab-processed bioactive extract"
             className="partnership-who-image"
+            loading="lazy"
           />
         </div>
 

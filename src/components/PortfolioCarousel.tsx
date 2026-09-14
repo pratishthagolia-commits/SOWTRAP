@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import useIsMobile from "@/lib/useIsMobile";
 
 type PortfolioItem = { title: string; body: string };
 
@@ -40,12 +41,16 @@ const ITEMS: PortfolioItem[] = [
 // Wrapper height = 100vh + travel distance, sticky child pins at top:0, and
 // rect.top going from 0 to -maxTranslate maps 1:1 to track x.
 export default function PortfolioCarousel() {
+  const isMobile = useIsMobile();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const [maxTranslate, setMaxTranslate] = useState(0);
   const [x, setX] = useState(0);
 
   useEffect(() => {
+    // phone swaps the scroll-jack for a plain native-scroll strip, so none
+    // of this measuring or the permanent rAF loop below is needed there
+    if (isMobile) return;
     function measure() {
       const track = trackRef.current;
       if (!track) return;
@@ -74,7 +79,50 @@ export default function PortfolioCarousel() {
       window.removeEventListener("resize", measure);
       cancelAnimationFrame(frameId);
     };
-  }, [maxTranslate]);
+  }, [maxTranslate, isMobile]);
+
+  function scrollByCard(direction: 1 | -1) {
+    const track = trackRef.current;
+    if (!track) return;
+    const card = track.firstElementChild as HTMLElement | null;
+    const step = card ? card.getBoundingClientRect().width + 16 : track.clientWidth * 0.8;
+    track.scrollBy({ left: step * direction, behavior: "smooth" });
+  }
+
+  if (isMobile) {
+    return (
+      <div id="portfolio-carousel" className="pf-wrapper pf-wrapper--mobile">
+        <div className="portfolio-mobile-arrows">
+          <button
+            type="button"
+            className="portfolio-mobile-arrow"
+            aria-label="Previous ingredient categories"
+            onClick={() => scrollByCard(-1)}
+          >
+            &#8249;
+          </button>
+          <button
+            type="button"
+            className="portfolio-mobile-arrow"
+            aria-label="Next ingredient categories"
+            onClick={() => scrollByCard(1)}
+          >
+            &#8250;
+          </button>
+        </div>
+        <div className="portfolio-mobile-scroller" ref={trackRef}>
+          {ITEMS.map((item) => (
+            <div className="pf-card" key={item.title}>
+              <div className="pf-card-tab">{item.title}</div>
+              <div className="pf-card-body">
+                <p>{item.body}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div

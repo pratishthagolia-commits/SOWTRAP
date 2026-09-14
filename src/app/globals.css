@@ -5152,3 +5152,139 @@ h2 {
   .product-detail-benefit-icon { width: 64px; height: 64px; }
   .product-detail-related-grid { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* ==========================================================================
+   Phone-only ( <=640px ): a dedicated tier below the existing 900px/860px
+   tablet reflow, which is untouched. Heavy scroll-driven work (canvas
+   loops, scroll-jacking, word-by-word reveal, the "chamber" hover-card
+   pattern) is skipped in JS via useIsMobile() rather than just hidden with
+   CSS, since the goal is less to load, not just less to look at. The one
+   exception is the wrap/overlap scroll transitions (negative-margin
+   sections easing over one another) and the 3D body scene, which stay
+   exactly as they are at every width.
+   ========================================================================== */
+
+/* chamber sections' phone stand-in: independently-toggleable curtain-drop
+   rows instead of the desktop hover-card + point-grid pattern (hover has
+   no touch equivalent). White cards on a thin divider, matching the
+   client's own Native Extracts reference for its "Application Categories"
+   accordion, so it reads consistently regardless of whatever section
+   background it's dropped into. */
+/* neutral wrapper so the accordion never inherits a section's desktop
+   flex/grid layout rules (e.g. .fail-v2-body's 50/50 split) */
+.chamber-mobile-wrap { padding: 0 20px; }
+.chamber-accordion {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.chamber-accordion-item { border-bottom: 1px solid rgba(13, 21, 38, 0.12); }
+.chamber-accordion-item:last-child { border-bottom: none; }
+.chamber-accordion-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  padding: 18px 20px;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-family: var(--font-prata), serif;
+  font-size: 1rem;
+  color: var(--ink);
+}
+.chamber-accordion-item.is-open .chamber-accordion-trigger { color: #003366; font-weight: 700; }
+.chamber-accordion-icon {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 100px;
+  border: 1px solid rgba(13, 21, 38, 0.25);
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--ink-soft);
+}
+.chamber-accordion-item.is-open .chamber-accordion-icon { border-color: #003366; color: #003366; }
+.chamber-accordion-curtain {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s ease;
+}
+.chamber-accordion-item.is-open .chamber-accordion-curtain { grid-template-rows: 1fr; }
+.chamber-accordion-curtain-inner { overflow: hidden; }
+.chamber-accordion-curtain-inner p {
+  margin: 0;
+  padding: 0 20px 20px;
+  font-family: var(--font-prata), serif;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--ink-soft);
+}
+
+/* portfolio carousel's phone stand-in: a plain native-scroll strip (no
+   pinning/scroll-jacking) with arrow buttons instead of relying on the
+   desktop scroll-jack to move it */
+.portfolio-mobile-scroller {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 4px 4px;
+}
+.portfolio-mobile-scroller::-webkit-scrollbar { display: none; }
+.portfolio-mobile-arrows {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.portfolio-mobile-arrow {
+  width: 40px;
+  height: 40px;
+  border-radius: 100px;
+  border: 1px solid rgba(13, 21, 38, 0.25);
+  background: #ffffff;
+  color: #003366;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.portfolio-mobile-arrow:disabled { opacity: 0.35; cursor: default; }
+
+@media (max-width: 640px) {
+  /* the shared fade/slide-in reveal system (26 files) stays mounted (its
+     observer is harmless either way) but is visually a no-op on phone —
+     content just shows immediately instead of animating in */
+  .reveal,
+  .reveal-left,
+  .reveal-right,
+  .reveal-up {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  /* these two carry no colour of their own — it came from the per-word
+     reveal's inline styles, which phone no longer renders, so state the
+     reveal's finished colour explicitly here */
+  .research-v2-quote,
+  .research-v2-para {
+    color: #000000;
+  }
+
+  /* every other content photo is dropped in JSX via useIsMobile; this one
+     sits in a server component, so it's hidden here instead (its <img> is
+     lazy, so hiding the wrapper also means it's never fetched) */
+  .partnership-who-image-wrap { display: none; }
+}

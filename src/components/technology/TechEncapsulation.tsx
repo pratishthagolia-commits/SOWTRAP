@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import useIsMobile from "@/lib/useIsMobile";
 
 type EncapTech = { num: string; title: string; desc: string; features: string[]; image: string };
 
@@ -69,6 +70,7 @@ const ENCAP_TECHS: EncapTech[] = [
 // (active photo sharp + tagged, neighbours blurred/peeking, tilts toward
 // the cursor) — reused here for the 4 encapsulation technologies.
 export default function TechEncapsulation() {
+  const isMobile = useIsMobile();
   const [open, setOpen] = useState<number | null>(null);
   const [activeImage, setActiveImage] = useState(0);
   const galleryRef = useRef<HTMLDivElement>(null);
@@ -107,6 +109,9 @@ export default function TechEncapsulation() {
   }, []);
 
   useEffect(() => {
+    // no cursor on a phone, and the photo stack this drives isn't
+    // rendered there — skip the permanent rAF loop entirely
+    if (isMobile) return;
     function handlePointerMove(e: globalThis.MouseEvent) {
       const el = galleryRef.current;
       if (!el) return;
@@ -137,7 +142,7 @@ export default function TechEncapsulation() {
       window.removeEventListener("mousemove", handlePointerMove);
       cancelAnimationFrame(frameId);
     };
-  }, []);
+  }, [isMobile]);
 
   return (
     <section className="tech-encap">
@@ -174,6 +179,7 @@ export default function TechEncapsulation() {
           })}
         </div>
 
+        {!isMobile && (
         <div className="tech-encap-gallery" ref={galleryRef}>
           {ENCAP_TECHS.map((item, i) => {
             const prevIndex = (activeImage - 1 + ENCAP_TECHS.length) % ENCAP_TECHS.length;
@@ -200,6 +206,7 @@ export default function TechEncapsulation() {
           })}
           <span className="tech-encap-gallery-tag">{ENCAP_TECHS[activeImage].title}</span>
         </div>
+        )}
       </div>
     </section>
   );

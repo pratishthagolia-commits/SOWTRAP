@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import ChamberAccordion from "@/components/ChamberAccordion";
+import useIsMobile from "@/lib/useIsMobile";
 
 type ValidationPoint = { title: string; detail: string; cta?: string };
 
@@ -47,6 +49,7 @@ const VALIDATION_POINTS: ValidationPoint[] = [
 const MAX_OVERLAP_RATIO = 0.25;
 
 export default function ScientificValidation() {
+  const isMobile = useIsMobile();
   const [pinned, setPinned] = useState(0);
   const [hovered, setHovered] = useState<number | null>(null);
   const [revealed, setRevealed] = useState(false);
@@ -120,6 +123,13 @@ export default function ScientificValidation() {
         </p>
       </div>
 
+      {isMobile ? (
+        <div className="chamber-mobile-wrap">
+          <ChamberAccordion
+            points={VALIDATION_POINTS.map((v) => ({ title: v.title, detail: v.detail }))}
+          />
+        </div>
+      ) : (
       <div className="sci-validation-body">
         <div className={`sci-validation-card reveal${revealClass}`} style={{ transitionDelay: "0.15s" }}>
           <h3>{current.title}</h3>
@@ -147,6 +157,7 @@ export default function ScientificValidation() {
           ))}
         </div>
       </div>
+      )}
     </section>
   );
 }

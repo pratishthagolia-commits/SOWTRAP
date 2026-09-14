@@ -3,8 +3,10 @@
 import { useEffect, useRef } from "react";
 import MatrixRain from "./MatrixRain";
 import GradientBlobs from "./GradientBlobs";
+import useIsMobile from "@/lib/useIsMobile";
 
 export default function Hero() {
+  const isMobile = useIsMobile();
   const heroRef = useRef<HTMLElement>(null);
   const wordRef = useRef<HTMLHeadingElement>(null);
 
@@ -30,8 +32,10 @@ export default function Hero() {
 
   return (
     <section className="hero" id="home" ref={heroRef}>
-      <GradientBlobs targetRef={heroRef} />
-      <MatrixRain />
+      {/* both are canvas loops running every frame; .hero already paints
+          its own navy gradient underneath them, so a phone just gets that */}
+      {!isMobile && <GradientBlobs targetRef={heroRef} />}
+      {!isMobile && <MatrixRain />}
 
       <div className="hero-fold">
         <h1 className="hero-wordmark" ref={wordRef}>SowTrap</h1>

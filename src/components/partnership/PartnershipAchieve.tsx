@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import useIsMobile from "@/lib/useIsMobile";
 
 // pixels pulled up for every pixel the section naturally enters from the
 // trigger line — reaches full cover (fully overlapping "Who We Partner
@@ -56,6 +57,7 @@ const RIGHT_POINTS: Point[] = [
 // "What We Help You Achieve" — same layout as PartnershipWho: three
 // points on either side of a centered photo.
 export default function PartnershipAchieve() {
+  const isMobile = useIsMobile();
   const sectionRef = useRef<HTMLElement>(null);
   const currentOverlapRef = useRef(0);
   const [overlapPx, setOverlapPx] = useState(0);
@@ -105,14 +107,16 @@ export default function PartnershipAchieve() {
           ))}
         </div>
 
-        <div className="partnership-who-image-wrap">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/images/partnership-achieve.jpeg"
-            alt="Encapsulated bioactive ingredient formats"
-            className="partnership-who-image"
-          />
-        </div>
+        {!isMobile && (
+          <div className="partnership-who-image-wrap">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/partnership-achieve.jpeg"
+              alt="Encapsulated bioactive ingredient formats"
+              className="partnership-who-image"
+            />
+          </div>
+        )}
 
         <div className="partnership-who-points partnership-who-points--right reveal-right">
           {RIGHT_POINTS.map((p) => (

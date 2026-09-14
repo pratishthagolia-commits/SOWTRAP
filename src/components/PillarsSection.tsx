@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import ChamberAccordion from "./ChamberAccordion";
+import useIsMobile from "@/lib/useIsMobile";
 
 type Pillar = { code: string; title: string; tagline: string; body: string };
 
@@ -36,6 +38,7 @@ const PILLARS: Pillar[] = [
 // the right (navy, not the reference's near-black) swaps which one is
 // active. No scroll-jack — just click-to-select state.
 export default function PillarsSection() {
+  const isMobile = useIsMobile();
   const [active, setActive] = useState(0);
   const current = PILLARS[active];
 
@@ -54,29 +57,42 @@ export default function PillarsSection() {
       </div>
 
       <section className="pillars-chamber" id="framework">
-        <div className="pillars-chamber-left">
-          <p className="pillars-chamber-code">{current.code}</p>
-          <h3 className="pillars-chamber-title">{current.title}</h3>
-          <span className="pillars-chamber-divider" />
-          <p className="pillars-chamber-tagline">{current.tagline}</p>
-          <p className="pillars-chamber-body">{current.body}</p>
-        </div>
+        {isMobile ? (
+          <div className="chamber-mobile-wrap">
+            <ChamberAccordion
+              points={PILLARS.map((p) => ({
+                title: `${p.code} – ${p.title}`,
+                detail: `${p.tagline} ${p.body}`,
+              }))}
+            />
+          </div>
+        ) : (
+          <>
+            <div className="pillars-chamber-left">
+              <p className="pillars-chamber-code">{current.code}</p>
+              <h3 className="pillars-chamber-title">{current.title}</h3>
+              <span className="pillars-chamber-divider" />
+              <p className="pillars-chamber-tagline">{current.tagline}</p>
+              <p className="pillars-chamber-body">{current.body}</p>
+            </div>
 
-        <div className="pillars-chamber-grid">
-          {PILLARS.map((pillar, i) => (
-            <button
-              key={pillar.code}
-              type="button"
-              className={`pillars-chamber-item${i === active ? " is-active" : ""}`}
-              onClick={() => setActive(i)}
-            >
-              <span className="pillars-chamber-plus">{i === active ? "–" : "+"}</span>
-              <span className="pillars-chamber-label">
-                {pillar.code} – {pillar.title}
-              </span>
-            </button>
-          ))}
-        </div>
+            <div className="pillars-chamber-grid">
+              {PILLARS.map((pillar, i) => (
+                <button
+                  key={pillar.code}
+                  type="button"
+                  className={`pillars-chamber-item${i === active ? " is-active" : ""}`}
+                  onClick={() => setActive(i)}
+                >
+                  <span className="pillars-chamber-plus">{i === active ? "–" : "+"}</span>
+                  <span className="pillars-chamber-label">
+                    {pillar.code} – {pillar.title}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </>
+        )}
       </section>
     </>
   );

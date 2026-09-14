@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import ChamberAccordion from "@/components/ChamberAccordion";
+import useIsMobile from "@/lib/useIsMobile";
 
 type EvalStep = { num: string; title: string; desc: string; image: string };
 
@@ -48,6 +50,7 @@ const STEPS: EvalStep[] = [
 // with the step's title/description; clicking does the same (toggling),
 // so it also works on touch devices where hover doesn't apply.
 export default function PartnershipEvaluate() {
+  const isMobile = useIsMobile();
   const [active, setActive] = useState<number | null>(null);
 
   return (
@@ -64,6 +67,11 @@ export default function PartnershipEvaluate() {
         commercial application.
       </p>
 
+      {isMobile ? (
+        <div className="chamber-mobile-wrap">
+          <ChamberAccordion points={STEPS.map((s) => ({ title: s.title, detail: s.desc }))} />
+        </div>
+      ) : (
       <div className="partnership-eval-grid">
         {STEPS.map((step, i) => (
           <button
@@ -89,6 +97,7 @@ export default function PartnershipEvaluate() {
           </button>
         ))}
       </div>
+      )}
 
       <p className="partnership-eval-closing reveal-right">
         Our objective is not simply to determine whether an ingredient meets specifications. We seek

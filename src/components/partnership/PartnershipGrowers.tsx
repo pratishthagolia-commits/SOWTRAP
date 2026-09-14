@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import ChamberAccordion from "@/components/ChamberAccordion";
+import useIsMobile from "@/lib/useIsMobile";
 
 type GrowerItem = { title: string; body: string };
 
@@ -40,6 +42,7 @@ const ITEMS: GrowerItem[] = [
 // it, and further hovering over other points does nothing until the user
 // clicks a different point (or the same one again, to unpin).
 export default function PartnershipGrowers() {
+  const isMobile = useIsMobile();
   const [active, setActive] = useState(0);
   const [pinned, setPinned] = useState(false);
   const item = ITEMS[active];
@@ -62,27 +65,33 @@ export default function PartnershipGrowers() {
     <section className="partnership-growers">
       <h2 className="partnership-growers-heading reveal-left">For GROWERS &amp; SUPPLIERS</h2>
 
-      <div className="partnership-growers-chamber">
-        <div className="partnership-growers-detail">
-          <h3>{item.title}</h3>
-          <p>{item.body}</p>
+      {isMobile ? (
+        <div className="chamber-mobile-wrap">
+          <ChamberAccordion points={ITEMS.map((it) => ({ title: it.title, detail: it.body }))} />
         </div>
-        <div className="partnership-growers-list">
-          {ITEMS.map((it, i) => (
-            <button
-              type="button"
-              key={it.title}
-              className={`partnership-growers-list-item${active === i ? " is-active" : ""}${
-                pinned && active === i ? " is-pinned" : ""
-              }`}
-              onMouseEnter={() => handleEnter(i)}
-              onClick={() => handleClick(i)}
-            >
-              {it.title}
-            </button>
-          ))}
+      ) : (
+        <div className="partnership-growers-chamber">
+          <div className="partnership-growers-detail">
+            <h3>{item.title}</h3>
+            <p>{item.body}</p>
+          </div>
+          <div className="partnership-growers-list">
+            {ITEMS.map((it, i) => (
+              <button
+                type="button"
+                key={it.title}
+                className={`partnership-growers-list-item${active === i ? " is-active" : ""}${
+                  pinned && active === i ? " is-pinned" : ""
+                }`}
+                onMouseEnter={() => handleEnter(i)}
+                onClick={() => handleClick(i)}
+              >
+                {it.title}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </section>
   );
 }

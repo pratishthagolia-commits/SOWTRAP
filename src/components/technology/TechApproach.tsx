@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import ChamberAccordion from "@/components/ChamberAccordion";
+import useIsMobile from "@/lib/useIsMobile";
 
 type Stage = { num: string; title: string; desc: string };
 
@@ -31,6 +33,7 @@ const STAGES: Stage[] = [
 // navy list of stages on the left, white card with the active stage's
 // full description on the right.
 export default function TechApproach() {
+  const isMobile = useIsMobile();
   const [active, setActive] = useState(0);
   const current = STAGES[active];
 
@@ -38,25 +41,31 @@ export default function TechApproach() {
     <section className="tech-approach">
       <h2 className="tech-approach-heading">Our Approach to Ingredient Innovation</h2>
 
-      <div className="tech-approach-chamber">
-        <div className="tech-approach-list">
-          {STAGES.map((s, i) => (
-            <button
-              key={s.title}
-              type="button"
-              className={`tech-approach-item${i === active ? " is-active" : ""}`}
-              onClick={() => setActive(i)}
-            >
-              <span className="tech-approach-item-title">{s.title}</span>
-            </button>
-          ))}
+      {isMobile ? (
+        <div className="chamber-mobile-wrap">
+          <ChamberAccordion points={STAGES.map((s) => ({ title: s.title, detail: s.desc }))} />
         </div>
+      ) : (
+        <div className="tech-approach-chamber">
+          <div className="tech-approach-list">
+            {STAGES.map((s, i) => (
+              <button
+                key={s.title}
+                type="button"
+                className={`tech-approach-item${i === active ? " is-active" : ""}`}
+                onClick={() => setActive(i)}
+              >
+                <span className="tech-approach-item-title">{s.title}</span>
+              </button>
+            ))}
+          </div>
 
-        <div className="tech-approach-card">
-          <h3>{current.title}</h3>
-          <p>{current.desc}</p>
+          <div className="tech-approach-card">
+            <h3>{current.title}</h3>
+            <p>{current.desc}</p>
+          </div>
         </div>
-      </div>
+      )}
     </section>
   );
 }

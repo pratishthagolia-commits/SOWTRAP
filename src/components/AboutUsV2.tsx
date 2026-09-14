@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import useIsMobile from "@/lib/useIsMobile";
 
 const PARAGRAPHS = [
   "SowTrap™ is the advanced microencapsulation technology platform of ScienceOnWheels Bio Pvt. Ltd., dedicated to developing scientifically engineered ingredient delivery systems that improve the stability, bioavailability, functionality, and performance of bioactive compounds. Leveraging cutting-edge encapsulation technologies, material science, and formulation expertise, SowTrap™ transforms sensitive nutraceutical, botanical, probiotic, pharmaceutical, and functional food ingredients into high-performance solutions tailored for modern product applications. We engineer advanced delivery systems that convert unstable, poorly bioavailable bioactives into highly stable, bioavailable, and commercially scalable ingredients.",
@@ -57,6 +58,7 @@ function RevealWords({
 // used elsewhere on the site) so the growth reads as one smooth motion
 // instead of stepped jumps.
 export default function AboutUsV2() {
+  const isMobile = useIsMobile();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0);
 
@@ -116,13 +118,19 @@ export default function AboutUsV2() {
           </div>
           <div className="about-v2-panel">
             <div className="about-v2-body">
+              {/* phone drops the per-word colour reveal and just shows the
+                  paragraphs; the panel's own growth/overlap is untouched */}
               {PARAGRAPH_WORDS.map((words, i) => (
                 <p key={PARAGRAPHS[i].slice(0, 24)}>
-                  <RevealWords
-                    words={words}
-                    startIndex={PARAGRAPH_START_INDICES[i]}
-                    activeCount={activeCount}
-                  />
+                  {isMobile ? (
+                    PARAGRAPHS[i]
+                  ) : (
+                    <RevealWords
+                      words={words}
+                      startIndex={PARAGRAPH_START_INDICES[i]}
+                      activeCount={activeCount}
+                    />
+                  )}
                 </p>
               ))}
             </div>
