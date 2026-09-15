@@ -22,7 +22,10 @@ export default function Hero() {
       const family = getComputedStyle(el).fontFamily;
       ctx.font = `800 ${probeSize}px ${family}`;
       const textWidth = ctx.measureText(el.textContent || "SowTrap").width;
-      el.style.fontSize = `${probeSize * (containerWidth / textWidth)}px`;
+      // 0.78x container width, not a full-bleed fit — was reading as too
+      // heavy/dominant, and left "Elevating Nutrition..." feeling
+      // disconnected below a full screen of just the wordmark
+      el.style.fontSize = `${probeSize * ((containerWidth * 0.78) / textWidth)}px`;
     }
 
     document.fonts.ready.then(fitWordmark);

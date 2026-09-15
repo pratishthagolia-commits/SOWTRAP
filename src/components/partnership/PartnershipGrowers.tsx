@@ -62,7 +62,7 @@ export default function PartnershipGrowers() {
   }
 
   return (
-    <section className="partnership-growers">
+    <section className="partnership-growers" id="for-growers">
       <h2 className="partnership-growers-heading reveal-left">For GROWERS &amp; SUPPLIERS</h2>
 
       {isMobile ? (

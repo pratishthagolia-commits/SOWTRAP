@@ -34,7 +34,6 @@ export default function Nav() {
       <li><Link href="/technology" className={pathname === "/technology" ? "active" : ""}>Technology</Link></li>
       <li><Link href="/products" className={pathname === "/products" ? "active" : ""}>Products</Link></li>
       <li><Link href="/partnership" className={pathname === "/partnership" ? "active" : ""}>Partnership</Link></li>
-      <li><Link href="/contact" className={pathname === "/contact" ? "active" : ""}>Contact</Link></li>
     </>
   );
 

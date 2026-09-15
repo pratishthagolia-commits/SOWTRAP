@@ -147,7 +147,7 @@ export default function TechEncapsulation() {
   return (
     <section className="tech-encap">
       <h3 className="tech-encap-banner">
-        Key encapsulation <span className="tech-encap-banner-accent">technologies</span>
+        Key Encapsulation <span className="tech-encap-banner-accent">Technologies</span>
       </h3>
 
       <div className="tech-encap-body">

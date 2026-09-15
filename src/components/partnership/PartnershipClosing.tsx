@@ -8,8 +8,8 @@ export default function PartnershipClosing() {
         science and technology create the greatest value.
       </p>
       <div className="partnership-closing-cta">
-        <a href="#contact" className="btn btn-lime">For Brands</a>
-        <a href="#contact" className="btn btn-outline-dark">For Growers and Suppliers</a>
+        <a href="#for-brands" className="btn btn-lime">For Brands</a>
+        <a href="#for-growers" className="btn btn-outline-dark">For Growers and Suppliers</a>
       </div>
     </section>
   );

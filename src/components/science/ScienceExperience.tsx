@@ -7,27 +7,27 @@ const ScienceScene = dynamic(() => import("./ScienceScene"), { ssr: false });
 
 const CHECKPOINTS = [
   {
-    title: "01 — Food / Supplement",
+    title: "Food / Supplement",
     body: "The bioactive enters the body through the selected delivery format.",
   },
   {
-    title: "02 — Digestion",
+    title: "Digestion",
     body: "The active encounters changing pH, digestive enzymes, bile, and the gastrointestinal environment.",
   },
   {
-    title: "03 — Absorption",
+    title: "Absorption",
     body: "The compound must become available in a form that can cross the intestinal barrier.",
   },
   {
-    title: "04 — Transport",
+    title: "Transport",
     body: "Once absorbed, the bioactive is transported through circulation to relevant tissues.",
   },
   {
-    title: "05 — Cellular Interaction",
+    title: "Cellular Interaction",
     body: "The active interacts with specific molecular or cellular targets.",
   },
   {
-    title: "06 — Health Benefit",
+    title: "Health Benefit",
     body: "The biological interaction contributes to the intended physiological or functional outcome.",
   },
 ];

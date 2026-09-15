@@ -61,9 +61,12 @@ export default function ComparisonSection() {
           naturalTopRef.current = el.getBoundingClientRect().top + window.scrollY;
         }
         const naturalViewportTop = naturalTopRef.current - window.scrollY;
-        // grows from 0 to 1 over the 400px before the section's natural
-        // position would reach the bottom of the viewport
-        const raw = (window.innerHeight - naturalViewportTop) / 400;
+        // grows from 0 to 1 over the 1500px before the section's natural
+        // position would reach the bottom of the viewport — was 400,
+        // then 900, both still completing the 340px overlap too quickly
+        // and cutting off Pillars' last point ("Systemic Bioavailability")
+        // before it was readable
+        const raw = (window.innerHeight - naturalViewportTop) / 1500;
         setOverlap(Math.min(1, Math.max(0, raw)));
       }
       frameId = requestAnimationFrame(tick);
@@ -83,11 +86,7 @@ export default function ComparisonSection() {
         <div className="cmp-header-block" />
         <div className="cmp-header-text">
           <p className="cmp-heading">
-            <span className="cmp-heading-sm">Comparison Between </span>
-            <span className="cmp-heading-lg">Conventional</span>
-            <span className="cmp-heading-sm"> and </span>
-            <span className="cmp-heading-lg">Encapsulated</span>
-            <span className="cmp-heading-sm"> Bioactives</span>
+            <span className="cmp-heading-lg">Make Every Molecule Work Smarter</span>
           </p>
         </div>
       </div>
@@ -101,8 +100,7 @@ export default function ComparisonSection() {
         )}
         <div className="cmp-row-content">
           <div className="cmp-intro">
-            <p className="cmp-tagline reveal">Make Every Molecule Work Smarter.</p>
-            <p className="cmp-intro-body reveal" style={{ transitionDelay: "0.1s" }}>
+            <p className="cmp-intro-body reveal">
               SowTrap&trade; encapsulation protects, optimizes and delivers bioactives far beyond what
               conventional forms can achieve
             </p>

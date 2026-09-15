@@ -34,7 +34,12 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
       <Nav />
       <ScrollReveal />
 
-      <ProductDetail product={product} related={related} />
+      {/* keyed on slug so navigating from one product to another (client-side,
+          no full page reload) forces React to unmount and remount this whole
+          subtree — otherwise it just patches the existing DOM nodes' src/text
+          in place, and their .reveal classes (already flipped to .in-view
+          from the previous product) would never re-trigger the fade-in */}
+      <ProductDetail product={product} related={related} key={product.slug} />
 
       <FooterCTA />
     </>

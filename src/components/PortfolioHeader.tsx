@@ -69,9 +69,6 @@ export default function PortfolioHeader() {
                 </span>
               ))}
             </p>
-            <a href="#portfolio-carousel" className="btn btn-lime portfolio-header-cta">
-              Explore Our Products
-            </a>
           </div>
         </div>
       </div>

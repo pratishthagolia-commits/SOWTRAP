@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ChamberAccordion from "@/components/ChamberAccordion";
 import useIsMobile from "@/lib/useIsMobile";
 
@@ -52,6 +52,32 @@ const STEPS: EvalStep[] = [
 export default function PartnershipEvaluate() {
   const isMobile = useIsMobile();
   const [active, setActive] = useState<number | null>(null);
+  // auto-flip each card the first time it scrolls into view, in addition
+  // to the existing hover/click flip — the grid is 3 columns x 2 rows, so
+  // cards 0-2 (row one) naturally intersect on an earlier point in the
+  // scroll than cards 3-5 (row two), giving the "first three flip on the
+  // first scroll, next three flip on the second scroll" behaviour without
+  // hardcoding two separate scroll thresholds.
+  const [autoFlipped, setAutoFlipped] = useState<Set<number>>(new Set());
+  const cardRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  useEffect(() => {
+    if (isMobile) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const index = cardRefs.current.indexOf(entry.target as HTMLButtonElement);
+          if (index === -1) return;
+          setAutoFlipped((prev) => (prev.has(index) ? prev : new Set(prev).add(index)));
+          io.unobserve(entry.target);
+        });
+      },
+      { threshold: 0.5 }
+    );
+    cardRefs.current.forEach((card) => card && io.observe(card));
+    return () => io.disconnect();
+  }, [isMobile]);
 
   return (
     <section className="partnership-eval">
@@ -76,7 +102,8 @@ export default function PartnershipEvaluate() {
         {STEPS.map((step, i) => (
           <button
             type="button"
-            className={`partnership-eval-card${active === i ? " is-active" : ""}`}
+            ref={(el) => { cardRefs.current[i] = el; }}
+            className={`partnership-eval-card${active === i || autoFlipped.has(i) ? " is-active" : ""}`}
             key={step.title}
             onClick={() => setActive((prev) => (prev === i ? null : i))}
           >

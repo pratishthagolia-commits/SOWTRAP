@@ -1,4 +1,5 @@
 import Link from "next/link";
+import IndicationProductsGrid from "./IndicationProductsGrid";
 import { getHealthBenefitDescription, getHealthBenefitIcon, type Product } from "@/lib/products";
 
 // a dedicated landing page per health benefit, reached by clicking a
@@ -11,7 +12,7 @@ export default function IndicationDetail({ benefit, products }: { benefit: strin
   const description = getHealthBenefitDescription(benefit);
 
   return (
-    <section className="product-detail" id="home">
+    <section className="product-detail">
       <p className="product-detail-breadcrumb">
         <Link href="/">Home</Link>
         <span aria-hidden="true">/</span>
@@ -20,40 +21,29 @@ export default function IndicationDetail({ benefit, products }: { benefit: strin
         <span>{benefit}</span>
       </p>
 
-      <div className="indication-hero">
-        {icon && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={icon} alt="" className="indication-hero-icon" aria-hidden="true" />
-        )}
-        <div>
+      {/* see ProductDetail.tsx — #home needs to sit on a hero-sized block,
+          not the whole page, or Nav's "have we scrolled past the hero"
+          check stays true almost the entire way down and the full header
+          never switches to the hamburger-only view. */}
+      <div className="indication-top" id="home">
+        <div className="indication-info reveal-left">
           <p className="product-detail-category">Health Benefit</p>
           <h1 className="product-detail-name">{benefit}</h1>
+          {description && <p className="indication-description">{description}</p>}
         </div>
-      </div>
 
-      {description && <p className="indication-description">{description}</p>}
+        {icon && (
+          <div className="indication-image-wrap reveal-right">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={icon} alt="" className="indication-image" aria-hidden="true" />
+          </div>
+        )}
+      </div>
 
       {products.length > 0 ? (
         <div className="product-detail-related">
-          <h2 className="product-detail-related-heading">
-            {products.length} Ingredient{products.length === 1 ? "" : "s"} for {benefit}
-          </h2>
-          <div className="product-detail-related-grid">
-            {products.map((p) => (
-              <Link href={`/products/${p.slug}`} className="product-card" key={p.slug}>
-                <div className="product-card-image-wrap">
-                  {p.image ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={p.image} alt={p.name} className="product-card-image" />
-                  ) : (
-                    <div className="product-card-placeholder" aria-hidden="true" />
-                  )}
-                </div>
-                <h3 className="product-card-name">{p.name}</h3>
-                <p className="product-card-category">{p.scientificName || "\u00A0"}</p>
-              </Link>
-            ))}
-          </div>
+          <h2 className="product-detail-related-heading">Ingredients for {benefit}</h2>
+          <IndicationProductsGrid products={products} />
         </div>
       ) : (
         <p className="products-empty">No ingredients are tagged with this benefit yet.</p>

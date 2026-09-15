@@ -48,7 +48,7 @@ export default function PartnershipIntro() {
             SowTrap&trade; builds science-led partnerships across the ingredient value chain&mdash;from
             growers and ingredient suppliers to brands, manufacturers, and research organizations.
           </p>
-          <a href="#contact" className="btn btn-lime partnership-cta">Partner With Us</a>
+          <a href="/contact" className="btn btn-lime partnership-cta">Partner With Us</a>
         </div>
       </div>
     </section>

@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { getHealthBenefitIcon, getHealthBenefitSlug, type Product } from "@/lib/products";
+import IndicationStrip from "./IndicationStrip";
+import type { Product } from "@/lib/products";
 
 // per Native Extracts' product page: image area, title + botanical-style
 // subheading, description, a compounds list ("Phyto-Compounds"), and
@@ -17,7 +18,7 @@ export default function ProductDetail({ product, related }: { product: Product; 
     : null;
 
   return (
-    <section className="product-detail" id="home">
+    <section className="product-detail">
       <p className="product-detail-breadcrumb">
         <Link href="/">Home</Link>
         <span aria-hidden="true">/</span>
@@ -28,8 +29,15 @@ export default function ProductDetail({ product, related }: { product: Product; 
         <span>{product.name}</span>
       </p>
 
-      <div className="product-detail-top">
-        <div className="product-detail-image-wrap">
+      {/* Nav watches #home to decide full-header vs hamburger-only — this
+          used to be on the outer <section>, which spans the entire page
+          (image, description, benefits, documents, related products), so
+          it stayed "intersecting" and kept the full header on screen for
+          nearly the whole scroll. Scoping it to just the top image/info
+          row gives Nav a normal hero-sized target, matching every other
+          page's behaviour. */}
+      <div className="product-detail-top" id="home">
+        <div className="product-detail-image-wrap reveal-left">
           {product.image ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={product.image} alt={product.name} className="product-detail-image" />
@@ -40,7 +48,7 @@ export default function ProductDetail({ product, related }: { product: Product; 
           )}
         </div>
 
-        <div className="product-detail-info">
+        <div className="product-detail-info reveal-right">
           <p className="product-detail-category">{product.category}</p>
           <h1 className="product-detail-name">{product.name}</h1>
           <p className="product-detail-description">{product.description}</p>
@@ -62,37 +70,53 @@ export default function ProductDetail({ product, related }: { product: Product; 
       </div>
 
       {product.healthBenefits.length > 0 && (
-        <div className="product-detail-sections">
-          <div className="product-detail-section">
-            <h2 className="product-detail-section-heading">Health Benefits</h2>
-            <ul className="product-detail-benefit-list">
-              {product.healthBenefits.map((b) => {
-                const icon = getHealthBenefitIcon(b);
-                const slug = getHealthBenefitSlug(b);
-                return (
-                  <li key={b} className="product-detail-benefit-item">
-                    <Link href={slug ? `/indications/${slug}` : "/products"} className="product-detail-benefit-row">
-                      {icon && (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img src={icon} alt="" className="product-detail-benefit-icon" aria-hidden="true" />
-                      )}
-                      <span>{b}</span>
-                      <span className="product-detail-benefit-arrow" aria-hidden="true">&rarr;</span>
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
+        <div className="product-detail-sections product-detail-sections--indications reveal-up">
+          <h2 className="product-detail-section-heading">Health Benefits</h2>
+          <IndicationStrip benefits={product.healthBenefits} />
         </div>
       )}
 
+      <div className="product-detail-sections">
+        <div className="product-detail-section reveal-up">
+          <h2 className="product-detail-section-heading">Documents</h2>
+          <ul className="product-detail-downloads">
+            <li className="product-detail-download-row">
+              <span className="product-detail-download-label">COA</span>
+              <span className="product-detail-download-action is-disabled" aria-disabled="true">
+                Download
+              </span>
+            </li>
+            <li className="product-detail-download-row">
+              <span className="product-detail-download-label">TDS</span>
+              <span className="product-detail-download-action is-disabled" aria-disabled="true">
+                Download
+              </span>
+            </li>
+            <li className="product-detail-download-row">
+              <span className="product-detail-download-label">MSDS</span>
+              <span className="product-detail-download-action is-disabled" aria-disabled="true">
+                Download
+              </span>
+            </li>
+            <li className="product-detail-download-row">
+              <span className="product-detail-download-label">Clinical Evidence</span>
+              <span className="product-detail-download-action">On Request</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
       {related.length > 0 && (
         <div className="product-detail-related">
-          <h2 className="product-detail-related-heading">More from {product.category}</h2>
+          <h2 className="product-detail-related-heading reveal-up">More from {product.category}</h2>
           <div className="product-detail-related-grid">
-            {related.map((p) => (
-              <Link href={`/products/${p.slug}`} className="product-card" key={p.slug}>
+            {related.map((p, i) => (
+              <Link
+                href={`/products/${p.slug}`}
+                className="product-card reveal-up"
+                key={p.slug}
+                style={{ transitionDelay: `${i * 0.1}s` }}
+              >
                 <div className="product-card-image-wrap">
                   {p.image ? (
                     // eslint-disable-next-line @next/next/no-img-element
@@ -109,7 +133,7 @@ export default function ProductDetail({ product, related }: { product: Product; 
         </div>
       )}
 
-      <Link href="/products" className="product-detail-back">&larr; Back to all ingredients</Link>
+      <Link href="/products" className="product-detail-back reveal-up">&larr; Back to all ingredients</Link>
     </section>
   );
 }

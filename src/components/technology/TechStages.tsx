@@ -9,112 +9,74 @@ type Stage = {
   evaluate: string[];
 };
 
+// content moved over from TechPhilosophy's horizontal ingredient-challenge
+// cards (that section is now removed from the page) — kept this design
+// (the pinned photo/navy-band scroll-jack) rather than the card carousel,
+// per the client's direction. title -> name, solution -> evaluateHeading,
+// benefit -> the single-line "evaluate" list.
+//
+// images: the 7 original per-stage photos are reused here (assignment is
+// arbitrary — the client said any photo on any point is fine). Challenge
+// #8, "Process Sensitivity", has no source photo yet and temporarily
+// reuses Validate Performance's image as a placeholder — the client said
+// they'll send a real one for this slide; swap tech-stage-validate
+// -performance.jpeg out for it here once it arrives.
 const STAGES: Stage[] = [
   {
-    name: "Understand the Active",
+    name: "Sensory Challenges",
     image: "/images/tech-stage-understand-active.jpeg",
-    evaluateHeading: "Solubility & polarity",
-    evaluate: [
-      "Molecular characteristics",
-      "Thermal stability",
-      "pH sensitivity",
-      "Oxidative/light sensitivity",
-      "Hygroscopicity",
-      "Dose requirement",
-      "Taste & odour",
-    ],
+    evaluateHeading: "Taste-masked and sensory-optimised formats",
+    evaluate: ["Reduced bitterness, metallic notes and undesirable odour."],
   },
   {
-    name: "Define the Delivery Challenge",
+    name: "Low Bioavailability",
     image: "/images/tech-stage-delivery-challenge.jpeg",
-    evaluateHeading: "Stability protection",
-    evaluate: [
-      "Solubility/dispersibility",
-      "Taste masking",
-      "Protection during processing",
-      "Controlled/sustained release",
-      "Improved bioaccessibility",
-      "Compatibility with formulation",
-    ],
+    evaluateHeading: "Bioaccessibility focused delivery systems",
+    evaluate: ["Improved availability of the active during digestion."],
   },
   {
-    name: "Define End Application",
+    name: "Targeted Release",
     image: "/images/tech-stage-end-application.jpeg",
-    evaluateHeading: "Product format",
-    evaluate: [
-      "Processing conditions",
-      "Storage conditions",
-      "Target dose",
-      "Reconstitution/dispersibility",
-      "Sensory requirements",
-      "Matrix compatibility",
-      "Intended release profile",
-    ],
+    evaluateHeading: "Controlled and application-specific release systems",
+    evaluate: ["Delivery at the desired site of action."],
   },
   {
-    name: "Select Microencapsulation Material",
+    name: "High Active Load",
     image: "/images/tech-stage-microencapsulation-material.jpeg",
-    evaluateHeading: "Compatibility",
-    evaluate: [
-      "Solubility",
-      "Barrier properties",
-      "Processing tolerance",
-      "Release behaviour",
-      "Regulatory suitability",
-      "Sensory impact",
-      "Moisture protection",
-    ],
+    evaluateHeading: "Optimised high-load formulations",
+    evaluate: ["Higher active delivery with efficient use of carrier materials."],
   },
   {
-    name: "Select Encapsulation Technology",
+    name: "Poor Solubility",
     image: "/images/tech-stage-encapsulation-technology.jpeg",
-    evaluateHeading: "Active sensitivity",
-    evaluate: [
-      "Material compatibility",
-      "Encapsulation efficiency",
-      "Particle-size requirements",
-      "Thermal exposure",
-      "Desired release profile",
-      "Scale-up feasibility",
-      "Application suitability",
-    ],
+    evaluateHeading: "Enhanced dispersibility and delivery systems",
+    evaluate: ["Improved solubility and more uniform distribution in the final product."],
   },
   {
-    name: "Engineer the Process",
+    name: "Active Instability",
     image: "/images/tech-stage-engineer-process.jpeg",
-    evaluateHeading: "Feed composition",
-    evaluate: [
-      "Core-to-wall ratio",
-      "Total solids",
-      "Temperature profile",
-      "Feed rate",
-      "Atomization conditions",
-      "Residence time",
-      "Drying conditions",
-      "Process yield",
-    ],
+    evaluateHeading: "Protective encapsulation systems",
+    evaluate: ["Improved stability against heat, oxygen, light and moisture."],
   },
   {
-    name: "Validate Performance",
+    name: "Formulation Challenges",
     image: "/images/tech-stage-validate-performance.jpeg",
-    evaluateHeading: "Encapsulation efficiency",
-    evaluate: [
-      "Active retention",
-      "Particle size & morphology",
-      "Moisture content",
-      "Solubility/dispersibility",
-      "Stability",
-      "Release profile",
-      "Bioaccessibility",
-      "Application performance",
-    ],
+    evaluateHeading: "Application ingredient formats",
+    evaluate: ["Improved compatibility, handling and formulation flexibility."],
+  },
+  {
+    name: "Process Sensitivity",
+    // TODO: placeholder — swap for the client's incoming photo for this slide
+    image: "/images/tech-stage-validate-performance.jpeg",
+    evaluateHeading: "Process-compatible protective systems",
+    evaluate: ["Better active retention during manufacturing."],
   },
 ];
 
 // pinned scroll-jack, same mechanic as ScienceExperience — a tall wrapper
 // with a position:sticky inner view. The background layout (navy/white
 // bands, column headers, divider) stays fixed the whole time; only the
-// photo, "what we evaluate" list, and stage-name caption crossfade
+// photo, "what we create" list, and stage-name caption crossfade
 // between stages as the user scrolls, per the reference design.
 export default function TechStages() {
   const wrapperRef = useRef<HTMLElement>(null);
@@ -150,8 +112,8 @@ export default function TechStages() {
     >
       <div className="tech-stages-sticky">
         <div className="tech-stages-header">
-          <span className="reveal-left">Stage</span>
-          <span className="reveal-right">What we evaluate</span>
+          <span className="reveal-left">We Solve</span>
+          <span className="reveal-right">What we create</span>
         </div>
 
         <div className="tech-stages-white-band" />

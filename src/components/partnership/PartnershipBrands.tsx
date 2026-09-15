@@ -173,7 +173,7 @@ export default function PartnershipBrands() {
   }, [isMobile]);
 
   return (
-    <section className="partnership-brands">
+    <section className="partnership-brands" id="for-brands">
       <div className="partnership-brands-top reveal-up">
         <div className="partnership-brands-heading-col">
           <h2 className="partnership-brands-heading">For BRANDS</h2>

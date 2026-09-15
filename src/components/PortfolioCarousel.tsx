@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import useIsMobile from "@/lib/useIsMobile";
 
 type PortfolioItem = { title: string; body: string };
@@ -120,30 +121,40 @@ export default function PortfolioCarousel() {
             </div>
           ))}
         </div>
+        <Link href="/products" className="btn btn-lime pf-cta">Explore Our Products</Link>
       </div>
     );
   }
 
   return (
-    <div
-      id="portfolio-carousel"
-      className="pf-wrapper"
-      ref={wrapperRef}
-      style={{ height: `calc(100vh + ${maxTranslate}px)` }}
-    >
-      <div className="pf-sticky">
-        <div className="pf-track" ref={trackRef} style={{ transform: `translateX(-${x}px)` }}>
-          {ITEMS.map((item) => (
-            <div className="pf-card" key={item.title}>
-              <div className="pf-card-tab">{item.title}</div>
-              <div className="pf-card-body">
-                <p>{item.body}</p>
+    <>
+      {/* .pf-wrapper's height is a JS-computed fixed value sized purely
+          for the scroll-jack's own travel distance (often 2000px+) — any
+          content nested inside it inherits that leftover space as blank
+          dead air below it. The CTA has to live outside, as a normal
+          sibling, so it sits flush right after the pinned section ends
+          instead of floating at the top of a mostly-empty box. */}
+      <div
+        id="portfolio-carousel"
+        className="pf-wrapper"
+        ref={wrapperRef}
+        style={{ height: `calc(100vh + ${maxTranslate}px)` }}
+      >
+        <div className="pf-sticky">
+          <div className="pf-track" ref={trackRef} style={{ transform: `translateX(-${x}px)` }}>
+            {ITEMS.map((item) => (
+              <div className="pf-card" key={item.title}>
+                <div className="pf-card-tab">{item.title}</div>
+                <div className="pf-card-body">
+                  <p>{item.body}</p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
+          <span className="pf-arrow" aria-hidden="true">&gt;</span>
         </div>
-        <span className="pf-arrow" aria-hidden="true">&gt;</span>
       </div>
-    </div>
+      <Link href="/products" className="btn btn-lime pf-cta">Explore Our Products</Link>
+    </>
   );
 }

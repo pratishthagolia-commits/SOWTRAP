@@ -167,17 +167,6 @@
   },
   {
     "category": "Herbal Extracts",
-    "name": "Black Peppercorns",
-    "description": "PLACEHOLDER — description to be provided by the client. Do not publish without replacing this text.",
-    "bioactives": [],
-    "naturalSources": [],
-    "healthBenefits": [],
-    "slug": "black-peppercorns",
-    "image": "/images/products/black-peppercorns.jpeg",
-    "scientificName": "Piper nigrum"
-  },
-  {
-    "category": "Herbal Extracts",
     "name": "Tulsi",
     "description": "Advanced encapsulation enables SowTrap™ Holy Basil to stabilize its delicate volatile oils and key botanical constituents, helping retain their natural potency and functional properties from processing through delivery. This superior delivery method shields the delicate botanical extracts from environmental degradation, ensuring unmatched stability, a longer shelf life, and a controlled release that maximizes cellular absorption. Celebrated for its profound health benefits, our encapsulated Tulsi acts as a potent adaptogen that helps the body manage stress, enhances immune system resilience, supports respiratory health, and delivers a rich supply of antioxidants to promote holistic vitality and natural balance.",
     "bioactives": [
@@ -711,7 +700,7 @@
   },
   {
     "category": "Herbal Extracts",
-    "name": "Panax Ginseng",
+    "name": "Panax ginseng",
     "description": "SowTrap™ encapsulates the therapeutic ginsenosides found exclusively within mature roots of Panax ginseng, locking away their bitter, highly astringent saponin compounds. This protective shell acts as an armor against early breakdown by salivary enzymes, ensuring the bioactive molecules make it into the lower gastrointestinal tract completely unchanged for full cellular absorption. Primarily used to support vitality and metabolic health, this formulation excels as a central nervous system regulator that improves the brain's processing speed, lifts deep mental sluggishness, and heightens focus during periods of heavy mental strain. Furthermore, it serves as a powerful vascular health stimulant and immunosenescence combatant, boosting nitric oxide production to improve erectile function and blood flow while strengthening T-cell and natural killer cell activity to fight off age-related immune decline.",
     "bioactives": [
       "Arginine",
@@ -739,7 +728,7 @@
   },
   {
     "category": "Herbal Extracts",
-    "name": "Cordyceps Militaris",
+    "name": "Cordyceps militaris",
     "description": "SowTrap™ Cordyceps Militaris coats the bioactives derived from the medicinal fungus in a specialized microscopic barrier, preserving its high concentration of cordycepin, adenosine, and intracellular polysaccharides from humidity and thermal degradation. This advanced delivery matrix prevents the loss of its delicate nucleoside compounds during storage, ensuring they arrive fully active at intestinal receptor sites for rapid transport into the bloodstream. Tailored for cellular energy and respiratory applications, this precise formulation serves as a premium cellular ATP primer and oxygen-utilization booster, significantly increasing VO2 max and stamina by optimizing energy production directly within the mitochondria. Additionally, it operates as a potent renal protectant and immunological tuner, supporting healthy kidney function, combating deep physical exhaustion, and modulating macrophage activity to reinforce the body's natural defenses against chronic viral stressors.",
     "bioactives": [
       "Glutamic acid",

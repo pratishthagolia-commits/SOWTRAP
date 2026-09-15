@@ -54,6 +54,9 @@ export default function PillarsSection() {
             NUTRITION GAP
           </span>
         </p>
+        <p className="pillars-kicker-sub reveal-left" style={{ transitionDelay: "0.1s" }}>
+          Four Pillars. One Intelligent Delivery System
+        </p>
       </div>
 
       <section className="pillars-chamber" id="framework">
@@ -61,7 +64,7 @@ export default function PillarsSection() {
           <div className="chamber-mobile-wrap">
             <ChamberAccordion
               points={PILLARS.map((p) => ({
-                title: `${p.code} – ${p.title}`,
+                title: p.title,
                 detail: `${p.tagline} ${p.body}`,
               }))}
             />
@@ -69,7 +72,6 @@ export default function PillarsSection() {
         ) : (
           <>
             <div className="pillars-chamber-left">
-              <p className="pillars-chamber-code">{current.code}</p>
               <h3 className="pillars-chamber-title">{current.title}</h3>
               <span className="pillars-chamber-divider" />
               <p className="pillars-chamber-tagline">{current.tagline}</p>
@@ -85,9 +87,7 @@ export default function PillarsSection() {
                   onClick={() => setActive(i)}
                 >
                   <span className="pillars-chamber-plus">{i === active ? "–" : "+"}</span>
-                  <span className="pillars-chamber-label">
-                    {pillar.code} – {pillar.title}
-                  </span>
+                  <span className="pillars-chamber-label">{pillar.title}</span>
                 </button>
               ))}
             </div>

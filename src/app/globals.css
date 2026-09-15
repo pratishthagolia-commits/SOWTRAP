@@ -20,13 +20,20 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { scroll-behavior: smooth; }
+/* overflow-x here (not on body) — setting any non-"visible" overflow on
+   body forces its overflow-y to compute as "auto" too (per the CSS
+   Overflow spec), which turns body itself into a scroll container. That
+   breaks position:sticky for every descendant relying on the real
+   viewport as its scrolling ancestor (PortfolioCarousel's pinned drag,
+   ScienceExperience, TechStages, the partnership band sections, etc.) —
+   sticky elements just release early and scroll away, leaving a blank
+   gap where they should still be pinned. html doesn't have this problem. */
+html { scroll-behavior: smooth; overflow-x: hidden; }
 
 body {
   font-family: var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
   color: var(--ink);
   background: var(--white);
-  overflow-x: hidden;
 }
 
 .container {
@@ -49,8 +56,11 @@ body {
   transition: background 0.3s ease, border-color 0.3s ease, backdrop-filter 0.3s ease;
 }
 .nav-inner {
-  max-width: 1280px;
-  margin: 0 auto;
+  /* was max-width:1280px + margin:0 auto — centered the bar, which on any
+     viewport wider than ~1344px left the logo sitting well in from the
+     true left edge instead of hugging it like the rest of the site does */
+  max-width: 1600px;
+  margin: 0;
   padding: 22px 32px;
   display: flex;
   align-items: center;
@@ -78,6 +88,7 @@ body {
 .nav-links a {
   text-decoration: none;
   color: #ffffff;
+  font-family: var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
   font-size: 1.25rem;
   font-weight: 700;
   padding-bottom: 3px;
@@ -87,6 +98,7 @@ body {
 .nav-links a:hover, .nav-links a.active { border-color: currentColor; }
 .nav-cta {
   text-decoration: none;
+  font-family: var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
   font-size: 1.1rem;
   font-weight: 700;
   color: #ffffff;
@@ -146,6 +158,11 @@ body {
   box-shadow: -20px 0 50px -20px rgba(13, 21, 38, 0.3);
 }
 .nav-drawer.is-open { transform: translateX(0); }
+/* .nav-drawer is a column flexbox with no align-items set, so its
+   default stretch forces .logo-badge to the drawer's full width —
+   the pill's short height stays put, so it reads as a stretched-out
+   oval instead of the tight logo shape used everywhere else */
+.nav-drawer .logo-badge { align-self: flex-start; }
 .nav-drawer-close {
   align-self: flex-end;
   width: 36px;
@@ -211,11 +228,14 @@ body {
 .hero-fold {
   position: relative;
   z-index: 3;
-  min-height: 100vh;
+  /* was 100vh with the wordmark pinned to the very bottom edge — shrinking
+     the fold and giving it real bottom breathing room moves the wordmark
+     up, closing the gap before "Elevating Nutrition..." appears below it */
+  min-height: 85vh;
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  padding-bottom: 4vh;
+  padding-bottom: 10vh;
   pointer-events: none;
 }
 .hero-wordmark {
@@ -418,7 +438,12 @@ h2 {
 }
 .about-v2-panel {
   width: 100%;
-  height: 78vh;
+  /* was a fixed height:78vh — the paragraph text was sized to fit that
+     exactly, but bumping the font size made the three paragraphs taller
+     than 78vh, so the overflow spilled straight past the panel's own
+     bottom edge onto whatever section comes after it. min-height grows
+     the panel to contain its own text at any font size instead. */
+  min-height: 78vh;
   background: #ffffff;
   padding: 48px 64px;
   box-sizing: border-box;
@@ -438,7 +463,7 @@ h2 {
 }
 .about-v2-body p {
   font-family: var(--font-prata), serif;
-  font-size: 1rem;
+  font-size: 1.2rem;
   line-height: 1.75;
   color: var(--ink);
   text-align: justify;
@@ -515,20 +540,22 @@ h2 {
   margin-top: -1px;
 }
 .research-v2-quote {
-  max-width: 720px;
-  margin: 0 0 28px auto;
-  text-align: right;
+  /* was max-width:720px with an auto left margin, confining it to a
+     narrow column pinned against the panel's right edge even though
+     the panel itself runs the full page width — spans the whole panel
+     now instead of looking cramped off to one side */
+  margin: 0 0 28px;
+  text-align: left;
   font-family: var(--font-prata), serif;
-  font-size: clamp(1.2rem, 1.8vw, 1.5rem);
+  font-size: clamp(1.6rem, 2.4vw, 2rem);
   font-weight: 600;
   line-height: 1.5;
 }
 .research-v2-para {
-  max-width: 720px;
-  margin: 0 0 0 auto;
-  text-align: right;
+  margin: 0;
+  text-align: left;
   font-family: var(--font-prata), serif;
-  font-size: 1rem;
+  font-size: 1.2rem;
   line-height: 1.75;
 }
 
@@ -601,7 +628,7 @@ h2 {
   text-align: center;
   font-family: var(--font-prata), serif;
   font-style: italic;
-  font-size: 1.1rem;
+  font-size: 1.35rem;
   line-height: 1.7;
   color: var(--ink);
 }
@@ -657,13 +684,21 @@ h2 {
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
-  align-items: flex-start;
+  /* was flex-start with the card pinned to a fixed 460px — taller than
+     the 7-point list's own natural height, so the white card ran well
+     past "Inconsistent Absorption" (the list's last item). stretch lets
+     the card match the list's real height exactly instead. */
+  align-items: stretch;
   gap: 70px;
 }
 .fail-v2-card {
-  /* was a fixed 380px — now roughly half the chamber's content width */
+  /* was a fixed 380px, then a fixed 460px — now matches the list's own
+     height via align-items:stretch on the parent, whatever that turns
+     out to be at any content length */
   flex: 0 0 50%;
-  min-height: 460px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   background: #ffffff;
   padding: 48px 44px;
   box-sizing: border-box;
@@ -671,14 +706,14 @@ h2 {
 .fail-v2-card h3 {
   font-family: var(--font-prata), serif;
   font-weight: 400;
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   line-height: 1.3;
   color: var(--ink);
   margin-bottom: 10px;
 }
 .fail-v2-card p {
   font-family: var(--font-prata), serif;
-  font-size: 0.95rem;
+  font-size: 1.1rem;
   line-height: 1.5;
   color: var(--ink-soft);
 }
@@ -686,8 +721,10 @@ h2 {
   flex: 1;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-auto-flow: column;
-  grid-template-rows: repeat(4, auto);
+  /* 7 points don't fill an 8-cell 2x4 grid evenly — column-flow left the
+     leftover empty cell stranded mid-height in the middle of the right
+     column instead of tucked out of the way at the very end */
+  grid-auto-flow: row;
   column-gap: 60px;
 }
 .fail-v2-item {
@@ -734,7 +771,7 @@ h2 {
      2em, and on a shorter viewport that three-line stack is taller than
      the fixed 50vh left it, so overflow:hidden was clipping its own top
      line. Growing to fit the text can't clip it at any viewport size. */
-  min-height: 50vh;
+  min-height: 32vh;
   overflow: hidden;
   display: flex;
   align-items: flex-end;
@@ -742,7 +779,7 @@ h2 {
      same flat navy .pillars-chamber uses, so both section boundaries are
      seamless instead of showing a visible hard seam */
   background: linear-gradient(180deg, #003366 0%, #04407a 45%, #003366 100%);
-  padding-bottom: 13vh;
+  padding-bottom: 6vh;
 }
 .pillars-heading-slide .pillars-kicker {
   position: relative;
@@ -751,11 +788,20 @@ h2 {
 }
 .pillars-kicker-light { font-weight: 400; }
 .pillars-kicker-big { display: inline-block; font-size: 2em; }
+.pillars-kicker-sub {
+  position: relative;
+  z-index: 2;
+  margin: 14px 0 0;
+  padding: 0 60px;
+  font-family: var(--font-prata), serif;
+  font-size: clamp(1rem, 1.6vw, 1.25rem);
+  color: rgba(255, 255, 255, 0.8);
+}
 .pillars-kicker {
   position: relative;
   z-index: 2;
   padding: 0 60px;
-  font-size: clamp(2.8rem, 4.8vw, 4.5rem);
+  font-size: clamp(2.1rem, 3.6vw, 3.375rem);
   font-weight: 700;
   line-height: 1.1;
   color: #ffffff;
@@ -764,11 +810,29 @@ h2 {
 
 .pillars-chamber {
   display: flex;
-  min-height: 100vh;
+  /* was the default stretch — each side filled the full 100vh row on its
+     own, so the white card ran floor-to-ceiling even though its content
+     is much shorter than the 4-item list beside it. Centering the pair
+     as a unit instead lets each side size to its own content. min-height
+     is dropped too — forcing 100vh while the content is shorter than
+     that just left equal empty bands above and below the pair; letting
+     the section hug its own content removes that dead space entirely. */
+  align-items: center;
   background: #003366;
+  /* buffer before Comparison's own section begins in normal flow — that
+     section's overlap-onto-Pillars margin-top animates in as its natural
+     (unshifted) position approaches the viewport, so without real space
+     here its natural position sits right up against "Systemic
+     Bioavailability" and starts eating into it almost immediately,
+     however slowly the animation itself is tuned to run. */
+  padding-bottom: 220px;
 }
 .pillars-chamber-left {
   flex: 0 0 42%;
+  /* stretches to match the list's own natural height exactly — top edge
+     level with "Stability", bottom edge level with "Systemic
+     Bioavailability" — instead of sizing off its own (shorter) content */
+  align-self: stretch;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -1051,15 +1115,33 @@ h2 {
   height: 100vh;
   overflow: hidden;
   display: flex;
-  align-items: center;
+  /* was centered in the full 100vh sticky box, leaving as much empty
+     white space above the cards as below — pulling them up toward the
+     top closes the gap right under the header panel */
+  align-items: flex-start;
+  padding-top: 14vh;
+  box-sizing: border-box;
   background: #ffffff;
+}
+.pf-cta {
+  display: block;
+  width: fit-content;
+  margin: 40px auto 60px;
+  text-decoration: none;
 }
 .pf-track {
   position: relative;
   display: flex;
   align-items: center;
   gap: 60px;
-  padding: 0 60px 0 calc((100vw - var(--pf-card-w)) / 2);
+  /* was calc((100vw - var(--pf-card-w)) / 2) — centered card 1 at rest,
+     but on a wide viewport that's 400-500px of pure gutter baked into
+     the track's own scrollWidth, which directly inflates maxTranslate
+     (= scrollWidth - innerWidth) by that same amount. That's several
+     hundred extra px of scroll-jack runway for no visual gain — a
+     fixed, modest inset matching the section's other padding keeps the
+     pin duration tight instead. */
+  padding: 0 60px;
   will-change: transform;
 }
 .pf-card {
@@ -1104,8 +1186,11 @@ h2 {
   /* fixed (not min-) height so every card box is an identical rectangle
      regardless of how long its own body copy runs — a min-height let
      longer cards grow taller than shorter ones, breaking the uniform
-     shape across the row */
-  height: 320px;
+     shape across the row. Was 320px, sized for 1rem text; bumping the
+     paragraph font-size to 1.2rem made the longest card's copy (7-8
+     lines at this card width) taller than that box, and overflow:hidden
+     was silently clipping it mid-sentence instead of showing an overflow. */
+  height: 400px;
   overflow: hidden;
   box-sizing: border-box;
   background: #ffffff;
@@ -1117,8 +1202,8 @@ h2 {
 }
 .pf-card-body p {
   font-family: var(--font-prata), serif;
-  font-size: 1rem;
-  line-height: 1.65;
+  font-size: 1.2rem;
+  line-height: 1.6;
   color: var(--ink);
 }
 .pf-arrow {
@@ -1547,10 +1632,15 @@ h2 {
   pointer-events: none;
   will-change: transform;
 }
-.cta-blob.b1 { background: #a9d9f0; opacity: 0.8; }
 .cta-blob.b2 { background: #013a5c; opacity: 0.75; }
-.cta-blob.b3 { background: #6fb8e0; opacity: 0.65; }
-.cta-blob.b4 { background: #0060a0; opacity: 0.6; }
+/* dark variant (hero + footer): only the one darker-toned blob (b2) is
+   kept moving — b1/b3/b4 were lighter blues that read as a separate
+   "light" element against the navy background */
+.cta-blob.b1:not(.light),
+.cta-blob.b3:not(.light),
+.cta-blob.b4:not(.light) {
+  display: none;
+}
 
 /* light variant — white / light-lilac / neon-lime, used on the rest of the site */
 .cta-blob.light.b1 { background: #ffffff; opacity: 0.9; }
@@ -2036,7 +2126,7 @@ h2 {
 .bioactives-what-tab p {
   font-family: var(--font-prata), serif;
   font-weight: 400;
-  font-size: 1.15rem;
+  font-size: 1.35rem;
   line-height: 1.5;
   color: #ffffff;
   margin: 0;
@@ -2044,7 +2134,7 @@ h2 {
 .bioactives-what-body {
   max-width: 620px;
   font-family: var(--font-prata), serif;
-  font-size: 0.95rem;
+  font-size: 1.15rem;
   line-height: 1.7;
   color: var(--ink-soft);
   text-align: justify;
@@ -2407,7 +2497,7 @@ h2 {
   max-width: 760px;
   margin: 0 auto;
   font-family: var(--font-prata), serif;
-  font-size: 1rem;
+  font-size: 1.25rem;
   line-height: 1.9;
   color: #000000;
 }
@@ -2424,7 +2514,7 @@ h2 {
   background: #003366;
   color: #ffffff;
   font-family: var(--font-prata), serif;
-  font-size: 0.95rem;
+  font-size: 1.2rem;
   padding: 10px 24px;
   margin: 0 0 40px;
 }
@@ -2537,8 +2627,12 @@ h2 {
   font-size: 1.6rem;
   color: #ffffff;
 }
-.tech-stages-header span:first-child { position: absolute; left: 30vw; }
-.tech-stages-header span:last-child { position: absolute; left: 40vw; }
+/* right-aligned up to the divider (40vw) and left-aligned starting just
+   past it, instead of two independent left-anchored spans — those could
+   overlap since the left span's text just flowed rightward past the
+   right span's start point with no width limit */
+.tech-stages-header span:first-child { position: absolute; left: 0; width: calc(40vw - 40px); text-align: right; }
+.tech-stages-header span:last-child { position: absolute; left: calc(40vw + 40px); }
 
 .tech-stages-white-band {
   position: absolute;
@@ -2743,7 +2837,7 @@ h2 {
   font-weight: 400;
   font-size: clamp(1.5rem, 2.6vw, 2rem);
 }
-.tech-encap-banner-accent { font-size: 1.5em; }
+.tech-encap-banner-accent { font-size: 1em; }
 
 .tech-encap-body {
   display: flex;
@@ -2963,12 +3057,11 @@ h2 {
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
-  align-items: flex-start;
+  align-items: stretch;
   gap: 70px;
 }
 .sci-validation-card {
   flex: 0 0 50%;
-  min-height: 460px;
   background: #ffffff;
   padding: 48px 44px;
   box-sizing: border-box;
@@ -4979,22 +5072,50 @@ h2 {
 .product-detail-breadcrumb span:last-child { color: var(--ink); }
 
 /* ---------- indication page (one per health benefit) ---------- */
-.indication-hero {
+/* text column on the left, the benefit's own icon filling the panel of
+   blank space on the right instead of leaving it empty — same two-column
+   shape as .product-detail-top, mirrored (image on the right here). */
+.indication-top {
   display: flex;
-  align-items: center;
-  gap: 24px;
-  margin-bottom: 20px;
+  align-items: flex-start;
+  gap: 60px;
+  margin-bottom: 60px;
 }
-.indication-hero-icon { width: 88px; height: 88px; flex: none; object-fit: contain; }
+.indication-info { flex: 1; min-width: 0; }
+.indication-image-wrap {
+  flex: 0 0 480px;
+  aspect-ratio: 3 / 4;
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--bg-soft);
+}
+.indication-image { display: block; width: 100%; height: 100%; object-fit: cover; }
 .indication-description {
   max-width: 780px;
-  margin: 0 0 20px;
+  margin: 20px 0 0;
   font-family: var(--font-prata), serif;
   font-size: 1rem;
   line-height: 1.85;
   color: var(--ink-soft);
   text-align: justify;
   hyphens: auto;
+}
+
+/* indication page's ingredient grid: category filter on the left,
+   products shifted right to fill the rest — same sidebar+grid split as
+   the main /products browser, just scoped to this one benefit's own
+   ingredients */
+.indication-products {
+  display: flex;
+  align-items: flex-start;
+  gap: 48px;
+}
+.indication-products-filters { flex: 0 0 220px; }
+.indication-products-grid { flex: 1; min-width: 0; }
+
+@media (max-width: 900px) {
+  .indication-products { flex-direction: column; gap: 24px; }
+  .indication-products-filters { position: static; width: 100%; max-height: none; }
 }
 
 .product-detail-top {
@@ -5072,6 +5193,15 @@ h2 {
   border-top: 1px solid rgba(13, 21, 38, 0.12);
 }
 .product-detail-section { flex: 1; }
+/* .product-detail-sections is a flex row meant to hold sibling
+   .product-detail-section columns side by side — this variant instead
+   holds a heading stacked directly above the full-width indication
+   strip, so it needs to run as a column, not inherit the row layout */
+.product-detail-sections--indications {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 24px;
+}
 .product-detail-section-heading {
   font-family: var(--font-prata), serif;
   font-weight: 400;
@@ -5098,6 +5228,37 @@ h2 {
 /* Key Bioactives/Natural Sources, in the info column below the CTA */
 .product-detail-tag-list--info { margin-top: 40px; }
 .product-detail-tag-list--info .product-detail-section-heading { font-size: 1.4rem; }
+
+/* documents: COA/TDS/MSDS are placeholders until real files exist — shown
+   as a disabled label rather than a dead link so it doesn't read as a
+   broken download; Clinical Evidence is "On Request" instead, never a
+   file at all */
+.product-detail-downloads {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-width: 480px;
+}
+.product-detail-download-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(13, 21, 38, 0.12);
+  font-family: var(--font-prata), serif;
+}
+.product-detail-download-row:last-child { border-bottom: none; }
+.product-detail-download-label { font-size: 1rem; color: var(--ink); }
+.product-detail-download-action {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #003366;
+}
+.product-detail-download-action.is-disabled {
+  color: var(--ink-faint);
+  cursor: default;
+}
 
 /* health benefits: an icon-led row list (per Native Extracts' "Phyto
    Compounds" attribute rows) rather than pill tags, since each icon
@@ -5146,6 +5307,64 @@ h2 {
   color: #003366;
 }
 
+/* "for this ingredient" indication strip — Native Extracts' "More from
+   the Lab" panels: equal-width strips that expand toward whichever one
+   is hovered/focused, label pinned to the top-left corner over a
+   gradient for legibility, using the same per-indication photo as the
+   indication page's own hero image. */
+.indication-strip {
+  display: flex;
+  gap: 6px;
+  height: 520px;
+  overflow: hidden;
+  border-radius: 4px;
+}
+.indication-strip-item {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  background: var(--ink);
+  text-decoration: none;
+  overflow: hidden;
+  transition: flex 0.5s ease;
+}
+.indication-strip-item.is-active { flex: 2.6; }
+.indication-strip-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease, filter 0.4s ease;
+  filter: grayscale(1) contrast(1.05);
+}
+.indication-strip-item.is-active .indication-strip-photo {
+  transform: scale(1.06);
+  filter: grayscale(0.2) contrast(1.05);
+}
+/* darkens the top edge so the label stays legible over any photo,
+   regardless of how bright that particular frame is */
+.indication-strip-item::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0) 45%);
+  z-index: 1;
+}
+.indication-strip-label {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  right: 14px;
+  z-index: 2;
+  font-family: var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
 .product-detail-related {
   margin-top: 90px;
   padding-top: 50px;
@@ -5173,10 +5392,15 @@ h2 {
   .product-detail { padding: 140px 24px 60px; }
   .product-detail-top { flex-direction: column; gap: 30px; }
   .product-detail-image-wrap { flex: none; width: 100%; }
+  .indication-top { flex-direction: column; gap: 30px; }
+  .indication-image-wrap { flex: none; width: 100%; max-width: 280px; }
   .product-detail-sections { flex-direction: column; gap: 40px; }
   .product-detail-benefit-list { grid-template-columns: 1fr; }
   .product-detail-benefit-list .product-detail-benefit-item:nth-last-child(2) { border-bottom: 1px solid rgba(13, 21, 38, 0.12); }
   .product-detail-benefit-icon { width: 64px; height: 64px; }
+  .indication-strip { flex-wrap: wrap; height: auto; }
+  .indication-strip-item { flex: 1 1 45%; height: 150px; }
+  .indication-strip-item.is-active { flex: 1 1 45%; }
   .product-detail-related-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
@@ -5476,4 +5700,48 @@ h2 {
     font-size: clamp(0.9rem, 3.8vw, 1.1rem);
   }
   .hero-banner-cta { flex-wrap: wrap; }
+}
+
+/* ---------- cookie consent ---------- */
+.cookie-consent {
+  position: fixed;
+  left: 24px;
+  right: 24px;
+  bottom: 24px;
+  z-index: 200;
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  background: #003366;
+  color: #ffffff;
+  padding: 22px 28px;
+  border-radius: 12px;
+  box-shadow: 0 20px 50px rgba(13, 21, 38, 0.35);
+}
+.cookie-consent-text {
+  flex: 1 1 380px;
+  margin: 0;
+  font-family: var(--font-prata), serif;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
+}
+.cookie-consent-actions {
+  display: flex;
+  gap: 12px;
+  flex: 0 0 auto;
+}
+.cookie-consent-decline {
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  color: #ffffff;
+}
+.cookie-consent-decline:hover { background: rgba(255, 255, 255, 0.1); }
+
+@media (max-width: 640px) {
+  .cookie-consent { left: 12px; right: 12px; bottom: 12px; padding: 18px 20px; }
+  .cookie-consent-actions { width: 100%; }
+  .cookie-consent-actions .btn { flex: 1; }
 }

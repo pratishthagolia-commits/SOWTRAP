@@ -16,7 +16,7 @@ export default function PartnershipFarmClosing() {
       </p>
 
       <div className="partnership-farm-cta">
-        <Link href="/contact" className="btn btn-lime">Book a Consultation / Partnership Enquiry</Link>
+        <Link href="/contact" className="btn btn-lime">Partnership Enquiry</Link>
         <Link href="/products" className="btn btn-lime">Explore products</Link>
       </div>
     </section>

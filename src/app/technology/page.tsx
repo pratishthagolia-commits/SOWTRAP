@@ -3,7 +3,6 @@ import Nav from "@/components/Nav";
 import ScrollReveal from "@/components/ScrollReveal";
 import TechnologyHero from "@/components/technology/TechnologyHero";
 import TechIntro from "@/components/technology/TechIntro";
-import TechPhilosophy from "@/components/technology/TechPhilosophy";
 import TechApproach from "@/components/technology/TechApproach";
 import TechStages from "@/components/technology/TechStages";
 import TechPlatform from "@/components/technology/TechPlatform";
@@ -27,8 +26,6 @@ export default function TechnologyPage() {
       <TechnologyHero />
 
       <TechIntro />
-
-      <TechPhilosophy />
 
       <TechApproach />
 

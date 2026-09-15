@@ -60,28 +60,32 @@ export const HEALTH_BENEFIT_ORDER = [
   "Menopause",
 ] as const;
 
-// one icon per indication (from the client's "indicationlogos" folder),
-// keyed by the exact HEALTH_BENEFIT_ORDER label so a lookup never
-// silently falls through to a wrong icon
+// one photo per indication (from the client's "indications" folder on
+// Desktop), keyed by the exact HEALTH_BENEFIT_ORDER label so a lookup
+// never silently falls through to a wrong image. The client only had
+// real photography for 16 of the 18 — Energy & Vitality and
+// Bioenhancers reuse the closest-fitting photo (Sports Recovery's and
+// Gut Health's, respectively) per their own call, rather than falling
+// back to a placeholder.
 export const HEALTH_BENEFIT_ICONS: Record<(typeof HEALTH_BENEFIT_ORDER)[number], string> = {
-  "Immunity Support": "/images/indications/immunity-support.png",
-  "Energy & Vitality": "/images/indications/energy-vitality.png",
-  "Cognitive Health": "/images/indications/cognitive-health.png",
-  "Bone & Joint Health": "/images/indications/bone-joint-health.png",
-  "Heart Health": "/images/indications/heart-health.png",
-  "Skin Radiance": "/images/indications/skin-radiance.png",
-  "Hair & Nail Support": "/images/indications/hair-nail-support.png",
-  "Eye Health": "/images/indications/eye-health.png",
-  "Women’s Wellness": "/images/indications/womens-wellness.png",
-  "Men’s Health": "/images/indications/mens-health.png",
-  "Stress & Mood Balance": "/images/indications/stress-mood-balance.png",
-  "Sports Recovery": "/images/indications/sports-recovery.png",
-  "Sleep & Relaxation": "/images/indications/sleep-relaxation.png",
-  "Detox & Liver Support": "/images/indications/detox-liver-support.png",
-  "Weight Management": "/images/indications/weight-management.png",
-  Bioenhancers: "/images/indications/bioenhancers.png",
-  "Gut Health": "/images/indications/gut-health.png",
-  Menopause: "/images/indications/menopause.png",
+  "Immunity Support": "/images/indications/immunity-support.jpg",
+  "Energy & Vitality": "/images/indications/energy-vitality.jpg",
+  "Cognitive Health": "/images/indications/cognitive-health.jpg",
+  "Bone & Joint Health": "/images/indications/bone-joint-health.jpg",
+  "Heart Health": "/images/indications/heart-health.jpg",
+  "Skin Radiance": "/images/indications/skin-radiance.jpg",
+  "Hair & Nail Support": "/images/indications/hair-nail-support.jpg",
+  "Eye Health": "/images/indications/eye-health.jpg",
+  "Women’s Wellness": "/images/indications/womens-wellness.jpg",
+  "Men’s Health": "/images/indications/mens-health.jpg",
+  "Stress & Mood Balance": "/images/indications/stress-mood-balance.jpg",
+  "Sports Recovery": "/images/indications/sports-recovery.jpg",
+  "Sleep & Relaxation": "/images/indications/sleep-relaxation.jpg",
+  "Detox & Liver Support": "/images/indications/detox-liver-support.jpg",
+  "Weight Management": "/images/indications/weight-management.jpg",
+  Bioenhancers: "/images/indications/bioenhancers.jpg",
+  "Gut Health": "/images/indications/gut-health.jpg",
+  Menopause: "/images/indications/menopause.jpg",
 };
 
 export const PRODUCTS: Product[] = rawProducts as Product[];
@@ -115,7 +119,7 @@ export function getHealthBenefitIcon(benefit: string): string | undefined {
 // derived from the icon path rather than a second hand-written map, so
 // the URL slug and the icon file can never drift out of sync
 export function getHealthBenefitSlug(benefit: string): string | undefined {
-  return getHealthBenefitIcon(benefit)?.split("/").pop()?.replace(/\.png$/, "");
+  return getHealthBenefitIcon(benefit)?.split("/").pop()?.replace(/\.(png|jpe?g)$/i, "");
 }
 
 export function getHealthBenefitBySlug(slug: string): string | undefined {

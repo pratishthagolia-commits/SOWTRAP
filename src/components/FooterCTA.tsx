@@ -132,11 +132,11 @@ export default function FooterCTA() {
                 Panaji, Goa 403001, INDIA
               </li>
               <li>
-                <strong>Manufacturing Unit 1:</strong> Plot 216, Main road Phase &ndash; VI,
+                <strong>Manufacturing Unit 1:</strong> Plot 232, Main road Phase &ndash; VI,
                 Udyog Vihar, Sector&ndash;37, Gurgaon Haryana, India &ndash; 122001
               </li>
               <li>
-                <strong>Business Address:</strong> 10th floor, 83Avenue, Sector 83, Gurugram,
+                <strong>Business Address:</strong> 10th floor, 83 Avenue, Sector 83, Gurugram,
                 Haryana, Pincode &ndash; 122004
               </li>
             </ul>
