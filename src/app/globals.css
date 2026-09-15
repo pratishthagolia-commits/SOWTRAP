@@ -729,8 +729,12 @@ h2 {
   position: relative;
   /* was 100vh — left a large stretch of empty navy above the kicker text
      since the text itself (a few lines, bottom-aligned) never needed
-     anywhere near a full screen of height */
-  height: 50vh;
+     anywhere near a full screen of height. min-height (not a fixed
+     height) — the kicker's "BRIDGING / NUTRITION GAP" line renders at
+     2em, and on a shorter viewport that three-line stack is taller than
+     the fixed 50vh left it, so overflow:hidden was clipping its own top
+     line. Growing to fit the text can't clip it at any viewport size. */
+  min-height: 50vh;
   overflow: hidden;
   display: flex;
   align-items: flex-end;
@@ -4912,12 +4916,16 @@ h2 {
     #dee1e6 24px
   );
 }
+/* holds the product's scientific name (light, italic) where the plain
+   category label used to sit — blank (not the category) when a product
+   has no scientific name, rather than falling back to showing the
+   category after all */
 .product-card-category {
   margin: 0 0 4px;
   font-family: var(--font-prata), serif;
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+  font-style: italic;
+  font-size: 1.17rem;
+  letter-spacing: 0.01em;
   color: var(--ink-faint);
 }
 .product-card-name {

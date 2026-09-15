@@ -101,7 +101,7 @@ export default function ProductDetail({ product, related }: { product: Product; 
                     <div className="product-card-placeholder" aria-hidden="true" />
                   )}
                 </div>
-                <p className="product-card-category">{p.category}</p>
+                <p className="product-card-category">{p.scientificName || "\u00A0"}</p>
                 <h3 className="product-card-name">{p.name}</h3>
               </Link>
             ))}

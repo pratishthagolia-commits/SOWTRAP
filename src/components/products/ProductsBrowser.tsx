@@ -27,7 +27,7 @@ function ProductCard({ product }: { product: Product }) {
           <div className="product-card-placeholder" aria-hidden="true" />
         )}
       </div>
-      <p className="product-card-category">{product.category}</p>
+      <p className="product-card-category">{product.scientificName || "\u00A0"}</p>
       <h3 className="product-card-name">{product.name}</h3>
     </Link>
   );

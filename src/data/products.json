@@ -20,7 +20,8 @@
       "Stress & Mood Balance"
     ],
     "slug": "neem-oil",
-    "image": "/images/products/neem-oil.jpeg"
+    "image": "/images/products/neem-oil.jpeg",
+    "scientificName": "Azadirachta indica"
   },
   {
     "category": "Herbal Extracts",
@@ -47,7 +48,8 @@
       "Gut Health"
     ],
     "slug": "black-seed-oil",
-    "image": "/images/products/black-seed-oil.jpeg"
+    "image": "/images/products/black-seed-oil.jpeg",
+    "scientificName": "Nigella sativa"
   },
   {
     "category": "Herbal Extracts",
@@ -68,7 +70,8 @@
       "Cognitive Health"
     ],
     "slug": "lavender-oil",
-    "image": "/images/products/lavender-oil.jpeg"
+    "image": "/images/products/lavender-oil.jpeg",
+    "scientificName": "Lavandula angustifolia"
   },
   {
     "category": "Herbal Extracts",
@@ -92,7 +95,8 @@
       "Cognitive Health"
     ],
     "slug": "cinnamon-oil",
-    "image": "/images/products/cinnamon-oil.jpeg"
+    "image": "/images/products/cinnamon-oil.jpeg",
+    "scientificName": "Cinnamomum verum"
   },
   {
     "category": "Herbal Extracts",
@@ -111,7 +115,8 @@
       "Hair & Nail Support"
     ],
     "slug": "curry-leaf-oil",
-    "image": "/images/products/curry-leaf-oil.jpeg"
+    "image": "/images/products/curry-leaf-oil.jpeg",
+    "scientificName": "Murraya koenigii"
   },
   {
     "category": "Herbal Extracts",
@@ -138,7 +143,8 @@
       "Women’s Wellness"
     ],
     "slug": "curcumin",
-    "image": "/images/products/curcumin.jpeg"
+    "image": "/images/products/curcumin.jpeg",
+    "scientificName": "Curcuma longa"
   },
   {
     "category": "Herbal Extracts",
@@ -156,7 +162,8 @@
       "Weight Management"
     ],
     "slug": "black-pepper",
-    "image": "/images/products/black-pepper.jpeg"
+    "image": "/images/products/black-pepper.jpeg",
+    "scientificName": "Piper nigrum"
   },
   {
     "category": "Herbal Extracts",
@@ -178,7 +185,8 @@
       "Bioenhancers"
     ],
     "slug": "tulsi",
-    "image": "/images/products/tulsi.jpeg"
+    "image": "/images/products/tulsi.jpeg",
+    "scientificName": "Ocimum tenuiflorum"
   },
   {
     "category": "Herbal Extracts",
@@ -202,7 +210,8 @@
       "Menopause"
     ],
     "slug": "mint-oil",
-    "image": "/images/products/mint-oil.jpeg"
+    "image": "/images/products/mint-oil.jpeg",
+    "scientificName": "Mentha spicata"
   },
   {
     "category": "Herbal Extracts",
@@ -225,7 +234,8 @@
       "Immunity Support"
     ],
     "slug": "pomegranate-peel",
-    "image": "/images/products/pomegranate-peel.jpeg"
+    "image": "/images/products/pomegranate-peel.jpeg",
+    "scientificName": "Punica granatum"
   },
   {
     "category": "Herbal Extracts",
@@ -252,7 +262,8 @@
       "Immunity Support"
     ],
     "slug": "sea-buckthorn",
-    "image": "/images/products/sea-buckthorn.jpeg"
+    "image": "/images/products/sea-buckthorn.jpeg",
+    "scientificName": "Hippophae rhamnoides"
   },
   {
     "category": "Herbal Extracts",
@@ -274,7 +285,8 @@
       "Energy & Vitality"
     ],
     "slug": "coconut",
-    "image": "/images/products/coconut.jpeg"
+    "image": "/images/products/coconut.jpeg",
+    "scientificName": "Cocos nucifera"
   },
   {
     "category": "Herbal Extracts",
@@ -294,7 +306,8 @@
       "Men’s Health"
     ],
     "slug": "fenugreek",
-    "image": "/images/products/fenugreek.jpeg"
+    "image": "/images/products/fenugreek.jpeg",
+    "scientificName": "Trigonella foenum-graecum"
   },
   {
     "category": "Herbal Extracts",
@@ -318,7 +331,8 @@
       "Menopause"
     ],
     "slug": "saffron",
-    "image": "/images/products/saffron.jpeg"
+    "image": "/images/products/saffron.jpeg",
+    "scientificName": "Crocus sativus"
   },
   {
     "category": "Herbal Extracts",
@@ -341,7 +355,8 @@
       "Menopause"
     ],
     "slug": "ashwagandha",
-    "image": "/images/products/ashwagandha.jpeg"
+    "image": "/images/products/ashwagandha.jpeg",
+    "scientificName": "Withania somnifera"
   },
   {
     "category": "Herbal Extracts",
@@ -366,7 +381,8 @@
       "Detox & Liver Support"
     ],
     "slug": "beetroot",
-    "image": "/images/products/beetroot.jpeg"
+    "image": "/images/products/beetroot.jpeg",
+    "scientificName": "Beta vulgaris"
   },
   {
     "category": "Herbal Extracts",
@@ -395,7 +411,8 @@
       "Cognitive Health"
     ],
     "slug": "green-tea",
-    "image": "/images/products/green-tea.jpeg"
+    "image": "/images/products/green-tea.jpeg",
+    "scientificName": "Camellia sinensis"
   },
   {
     "category": "Herbal Extracts",
@@ -415,7 +432,8 @@
       "Gut Health"
     ],
     "slug": "raw-banana",
-    "image": "/images/products/raw-banana.jpeg"
+    "image": "/images/products/raw-banana.jpeg",
+    "scientificName": "Musa acuminata"
   },
   {
     "category": "Herbal Extracts",
@@ -442,7 +460,8 @@
       "Immunity Support"
     ],
     "slug": "coriander-oil",
-    "image": "/images/products/coriander-oil.jpeg"
+    "image": "/images/products/coriander-oil.jpeg",
+    "scientificName": "Coriandrum sativum"
   },
   {
     "category": "Herbal Extracts",
@@ -469,7 +488,8 @@
       "Bone & Joint Health"
     ],
     "slug": "coffee",
-    "image": "/images/products/coffee.jpeg"
+    "image": "/images/products/coffee.jpeg",
+    "scientificName": "Coffea"
   },
   {
     "category": "Herbal Extracts",
@@ -489,7 +509,8 @@
       "Weight Management"
     ],
     "slug": "guarana",
-    "image": "/images/products/guarana.jpeg"
+    "image": "/images/products/guarana.jpeg",
+    "scientificName": "Paullinia cupana"
   },
   {
     "category": "Herbal Extracts",
@@ -516,7 +537,8 @@
       "Immunity Support"
     ],
     "slug": "moringa",
-    "image": "/images/products/moringa.jpeg"
+    "image": "/images/products/moringa.jpeg",
+    "scientificName": "Moringa oleifera"
   },
   {
     "category": "Herbal Extracts",
@@ -540,7 +562,8 @@
       "Eye Health"
     ],
     "slug": "goji-berries",
-    "image": "/images/products/goji-berries.jpeg"
+    "image": "/images/products/goji-berries.jpeg",
+    "scientificName": "Lycium barbarum"
   },
   {
     "category": "Herbal Extracts",
@@ -564,7 +587,8 @@
       "Skin Radiance"
     ],
     "slug": "amla",
-    "image": "/images/products/amla.jpeg"
+    "image": "/images/products/amla.jpeg",
+    "scientificName": "Phyllanthus emblica"
   },
   {
     "category": "Herbal Extracts",
@@ -585,7 +609,8 @@
       "Menopause"
     ],
     "slug": "rhodiola-rosea",
-    "image": "/images/products/rhodiola-rosea.jpeg"
+    "image": "/images/products/rhodiola-rosea.jpeg",
+    "scientificName": "Rhodiola rosea"
   },
   {
     "category": "Herbal Extracts",
@@ -611,7 +636,8 @@
       "Detox & Liver Support"
     ],
     "slug": "schisandra-berries",
-    "image": "/images/products/schisandra-berries.jpeg"
+    "image": "/images/products/schisandra-berries.jpeg",
+    "scientificName": "Schisandra chinensis"
   },
   {
     "category": "Herbal Extracts",
@@ -639,7 +665,8 @@
       "Bone & Joint Health"
     ],
     "slug": "haematococcus-pluvialis-microalgae",
-    "image": "/images/products/haematococcus-pluvialis-microalgae.jpeg"
+    "image": "/images/products/haematococcus-pluvialis-microalgae.jpeg",
+    "scientificName": "Haematococcus pluvialis"
   },
   {
     "category": "Herbal Extracts",
@@ -668,7 +695,8 @@
       "Sports Recovery"
     ],
     "slug": "maca-root",
-    "image": "/images/products/maca-root.jpeg"
+    "image": "/images/products/maca-root.jpeg",
+    "scientificName": "Lepidium meyenii"
   },
   {
     "category": "Herbal Extracts",
@@ -695,7 +723,8 @@
       "Heart Health"
     ],
     "slug": "panax-ginseng",
-    "image": "/images/products/panax-ginseng.jpeg"
+    "image": "/images/products/panax-ginseng.jpeg",
+    "scientificName": "Panax ginseng C.A. Mey"
   },
   {
     "category": "Herbal Extracts",
@@ -721,7 +750,8 @@
       "Bioenhancers"
     ],
     "slug": "cordyceps-militaris",
-    "image": "/images/products/cordyceps-militaris.jpeg"
+    "image": "/images/products/cordyceps-militaris.jpeg",
+    "scientificName": "Caterpillar fungus"
   },
   {
     "category": "Herbal Extracts",
@@ -750,7 +780,8 @@
       "Sleep & Relaxation"
     ],
     "slug": "shiitake-mushroom",
-    "image": "/images/products/shiitake-mushroom.jpeg"
+    "image": "/images/products/shiitake-mushroom.jpeg",
+    "scientificName": "Lentinula edodes"
   },
   {
     "category": "Herbal Extracts",
@@ -774,7 +805,8 @@
       "Skin Radiance"
     ],
     "slug": "gotu-kola-brahmi",
-    "image": "/images/products/gotu-kola-brahmi.jpeg"
+    "image": "/images/products/gotu-kola-brahmi.jpeg",
+    "scientificName": "Centella asiatica"
   },
   {
     "category": "Herbal Extracts",
@@ -797,7 +829,8 @@
       "Detox & Liver Support"
     ],
     "slug": "bitter-gourd",
-    "image": "/images/products/bitter-gourd.jpeg"
+    "image": "/images/products/bitter-gourd.jpeg",
+    "scientificName": "Momordica charanti"
   },
   {
     "category": "Herbal Extracts",
@@ -820,7 +853,8 @@
       "Sports Recovery"
     ],
     "slug": "siberian-ginseng",
-    "image": "/images/products/siberian-ginseng.jpeg"
+    "image": "/images/products/siberian-ginseng.jpeg",
+    "scientificName": "Eleutherococcus senticosus"
   },
   {
     "category": "Herbal Extracts",
@@ -836,7 +870,8 @@
       "Gut Health"
     ],
     "slug": "chicory-root",
-    "image": "/images/products/chicory-root.jpeg"
+    "image": "/images/products/chicory-root.jpeg",
+    "scientificName": "Cichorium intybus"
   },
   {
     "category": "Herbal Extracts",
@@ -858,7 +893,8 @@
       "Menopause"
     ],
     "slug": "corn",
-    "image": "/images/products/corn.jpeg"
+    "image": "/images/products/corn.jpeg",
+    "scientificName": "Zea mays"
   },
   {
     "category": "Herbal Extracts",
@@ -880,7 +916,8 @@
       "Immunity Support"
     ],
     "slug": "pomegranate",
-    "image": "/images/products/pomegranate.jpeg"
+    "image": "/images/products/pomegranate.jpeg",
+    "scientificName": "Punica granatum"
   },
   {
     "category": "Herbal Extracts",
@@ -897,7 +934,8 @@
       "Bone & Joint Health"
     ],
     "slug": "porcini-mushroom",
-    "image": "/images/products/porcini-mushroom.jpeg"
+    "image": "/images/products/porcini-mushroom.jpeg",
+    "scientificName": "Boletus edulis"
   },
   {
     "category": "Herbal Extracts",
@@ -916,7 +954,8 @@
       "Sports Recovery"
     ],
     "slug": "muscadine-grapes",
-    "image": "/images/products/muscadine-grapes.jpeg"
+    "image": "/images/products/muscadine-grapes.jpeg",
+    "scientificName": "Vitis rotundifolia"
   },
   {
     "category": "Herbal Extracts",
@@ -942,7 +981,8 @@
       "Immunity Support"
     ],
     "slug": "ginger",
-    "image": "/images/products/ginger.jpeg"
+    "image": "/images/products/ginger.jpeg",
+    "scientificName": "Zingiber officinale"
   },
   {
     "category": "Herbal Extracts",
@@ -961,7 +1001,8 @@
       "Sports Recovery"
     ],
     "slug": "sunflower-seed-oil",
-    "image": "/images/products/sunflower-seed-oil.jpeg"
+    "image": "/images/products/sunflower-seed-oil.jpeg",
+    "scientificName": "Helianthus annuus"
   },
   {
     "category": "Vitamins",

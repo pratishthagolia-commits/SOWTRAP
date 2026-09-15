@@ -12,6 +12,9 @@ export type Product = {
   image: string | null;
   // only set for Bioactives products — its Product Type sub-filter
   productType?: "Functional Oils" | "Amino Acids" | "Functional Ingredients";
+  // binomial from "Herbal Extracts- biological name.docx" — only the
+  // Herbal Extracts category has one
+  scientificName?: string;
 };
 
 // order per the "Website structure - SowTrap.docx" filter spec, rather
