@@ -167,6 +167,17 @@
   },
   {
     "category": "Herbal Extracts",
+    "name": "Black Peppercorns",
+    "description": "PLACEHOLDER — description to be provided by the client. Do not publish without replacing this text.",
+    "bioactives": [],
+    "naturalSources": [],
+    "healthBenefits": [],
+    "slug": "black-peppercorns",
+    "image": "/images/products/black-peppercorns.jpeg",
+    "scientificName": "Piper nigrum"
+  },
+  {
+    "category": "Herbal Extracts",
     "name": "Tulsi",
     "description": "Advanced encapsulation enables SowTrap™ Holy Basil to stabilize its delicate volatile oils and key botanical constituents, helping retain their natural potency and functional properties from processing through delivery. This superior delivery method shields the delicate botanical extracts from environmental degradation, ensuring unmatched stability, a longer shelf life, and a controlled release that maximizes cellular absorption. Celebrated for its profound health benefits, our encapsulated Tulsi acts as a potent adaptogen that helps the body manage stress, enhances immune system resilience, supports respiratory health, and delivers a rich supply of antioxidants to promote holistic vitality and natural balance.",
     "bioactives": [
