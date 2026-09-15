@@ -69,7 +69,7 @@ export default function ContactProjectForm() {
         </div>
 
         <button type="submit" className="btn btn-lime contact-submit">
-          Submit Project Inquiry &rarr;
+          Submit Project Inquiry
         </button>
       </form>
     </section>

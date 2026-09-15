@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import useIsMobile from "@/lib/useIsMobile";
 
 type Stage = {
   name: string;
@@ -118,7 +117,6 @@ const STAGES: Stage[] = [
 // photo, "what we evaluate" list, and stage-name caption crossfade
 // between stages as the user scrolls, per the reference design.
 export default function TechStages() {
-  const isMobile = useIsMobile();
   const wrapperRef = useRef<HTMLElement>(null);
   const [progress, setProgress] = useState(0);
 
@@ -159,19 +157,17 @@ export default function TechStages() {
         <div className="tech-stages-white-band" />
         <div className="tech-stages-divider" />
 
-        {!isMobile && (
-          <div className="tech-stages-photo-col">
-            {STAGES.map((stage, i) => (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                key={stage.name}
-                src={stage.image}
-                alt={stage.name}
-                className={`tech-stages-photo${i === activeIndex ? " is-active" : ""}`}
-              />
-            ))}
-          </div>
-        )}
+        <div className="tech-stages-photo-col">
+          {STAGES.map((stage, i) => (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              key={stage.name}
+              src={stage.image}
+              alt={stage.name}
+              className={`tech-stages-photo${i === activeIndex ? " is-active" : ""}`}
+            />
+          ))}
+        </div>
 
         <div className="tech-stages-caption">
           {STAGES.map((stage, i) => (

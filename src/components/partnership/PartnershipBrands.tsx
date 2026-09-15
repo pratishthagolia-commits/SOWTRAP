@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import useIsMobile from "@/lib/useIsMobile";
 
 type BrandStep = {
   num: string;
@@ -122,6 +123,7 @@ const STEPS: BrandStep[] = [
 // cursor photo gallery on the right (active photo sharp + tagged,
 // neighbours blurred/peeking), instead of a hover-curtain on navy.
 export default function PartnershipBrands() {
+  const isMobile = useIsMobile();
   const [open, setOpen] = useState<number | null>(null);
   const [activeImage, setActiveImage] = useState(0);
   const galleryRef = useRef<HTMLDivElement>(null);
@@ -135,6 +137,9 @@ export default function PartnershipBrands() {
   }
 
   useEffect(() => {
+    // no cursor to follow on a phone, and the photo stack this drives
+    // isn't rendered there — skip the permanent rAF loop entirely
+    if (isMobile) return;
     function handlePointerMove(e: globalThis.MouseEvent) {
       const el = galleryRef.current;
       if (!el) return;
@@ -165,7 +170,7 @@ export default function PartnershipBrands() {
       window.removeEventListener("mousemove", handlePointerMove);
       cancelAnimationFrame(frameId);
     };
-  }, []);
+  }, [isMobile]);
 
   return (
     <section className="partnership-brands">
@@ -220,6 +225,7 @@ export default function PartnershipBrands() {
           })}
         </div>
 
+        {!isMobile && (
         <div className="partnership-brands-gallery" ref={galleryRef}>
           {STEPS.map((step, i) => {
             const prevIndex = (activeImage - 1 + STEPS.length) % STEPS.length;
@@ -246,14 +252,16 @@ export default function PartnershipBrands() {
           })}
           <span className="partnership-brands-gallery-tag">{STEPS[activeImage].title}</span>
         </div>
+        )}
       </div>
 
       <div className="partnership-brands-strategist reveal-up">
         <h3 className="partnership-brands-strategist-heading">
           Meet your Ingredient Strategist &amp; Formula Creator.
-          <br />
-          Innovation starts with the right scientific partner.
         </h3>
+        <p className="partnership-brands-strategist-subheading">
+          Innovation starts with the right scientific partner.
+        </p>
         <p className="partnership-brands-strategist-body">
           Our New Product Development (NPD) specialists combine expertise in ingredient science,
           encapsulation technology, formulation development, and manufacturing to help brands

@@ -47,7 +47,7 @@ export default function ContactDirectForm() {
         </div>
 
         <button type="submit" className="btn btn-lime contact-submit">
-          Submit query &rarr;
+          Submit query
         </button>
       </form>
     </section>

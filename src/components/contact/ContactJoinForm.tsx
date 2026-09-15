@@ -67,7 +67,7 @@ export default function ContactJoinForm() {
         </div>
 
         <button type="submit" className="btn btn-lime contact-submit">
-          &rarr; Submit Application
+          Submit Application
         </button>
       </form>
     </section>

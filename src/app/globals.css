@@ -448,7 +448,13 @@ h2 {
 @media (max-width: 860px) {
   .about-v2-notch { width: 78vw; height: 100px; padding: 0 28px; }
   .about-v2-heading { font-size: 2.2rem; }
-  .about-v2-panel { padding: 24px 28px 32px; }
+  /* height (not min-height) at 78vh meant the paragraphs — far taller
+     once they wrap at this width — spilled straight out of the box and
+     painted over the "OUR CORE EXPERTISE" notch that follows it inside
+     .about-v2-slide. Letting the panel grow keeps the copy inside its own
+     white box and pushes the notch down with it, so they can't collide
+     however long the text runs or however narrow the screen gets. */
+  .about-v2-panel { padding: 24px 28px 32px; height: auto; min-height: 78vh; }
   .about-v2-body { margin-left: 0; max-width: 100%; }
 }
 
@@ -4324,6 +4330,16 @@ h2 {
   font-size: clamp(1.5rem, 2.8vw, 2.1rem);
   line-height: 1.4;
   color: #ffffff;
+  margin: 0 0 10px;
+}
+/* second line reads as a subheading under the line above, rather than
+   two equal-weight lines of the same sentence */
+.partnership-brands-strategist-subheading {
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: clamp(1.1rem, 2vw, 1.5rem);
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.82);
   margin: 0 0 30px;
 }
 .partnership-brands-strategist-body {
@@ -5287,4 +5303,166 @@ h2 {
      sits in a server component, so it's hidden here instead (its <img> is
      lazy, so hiding the wrapper also means it's never fetched) */
   .partnership-who-image-wrap { display: none; }
+
+  /* "BRIDGING / NUTRITION GAP" ran off the right edge: the base clamp
+     bottoms out at 2.8rem and -big doubles it to 5.6rem, which is wider
+     than a phone screen before the 60px side padding is even counted */
+  .pillars-kicker {
+    padding: 0 20px;
+    font-size: clamp(1.2rem, 5vw, 1.9rem);
+  }
+
+  /* the timeline's little connector dashes off the side of each box */
+  .dt-row.is-left .dt-box::after,
+  .dt-row.is-right .dt-box::after { display: none; }
+
+  /* the portfolio cards sized off --pf-card-w, which is declared on
+     .pf-sticky — and .pf-sticky doesn't exist in the phone branch, so the
+     variable resolved to nothing and every card collapsed to a sliver.
+     Declare it on the phone scroller instead and let the body grow to fit
+     its copy rather than holding a fixed 320px desktop rectangle. */
+  .portfolio-mobile-scroller {
+    --pf-card-w: 78vw;
+    /* room for the tab, which sits at top:-18px and would otherwise be
+       clipped by the scroller's own overflow */
+    padding-top: 24px;
+  }
+  /* every card stretches to the tallest one in the strip (the flex
+     container's own height), so the boxes stay one uniform rectangle
+     sized to the longest copy — rather than each card shrink-wrapping
+     its own text at a different height */
+  .portfolio-mobile-scroller { align-items: stretch; }
+  .portfolio-mobile-scroller .pf-card {
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+  }
+  .portfolio-mobile-scroller .pf-card-body {
+    flex: 1;
+    height: auto;
+    overflow: visible;
+    padding: 52px 20px 26px;
+  }
+  .portfolio-mobile-scroller .pf-card-body p { font-size: 0.92rem; line-height: 1.6; }
+  .portfolio-mobile-scroller .pf-card-tab { font-size: 0.9rem; padding: 10px 16px; }
+
+  /* .about-v2-panel is a FIXED 78vh box, and at phone width its three
+     paragraphs run far taller than that — the overflow was painting
+     straight over the "OUR CORE EXPERTISE" notch that follows it inside
+     .about-v2-slide. Scaling the type off vw (rather than a fixed rem)
+     makes the copy fit the panel on any phone without dropping a word,
+     and keeps the panel's slide/overlap motion exactly as it was. */
+  .about-v2-body { gap: 14px; }
+  .about-v2-body p {
+    font-size: clamp(0.72rem, 3.2vw, 0.95rem);
+    line-height: 1.5;
+  }
+  .about-v2-panel { padding: 20px 20px 24px; }
+  .expertise-notch { width: 92vw; height: 104px; padding: 0 20px; }
+  .expertise-heading { font-size: clamp(1.15rem, 5.4vw, 1.7rem); }
+
+  /* the industry cards carry per-card pixel nudges (±48-144px) tuned
+     against a full-height desktop column. On a phone each half is ~50vh
+     and the titles wrap to 2-3 lines, so those offsets pushed cards off
+     the bottom edge or up underneath the nav badge. Centre each card in
+     its own half instead, so it sits clear whatever its title wraps to.
+     !important because each nudge is written at a higher specificity
+     (.ind-slide:nth-child(n) .ind-slide-half:first-child .ind-slide-card)
+     — this way a future nudge can't reintroduce the clipping either. */
+  .ind-slide .ind-slide-card {
+    top: 50% !important;
+    transform: translateY(-50%);
+  }
+  /* the notch holds a fixed single-line 52px height and lets extra lines
+     spill past its own background onto the panel below — fine for a wide
+     desktop column, messy at 170px wide where every title wraps */
+  .ind-slide-notch { height: auto; padding: 14px 18px 16px; }
+  .ind-slide-panel { height: 92px; }
+
+  /* Sports Nutrition (255px) and Contract Manufacturers (188px) carry
+     desktop-sized per-card logo overrides that dwarf the phone panel and
+     spill past it. Drop every logo back to the shared base size, so they
+     all match Beauty & Nutricosmetics — the proportion we're matching.
+     !important because those two are written at a higher specificity. */
+  .ind-slide .ind-slide-logo {
+    width: 34px !important;
+    height: 34px !important;
+  }
+  /* smaller title: long names like "Botanical Growers & Extract
+     Producers" were wrapping to four lines, running the tab far taller
+     than the folder-tab silhouette wants */
+  .ind-slide-notch { max-width: 190px; }
+  .ind-slide-notch p { font-size: 0.92rem; }
+
+  /* tech stages keeps its desktop two-column split at phone width (photo
+     45vw on the left, copy crammed into the ~45vw beside it), and the
+     white band only spans 42-82% so the photo straddles the navy/white
+     edge. Stack them instead: photo across the top, copy underneath, both
+     on the same 20px gutter, with the band sized to back the copy. */
+  .tech-stages-photo-col {
+    left: 20px;
+    width: calc(100vw - 40px);
+    top: 8%;
+    height: 30%;
+  }
+  .tech-stages-caption {
+    left: 20px;
+    width: calc(100vw - 40px);
+    top: calc(8% + 30% + 12px);
+  }
+  .tech-stages-white-band { top: 46%; height: 48%; }
+  .tech-stages-evaluate-col {
+    left: 20px;
+    width: calc(100vw - 40px);
+    max-width: none;
+    top: 46%;
+    height: 48%;
+  }
+  .tech-stages-evaluate-item { left: 0; right: 0; }
+  .tech-stages-evaluate-heading { font-size: 1rem; }
+  .tech-stages-evaluate-list { font-size: 0.85rem; }
+
+  /* the 860px rule zeroes this list's side padding, so on a phone the
+     headings and bullets sit flush against both screen edges (and the
+     longer bullets run off the right) */
+  .tech-encap-list { padding: 0 20px; }
+
+  /* partnership engagement models runs the exact same navy/white band
+     mechanic as tech stages above, and had the same squeezed two-column
+     phone layout — stack it identically */
+  .partnership-stages-photo-col {
+    left: 20px;
+    width: calc(100vw - 40px);
+    top: 8%;
+    height: 30%;
+  }
+  .partnership-stages-caption {
+    left: 20px;
+    width: calc(100vw - 40px);
+    top: calc(8% + 30% + 12px);
+  }
+  .partnership-stages-white-band { top: 46%; height: 48%; }
+  .partnership-stages-evaluate-col {
+    left: 20px;
+    width: calc(100vw - 40px);
+    max-width: none;
+    top: 46%;
+    height: 48%;
+  }
+  .partnership-stages-evaluate-item { left: 0; right: 0; }
+  .partnership-stages-evaluate-heading { font-size: 1rem; }
+  .partnership-stages-evaluate-desc { font-size: 0.85rem; }
+
+  /* the hero headline and lead are pinned to one line with
+     white-space: nowrap, which just runs off both edges on a phone —
+     let them wrap and scale off vw instead */
+  .hero-about h2 {
+    white-space: normal;
+    font-size: clamp(1.4rem, 6.4vw, 2rem);
+  }
+  .hero-about .lead {
+    white-space: normal;
+    font-size: clamp(0.9rem, 3.8vw, 1.1rem);
+  }
+  .hero-banner-cta { flex-wrap: wrap; }
 }

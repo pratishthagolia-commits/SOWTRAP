@@ -55,16 +55,16 @@ export default function PartnershipTouch() {
           <p>
             Have a Project in mind ?
             <br />
-            Connect with our experts&ndash;
+            Connect with our experts
           </p>
           <Link href="/contact" className="btn btn-lime">Contact Us</Link>
         </div>
         <div className="partnership-touch-link">
-          <p>Explore encapsulation technologies&ndash;</p>
+          <p>Explore encapsulation technologies</p>
           <Link href="/technology" className="btn btn-lime">Technology</Link>
         </div>
         <div className="partnership-touch-link">
-          <p>Explore Products&ndash;</p>
+          <p>Explore Products</p>
           <Link href="/products" className="btn btn-lime">Products</Link>
         </div>
       </div>
