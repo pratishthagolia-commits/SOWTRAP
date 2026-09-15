@@ -73,6 +73,8 @@ body {
   border-radius: 100px;
   background: #ffffff;
   border: 2px solid #000000;
+  /* the wordmark itself — kept on the brand's own font, unlike the rest
+     of the nav which now matches the site's Prata headings */
   font-family: var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
   font-weight: 700;
   font-size: 1.4rem;
@@ -88,9 +90,9 @@ body {
 .nav-links a {
   text-decoration: none;
   color: #ffffff;
-  font-family: var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
+  font-family: var(--font-prata), serif;
   font-size: 1.25rem;
-  font-weight: 700;
+  font-weight: 400;
   padding-bottom: 3px;
   border-bottom: 1px solid transparent;
   transition: color 0.3s ease, border-color 0.2s ease;
@@ -98,9 +100,9 @@ body {
 .nav-links a:hover, .nav-links a.active { border-color: currentColor; }
 .nav-cta {
   text-decoration: none;
-  font-family: var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
+  font-family: var(--font-prata), serif;
   font-size: 1.1rem;
-  font-weight: 700;
+  font-weight: 400;
   color: #ffffff;
   background: rgba(255, 255, 255, 0.14);
   border: 1px solid rgba(255, 255, 255, 0.7);
@@ -183,9 +185,9 @@ body {
 }
 .nav-drawer-links a {
   text-decoration: none;
-  font-family: var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
+  font-family: var(--font-prata), serif;
   font-size: 1.2rem;
-  font-weight: 700;
+  font-weight: 400;
   color: var(--ink);
 }
 .nav-drawer-links a:hover, .nav-drawer-links a.active { color: var(--blue); }
@@ -3884,6 +3886,24 @@ h2 {
   margin: 0 0 40px;
 }
 .contact-form-section--alt .contact-form-subheading { color: #ffffff; }
+.contact-form-success {
+  max-width: 640px;
+  margin: 40px auto 0;
+  text-align: center;
+  font-family: var(--font-prata), serif;
+  font-size: 1.1rem;
+  color: var(--ink);
+}
+.contact-form-section--alt .contact-form-success { color: #ffffff; }
+.contact-form-error {
+  grid-column: 1 / -1;
+  text-align: center;
+  font-family: var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.85rem;
+  color: #c0392b;
+  margin: -8px 0 0;
+}
+.contact-form-section--alt .contact-form-error { color: #ffb4a8; }
 
 .contact-form {
   max-width: 800px;
@@ -4068,6 +4088,90 @@ h2 {
   border: none;
   cursor: pointer;
 }
+.contact-submit:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ---------- email OTP gate — sits directly under the email field ---------- */
+.otp-gate {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: -4px;
+}
+.otp-send-btn {
+  font-family: var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #003366;
+  background: none;
+  border: 1px solid rgba(13, 21, 38, 0.3);
+  border-radius: 100px;
+  padding: 8px 18px;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+}
+.otp-send-btn:hover:not(:disabled) { border-color: #003366; }
+.otp-send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.otp-gate--dark .otp-send-btn {
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.5);
+}
+.otp-gate--dark .otp-send-btn:hover:not(:disabled) { border-color: #deff08; color: #deff08; }
+
+.otp-code-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.otp-code-input {
+  width: 130px;
+  font-family: var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.2em;
+  padding: 10px 14px;
+  border-radius: 6px;
+  border: 1px solid rgba(13, 21, 38, 0.25);
+  background: #ffffff;
+  color: var(--ink);
+}
+.otp-code-input:focus { outline: none; border-color: #003366; }
+.otp-gate--dark .otp-code-input {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #ffffff;
+}
+.otp-gate--dark .otp-code-input:focus { border-color: #deff08; }
+
+.otp-verify-btn {
+  font-family: var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #0d1526;
+  background: #deff08;
+  border: none;
+  border-radius: 100px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+.otp-verify-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.otp-status {
+  font-family: var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.82rem;
+  margin: 0;
+}
+.otp-status--ok {
+  color: #1a7f37;
+  font-weight: 700;
+}
+.otp-status--ok::before { content: "✓ "; }
+.otp-status--ok.otp-status--dark { color: #deff08; }
+.otp-status--error { color: #c0392b; }
+.otp-gate--dark .otp-status--error { color: #ffb4a8; }
 
 @media (max-width: 900px) {
   .contact-hero { padding: 200px 24px 70px; }

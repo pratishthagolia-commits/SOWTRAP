@@ -1,7 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import FormSelect from "./FormSelect";
 import PhoneInput from "./PhoneInput";
+import OtpGate from "./OtpGate";
+import { useContactSubmit } from "./useContactSubmit";
 
 const INTEREST_OPTIONS = [
   "Research & Innovation",
@@ -15,6 +18,17 @@ const INTEREST_OPTIONS = [
 ];
 
 export default function ContactJoinForm() {
+  const [email, setEmail] = useState("");
+  const [otpVerified, setOtpVerified] = useState(false);
+  const [otpTicket, setOtpTicket] = useState<string | null>(null);
+  const { submit, submitting, submitted, error } = useContactSubmit("join");
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!otpVerified || !otpTicket) return;
+    submit(e.currentTarget, otpTicket);
+  }
+
   return (
     <section className="contact-form-section">
       <p className="contact-form-kicker">Join our team</p>
@@ -24,52 +38,75 @@ export default function ContactJoinForm() {
         into real-world applications, we would like to hear from you.
       </p>
 
-      <form className="contact-form" onSubmit={(e) => e.preventDefault()}>
-        <div className="contact-field">
-          <label htmlFor="join-name">Full Name*</label>
-          <input id="join-name" name="name" type="text" required />
-        </div>
-        <div className="contact-field">
-          <label htmlFor="join-email">Email Address*</label>
-          <input id="join-email" name="email" type="email" required />
-        </div>
-        <div className="contact-field">
-          <label htmlFor="join-phone">Phone Number*</label>
-          <PhoneInput id="join-phone" name="phone" required />
-        </div>
-        <div className="contact-field">
-          <label htmlFor="join-org">Current Organization / Institution</label>
-          <input id="join-org" name="organization" type="text" />
-        </div>
+      {submitted ? (
+        <p className="contact-form-success">Thanks — your application has been received. Our team will be in touch shortly.</p>
+      ) : (
+        <form className="contact-form" onSubmit={handleSubmit}>
+          <div className="contact-field">
+            <label htmlFor="join-name">Full Name*</label>
+            <input id="join-name" name="name" type="text" required />
+          </div>
+          <div className="contact-field">
+            <label htmlFor="join-email">Email Address*</label>
+            <input
+              id="join-email"
+              name="email"
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+          <div className="contact-field">
+            <label htmlFor="join-phone">Phone Number*</label>
+            <PhoneInput id="join-phone" name="phone" required />
+          </div>
+          <div className="contact-field">
+            <label htmlFor="join-org">Current Organization / Institution</label>
+            <input id="join-org" name="organization" type="text" />
+          </div>
 
-        <div className="contact-field contact-field--full">
-          <label htmlFor="join-interest">Area of Interest*</label>
-          <FormSelect id="join-interest" name="interest" options={INTEREST_OPTIONS} required placeholder="Select one" />
-        </div>
+          <div className="contact-field contact-field--full">
+            <OtpGate
+              email={email}
+              onVerifiedChange={(verified, ticket) => {
+                setOtpVerified(verified);
+                setOtpTicket(ticket);
+              }}
+            />
+          </div>
 
-        <div className="contact-field">
-          <label htmlFor="join-experience">Experience</label>
-          <input id="join-experience" name="experience" type="text" placeholder="e.g. 3 years" />
-        </div>
-        <div className="contact-field">
-          <label htmlFor="join-cv">Upload CV / Resume*</label>
-          <input id="join-cv" name="cv" type="file" required />
-        </div>
+          <div className="contact-field contact-field--full">
+            <label htmlFor="join-interest">Area of Interest*</label>
+            <FormSelect id="join-interest" name="interest" options={INTEREST_OPTIONS} required placeholder="Select one" />
+          </div>
 
-        <div className="contact-field contact-field--full">
-          <label htmlFor="join-message">Message / Brief Profile</label>
-          <textarea id="join-message" name="message" rows={4} />
-        </div>
+          <div className="contact-field">
+            <label htmlFor="join-experience">Experience</label>
+            <input id="join-experience" name="experience" type="text" placeholder="e.g. 3 years" />
+          </div>
+          <div className="contact-field">
+            <label htmlFor="join-cv">Upload CV / Resume*</label>
+            <input id="join-cv" name="cv" type="file" required />
+          </div>
 
-        <div className="contact-field contact-field--full">
-          <label htmlFor="join-cover-letter">Upload Cover Letter</label>
-          <input id="join-cover-letter" name="coverLetter" type="file" />
-        </div>
+          <div className="contact-field contact-field--full">
+            <label htmlFor="join-message">Message / Brief Profile</label>
+            <textarea id="join-message" name="message" rows={4} />
+          </div>
 
-        <button type="submit" className="btn btn-lime contact-submit">
-          Submit Application
-        </button>
-      </form>
+          <div className="contact-field contact-field--full">
+            <label htmlFor="join-cover-letter">Upload Cover Letter</label>
+            <input id="join-cover-letter" name="coverLetter" type="file" />
+          </div>
+
+          {error && <p className="contact-form-error">{error}</p>}
+
+          <button type="submit" className="btn btn-lime contact-submit" disabled={!otpVerified || submitting}>
+            {submitting ? "Sending…" : "Submit Application"}
+          </button>
+        </form>
+      )}
     </section>
   );
 }
