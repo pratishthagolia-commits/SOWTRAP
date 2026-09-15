@@ -4916,26 +4916,29 @@ h2 {
     #dee1e6 24px
   );
 }
-/* holds the product's scientific name (light, italic) where the plain
-   category label used to sit — blank (not the category) when a product
-   has no scientific name, rather than falling back to showing the
-   category after all */
-.product-card-category {
-  margin: 0 0 4px;
-  font-family: var(--font-prata), serif;
-  font-style: italic;
-  font-size: 1.17rem;
-  letter-spacing: 0.01em;
-  color: var(--ink-faint);
-}
+/* the common name reads first and larger (dark); the scientific name
+   sits below it, smaller and grey — same order/weighting as the
+   reference (e.g. "ACAI CELLULAR EXTRACT" above, "Euterpe oleracea"
+   below it, lighter and italic) */
 .product-card-name {
-  margin: 0;
+  margin: 0 0 3px;
   font-family: var(--font-prata), serif;
   font-weight: 400;
-  font-size: 1.02rem;
-  line-height: 1.35;
+  font-size: 1.12rem;
+  line-height: 1.3;
   color: var(--ink);
   transition: color 0.2s ease;
+}
+/* holds the product's scientific name (light, italic) — blank (not the
+   category) when a product has no scientific name, rather than falling
+   back to showing the category after all */
+.product-card-category {
+  margin: 0;
+  font-family: var(--font-prata), serif;
+  font-style: italic;
+  font-size: 0.85rem;
+  letter-spacing: 0.01em;
+  color: var(--ink-faint);
 }
 .product-card:hover .product-card-name { color: #003366; }
 

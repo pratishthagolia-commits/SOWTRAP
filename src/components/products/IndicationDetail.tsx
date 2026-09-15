@@ -49,8 +49,8 @@ export default function IndicationDetail({ benefit, products }: { benefit: strin
                     <div className="product-card-placeholder" aria-hidden="true" />
                   )}
                 </div>
-                <p className="product-card-category">{p.scientificName || "\u00A0"}</p>
                 <h3 className="product-card-name">{p.name}</h3>
+                <p className="product-card-category">{p.scientificName || "\u00A0"}</p>
               </Link>
             ))}
           </div>
