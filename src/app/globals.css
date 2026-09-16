@@ -5551,6 +5551,11 @@ h2 {
   transform: scale(1.06);
   filter: grayscale(0.2) contrast(1.05);
 }
+/* Immunity Support stays fully black-and-white on hover/active, unlike
+   every other card, which partially reveals colour */
+.indication-strip-item[data-slug="immunity-support"].is-active .indication-strip-photo {
+  filter: grayscale(1) contrast(1.05);
+}
 /* darkens the top edge so the label stays legible over any photo,
    regardless of how bright that particular frame is */
 .indication-strip-item::before {

@@ -23,6 +23,7 @@ export default function IndicationStrip({ benefits }: { benefits: string[] }) {
           <Link
             key={benefit}
             href={slug ? `/indications/${slug}` : "/products"}
+            data-slug={slug}
             className={`indication-strip-item${active === i ? " is-active" : ""}`}
             onMouseEnter={() => setActive(i)}
             onMouseLeave={() => setActive(null)}

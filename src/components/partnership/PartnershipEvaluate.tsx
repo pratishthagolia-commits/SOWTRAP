@@ -48,24 +48,27 @@ const STEPS: EvalStep[] = [
 // "We Care How We Evaluate Your Ingredients" — a 3x2 grid of photo cards.
 // Hovering a card turns it slightly and fades in a white info overlay
 // with the step's title/description; clicking does the same (toggling
-// manually). Scrolling also flips each card automatically, but only for
-// one full in-then-back cycle: it flips to info as it passes through a
-// band in the middle of the viewport, then flips back to its photo once
-// it scrolls out the other side — after that one cycle, scroll no longer
-// touches that card at all, and hover/click are the only way to flip it
-// again. The grid is 3 columns x 2 rows, so cards 0-2 (row one) cross
-// that band together, then cards 3-5 (row two) follow as the user keeps
-// scrolling, with row one settling back to its photo around the same
-// time.
+// manually). Scrolling also drives one synchronized sequence for the two
+// rows, tied to the grid's own position as it scrolls through the
+// viewport (not each card independently):
+//   stage 0 — both rows on their photo (the resting state before/after)
+//   stage 1 — row one (cards 0-2) flips to text, row two stays photo
+//   stage 2 — row one flips back to photo, row two flips to text
+//   stage 3 — row two flips back to photo — settled; from here on only
+//             hover/click flip a card, scroll no longer touches any of
+//             them
+// Stage only ever advances (never regresses on scrolling back up), so
+// the sequence plays through once per visit and then leaves hover fully
+// in control, matching how a card that's "stuck" flipped with no visible
+// change on hover would otherwise be indistinguishable from a working one.
 export default function PartnershipEvaluate() {
   const isMobile = useIsMobile();
-  const [flipped, setFlipped] = useState<Set<number>>(new Set());
-  const cardRefs = useRef<(HTMLButtonElement | null)[]>([]);
-  const enteredOnceRef = useRef<Set<number>>(new Set());
-  const settledRef = useRef<Set<number>>(new Set());
+  const [stage, setStage] = useState(0);
+  const [clicked, setClicked] = useState<Set<number>>(new Set());
+  const gridRef = useRef<HTMLDivElement>(null);
 
   function toggle(i: number) {
-    setFlipped((prev) => {
+    setClicked((prev) => {
       const next = new Set(prev);
       if (next.has(i)) next.delete(i);
       else next.add(i);
@@ -75,42 +78,30 @@ export default function PartnershipEvaluate() {
 
   useEffect(() => {
     if (isMobile) return;
-    const io = new IntersectionObserver(
-      (entries) => {
-        setFlipped((prev) => {
-          let next: Set<number> | null = null;
-          entries.forEach((entry) => {
-            const index = cardRefs.current.indexOf(entry.target as HTMLButtonElement);
-            // already completed its one auto in/out cycle — scroll
-            // no longer drives this card, only hover/click do
-            if (index === -1 || settledRef.current.has(index)) return;
-
-            if (entry.isIntersecting) {
-              enteredOnceRef.current.add(index);
-              if (!prev.has(index)) {
-                if (!next) next = new Set(prev);
-                next.add(index);
-              }
-            } else if (enteredOnceRef.current.has(index)) {
-              // the exit after having entered once — flip back and retire
-              settledRef.current.add(index);
-              if ((next ?? prev).has(index)) {
-                if (!next) next = new Set(prev);
-                next.delete(index);
-              }
-            }
-          });
-          return next ?? prev;
+    let frameId = 0;
+    function tick() {
+      const el = gridRef.current;
+      if (el) {
+        const top = el.getBoundingClientRect().top;
+        setStage((prev) => {
+          if (prev < 1 && top < window.innerHeight * 0.75) return 1;
+          if (prev < 2 && top < window.innerHeight * 0.35) return 2;
+          if (prev < 3 && top < 0) return 3;
+          return prev;
         });
-      },
-      // shrinks the observed region to the middle half of the viewport —
-      // a card counts as "intersecting" (flipped) only while passing
-      // through that band, not for the whole time it's anywhere on screen
-      { threshold: 0, rootMargin: "-25% 0px -25% 0px" }
-    );
-    cardRefs.current.forEach((card) => card && io.observe(card));
-    return () => io.disconnect();
+      }
+      frameId = requestAnimationFrame(tick);
+    }
+    frameId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frameId);
   }, [isMobile]);
+
+  function isAutoFlipped(i: number) {
+    const row = i < 3 ? 1 : 2;
+    if (stage === 1) return row === 1;
+    if (stage === 2) return row === 2;
+    return false;
+  }
 
   return (
     <section className="partnership-eval">
@@ -131,12 +122,11 @@ export default function PartnershipEvaluate() {
           <ChamberAccordion points={STEPS.map((s) => ({ title: s.title, detail: s.desc }))} />
         </div>
       ) : (
-      <div className="partnership-eval-grid">
+      <div className="partnership-eval-grid" ref={gridRef}>
         {STEPS.map((step, i) => (
           <button
             type="button"
-            ref={(el) => { cardRefs.current[i] = el; }}
-            className={`partnership-eval-card${flipped.has(i) ? " is-active" : ""}`}
+            className={`partnership-eval-card${isAutoFlipped(i) || clicked.has(i) ? " is-active" : ""}`}
             key={step.title}
             onClick={() => toggle(i)}
           >
