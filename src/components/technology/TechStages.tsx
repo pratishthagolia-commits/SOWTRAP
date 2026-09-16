@@ -17,10 +17,7 @@ type Stage = {
 //
 // images: the 7 original per-stage photos are reused here (assignment is
 // arbitrary — the client said any photo on any point is fine). Challenge
-// #8, "Process Sensitivity", has no source photo yet and temporarily
-// reuses Validate Performance's image as a placeholder — the client said
-// they'll send a real one for this slide; swap tech-stage-validate
-// -performance.jpeg out for it here once it arrives.
+// #8, "Process Sensitivity", now has its own dedicated photo.
 const STAGES: Stage[] = [
   {
     name: "Sensory Challenges",
@@ -66,8 +63,7 @@ const STAGES: Stage[] = [
   },
   {
     name: "Process Sensitivity",
-    // TODO: placeholder — swap for the client's incoming photo for this slide
-    image: "/images/tech-stage-validate-performance.jpeg",
+    image: "/images/tech-stage-process-sensitivity.jpeg",
     evaluateHeading: "Process-compatible protective systems",
     evaluate: ["Better active retention during manufacturing."],
   },

@@ -2166,7 +2166,7 @@ h2 {
   font-weight: 400;
   font-size: clamp(1.5rem, 2.6vw, 2rem);
 }
-.bioactives-classes-banner-accent { font-size: 1.5em; }
+.bioactives-classes-banner-accent { font-size: 1em; }
 
 .bioactives-classes-body {
   display: flex;

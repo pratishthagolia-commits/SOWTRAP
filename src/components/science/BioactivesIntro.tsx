@@ -209,8 +209,8 @@ export default function BioactivesIntro() {
 
       <div className="bioactives-classes">
         <h3 className="bioactives-classes-banner">
-          <span className="reveal-left">Key classes of</span>{" "}
-          <span className="bioactives-classes-banner-accent reveal-left" style={{ transitionDelay: "0.15s" }}>bioactives</span>
+          <span className="reveal-left">Key Classes Of</span>{" "}
+          <span className="bioactives-classes-banner-accent reveal-left" style={{ transitionDelay: "0.15s" }}>Bioactives</span>
         </h3>
 
         <div className="bioactives-classes-body">
