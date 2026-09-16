@@ -5791,6 +5791,17 @@ h2 {
   /* the timeline's little connector dashes off the side of each box */
   .dt-row.is-left .dt-box::after,
   .dt-row.is-right .dt-box::after { display: none; }
+  /* .dt-box's fixed height:260px (desktop) was sized for short copy —
+     longer entries like "Application-Ready Ingredient Systems" overflow
+     past the box's bottom edge uncontained at phone width. The fixed
+     height was there only to keep the connector line centered, which is
+     already hidden on phone (above), so min-height is safe here and
+     lets the box grow to fit its own text instead of spilling out of it. */
+  .dt-box { height: auto; min-height: 260px; }
+  /* "WHAT MAKES SowTrap™ DIFFERENT" at white-space:nowrap can't shrink
+     to fit a phone screen — forces the whole page wider instead of
+     wrapping, which is the actual page-wide horizontal overflow */
+  .dt-heading { white-space: normal; padding: 0 12px; }
 
   /* the portfolio cards sized off --pf-card-w, which is declared on
      .pf-sticky — and .pf-sticky doesn't exist in the phone branch, so the
