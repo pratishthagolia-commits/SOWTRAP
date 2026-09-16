@@ -47,11 +47,7 @@ export default function PillarsSection() {
         <p className="pillars-kicker reveal-left">
           <span className="pillars-kicker-light">SowTrap&trade;:</span>
           <br />
-          <span className="pillars-kicker-big">
-            BRIDGING
-            <br />
-            NUTRITION GAP
-          </span>
+          <span className="pillars-kicker-big">BRIDGING NUTRITION GAP</span>
         </p>
         <p className="pillars-kicker-sub reveal-left" style={{ transitionDelay: "0.1s" }}>
           Four Pillars. One Intelligent Delivery System
@@ -102,6 +98,7 @@ export default function PillarsSection() {
                   onClick={() => setActive(i)}
                 >
                   <span className="pillars-chamber-plus">{i === active ? "–" : "+"}</span>
+                  <span className="pillars-chamber-item-code">{pillar.code}</span>
                   <span className="pillars-chamber-label">{pillar.title}</span>
                 </button>
               ))}

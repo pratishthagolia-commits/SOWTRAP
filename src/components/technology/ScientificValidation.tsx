@@ -57,7 +57,6 @@ export default function ScientificValidation() {
   const naturalTopRef = useRef<number | null>(null);
   const [overlapPx, setOverlapPx] = useState(0);
   const active = hovered ?? pinned;
-  const current = VALIDATION_POINTS[active];
 
   // same local-IntersectionObserver reveal as SupplementsFail — the grid
   // buttons' className already changes with hover/pin state, so folding
@@ -132,13 +131,28 @@ export default function ScientificValidation() {
       ) : (
       <div className="sci-validation-body">
         <div className={`sci-validation-card reveal${revealClass}`} style={{ transitionDelay: "0.15s" }}>
-          <h3>{current.title}</h3>
-          {current.detail && <p>{current.detail}</p>}
-          {current.cta && (
-            <button type="button" className="btn btn-outline-dark sci-validation-cta">
-              {current.cta}
-            </button>
-          )}
+          {/* all five points are stacked in the same grid cell (only the
+              active one visible) so the card's height is always set by
+              the tallest one — was sizing off whichever point happened
+              to be selected, so it visibly grew when e.g. Patents (which
+              has a CTA button) was picked */}
+          <div className="sci-validation-stack">
+            {VALIDATION_POINTS.map((point, i) => (
+              <div
+                key={point.title}
+                className={`sci-validation-content${i === active ? " is-active" : ""}`}
+                aria-hidden={i !== active}
+              >
+                <h3>{point.title}</h3>
+                {point.detail && <p>{point.detail}</p>}
+                {point.cta && (
+                  <button type="button" className="btn btn-outline-dark sci-validation-cta">
+                    {point.cta}
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="sci-validation-grid">

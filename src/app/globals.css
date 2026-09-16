@@ -661,12 +661,15 @@ h2 {
    right. Static, no scroll-jack, no pin. */
 .fail-v2-chamber {
   position: relative;
-  min-height: 100vh;
+  /* was min-height:100vh — the actual content (card + grid) sits at the
+     top of the box and is nowhere near a full screen tall, so forcing
+     100vh just left a large stretch of empty navy below it before
+     .pillars-heading-slide starts */
   background: #003366;
   /* top padding cleared to fit the notch (230px, starting 90px above
      the chamber's own edge) without it overlapping the body content
      below it */
-  padding: 160px 64px 100px;
+  padding: 160px 64px 60px;
 }
 /* folder-notch tab, same silhouette as the About Us / Research Gap
    notches — white box poking up above the chamber's own top edge — but
@@ -803,7 +806,7 @@ h2 {
   text-align: left;
 }
 .pillars-kicker-light { font-weight: 400; }
-.pillars-kicker-big { display: inline-block; font-size: 2em; }
+.pillars-kicker-big { display: inline-block; font-size: 1em; }
 .pillars-kicker-sub {
   position: relative;
   z-index: 2;
@@ -944,6 +947,13 @@ h2 {
   border-color: #deff08;
   color: #003366;
 }
+.pillars-chamber-item-code {
+  flex-shrink: 0;
+  font-family: var(--font-prata), serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.45);
+}
 .pillars-chamber-label {
   font-family: var(--font-prata), serif;
   font-size: 1.1rem;
@@ -1057,6 +1067,14 @@ h2 {
   flex: 0 0 44%;
   overflow: hidden;
   box-shadow: 0 30px 60px -30px rgba(13, 21, 38, 0.35);
+  /* pills sit flush against the image with no gap (see .cmp-row-content
+     below), and their reveal-left/reveal-right slide-in starts 70px
+     offset toward it — without this, that offset briefly painted the
+     pill on top of the image instead of the image covering it, since
+     .cmp-row-con's DOM order (image, then content) puts the pills later
+     in paint order by default */
+  position: relative;
+  z-index: 2;
 }
 .cmp-row-image img {
   display: block;
@@ -1069,6 +1087,11 @@ h2 {
   /* pushes the intro + banner + pills further down within the row,
      without moving .cmp-row-image at all (it's a separate flex sibling) */
   padding: 10px 60px 0 0;
+  /* keeps this column (and the pills' reveal-left/-right slide-in inside
+     it) behind .cmp-row-image's z-index:2, so the image covers them
+     during the brief moment the animation's starting offset overlaps it */
+  position: relative;
+  z-index: 1;
 }
 .cmp-row-pro .cmp-row-content { padding: 0 0 0 60px; }
 .cmp-row-banner {
@@ -3120,6 +3143,21 @@ h2 {
   background: #ffffff;
   padding: 48px 44px;
   box-sizing: border-box;
+}
+/* all five points occupy the same grid cell (see ScientificValidation.tsx)
+   — CSS Grid sizes the cell to the tallest one automatically, so the
+   card stops resizing as the user hovers/clicks between points with
+   different title lengths or an extra CTA button. Same technique as
+   .pillars-chamber-stack. */
+.sci-validation-stack {
+  display: grid;
+}
+.sci-validation-content {
+  grid-area: 1 / 1;
+  visibility: hidden;
+}
+.sci-validation-content.is-active {
+  visibility: visible;
 }
 .sci-validation-card h3 {
   font-family: var(--font-prata), serif;

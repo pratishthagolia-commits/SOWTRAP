@@ -109,8 +109,10 @@ export default function ComparisonSection() {
             Conventional Bioactive :
           </p>
           <div className="cmp-row-list">
+            {/* image sits on the left in this row, so the pills slide in
+                from the left (toward it) rather than up from below */}
             {ROWS.map((row, i) => (
-              <p className="cmp-pill reveal" key={row.con} style={{ transitionDelay: `${0.3 + i * 0.1}s` }}>
+              <p className="cmp-pill reveal-left" key={row.con} style={{ transitionDelay: `${0.3 + i * 0.1}s` }}>
                 {row.con}
               </p>
             ))}
@@ -122,8 +124,10 @@ export default function ComparisonSection() {
         <div className="cmp-row-content">
           <p className="cmp-row-banner reveal">SowTrap&trade; Encapsulated Bioactive :</p>
           <div className="cmp-row-list">
+            {/* image sits on the right in this row, so the pills slide in
+                from the right (toward it) rather than up from below */}
             {ROWS.map((row, i) => (
-              <p className="cmp-pill reveal" key={row.pro} style={{ transitionDelay: `${0.1 + i * 0.1}s` }}>
+              <p className="cmp-pill reveal-right" key={row.pro} style={{ transitionDelay: `${0.1 + i * 0.1}s` }}>
                 {row.pro}
               </p>
             ))}

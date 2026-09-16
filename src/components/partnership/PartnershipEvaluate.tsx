@@ -47,33 +47,66 @@ const STEPS: EvalStep[] = [
 
 // "We Care How We Evaluate Your Ingredients" — a 3x2 grid of photo cards.
 // Hovering a card turns it slightly and fades in a white info overlay
-// with the step's title/description; clicking does the same (toggling),
-// so it also works on touch devices where hover doesn't apply.
+// with the step's title/description; clicking does the same (toggling
+// manually). Scrolling also flips each card automatically, but only for
+// one full in-then-back cycle: it flips to info as it passes through a
+// band in the middle of the viewport, then flips back to its photo once
+// it scrolls out the other side — after that one cycle, scroll no longer
+// touches that card at all, and hover/click are the only way to flip it
+// again. The grid is 3 columns x 2 rows, so cards 0-2 (row one) cross
+// that band together, then cards 3-5 (row two) follow as the user keeps
+// scrolling, with row one settling back to its photo around the same
+// time.
 export default function PartnershipEvaluate() {
   const isMobile = useIsMobile();
-  const [active, setActive] = useState<number | null>(null);
-  // auto-flip each card the first time it scrolls into view, in addition
-  // to the existing hover/click flip — the grid is 3 columns x 2 rows, so
-  // cards 0-2 (row one) naturally intersect on an earlier point in the
-  // scroll than cards 3-5 (row two), giving the "first three flip on the
-  // first scroll, next three flip on the second scroll" behaviour without
-  // hardcoding two separate scroll thresholds.
-  const [autoFlipped, setAutoFlipped] = useState<Set<number>>(new Set());
+  const [flipped, setFlipped] = useState<Set<number>>(new Set());
   const cardRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const enteredOnceRef = useRef<Set<number>>(new Set());
+  const settledRef = useRef<Set<number>>(new Set());
+
+  function toggle(i: number) {
+    setFlipped((prev) => {
+      const next = new Set(prev);
+      if (next.has(i)) next.delete(i);
+      else next.add(i);
+      return next;
+    });
+  }
 
   useEffect(() => {
     if (isMobile) return;
     const io = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          const index = cardRefs.current.indexOf(entry.target as HTMLButtonElement);
-          if (index === -1) return;
-          setAutoFlipped((prev) => (prev.has(index) ? prev : new Set(prev).add(index)));
-          io.unobserve(entry.target);
+        setFlipped((prev) => {
+          let next: Set<number> | null = null;
+          entries.forEach((entry) => {
+            const index = cardRefs.current.indexOf(entry.target as HTMLButtonElement);
+            // already completed its one auto in/out cycle — scroll
+            // no longer drives this card, only hover/click do
+            if (index === -1 || settledRef.current.has(index)) return;
+
+            if (entry.isIntersecting) {
+              enteredOnceRef.current.add(index);
+              if (!prev.has(index)) {
+                if (!next) next = new Set(prev);
+                next.add(index);
+              }
+            } else if (enteredOnceRef.current.has(index)) {
+              // the exit after having entered once — flip back and retire
+              settledRef.current.add(index);
+              if ((next ?? prev).has(index)) {
+                if (!next) next = new Set(prev);
+                next.delete(index);
+              }
+            }
+          });
+          return next ?? prev;
         });
       },
-      { threshold: 0.5 }
+      // shrinks the observed region to the middle half of the viewport —
+      // a card counts as "intersecting" (flipped) only while passing
+      // through that band, not for the whole time it's anywhere on screen
+      { threshold: 0, rootMargin: "-25% 0px -25% 0px" }
     );
     cardRefs.current.forEach((card) => card && io.observe(card));
     return () => io.disconnect();
@@ -103,9 +136,9 @@ export default function PartnershipEvaluate() {
           <button
             type="button"
             ref={(el) => { cardRefs.current[i] = el; }}
-            className={`partnership-eval-card${active === i || autoFlipped.has(i) ? " is-active" : ""}`}
+            className={`partnership-eval-card${flipped.has(i) ? " is-active" : ""}`}
             key={step.title}
-            onClick={() => setActive((prev) => (prev === i ? null : i))}
+            onClick={() => toggle(i)}
           >
             <div className="partnership-eval-card-inner">
               <div className="partnership-eval-card-front">
