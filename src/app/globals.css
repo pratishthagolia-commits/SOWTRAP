@@ -5176,6 +5176,107 @@ h2 {
   color: var(--ink-soft);
 }
 
+/* ---------- products page FAQ — exclusive accordion, same curtain/blind
+   reveal (grid-template-rows 0fr -> 1fr) used elsewhere on the site ---------- */
+.products-faq {
+  position: relative;
+  z-index: 2;
+  background: #ffffff;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 130px 60px 140px;
+}
+.products-faq-intro {
+  text-align: center;
+  margin-bottom: 60px;
+}
+.products-faq-kicker {
+  font-family: var(--font-prata), serif;
+  font-size: 0.9rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #003366;
+  margin: 0 0 16px;
+}
+.products-faq-heading {
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: clamp(2rem, 3.6vw, 2.9rem);
+  color: var(--ink);
+  margin: 0;
+}
+.products-faq-list {
+  display: flex;
+  flex-direction: column;
+}
+.products-faq-item {
+  border-bottom: 1px solid rgba(13, 21, 38, 0.14);
+}
+.products-faq-item:first-child { border-top: 1px solid rgba(13, 21, 38, 0.14); }
+.products-faq-item-head {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 26px 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+}
+.products-faq-item-q {
+  font-family: var(--font-prata), serif;
+  font-size: 1.15rem;
+  line-height: 1.4;
+  color: var(--ink);
+  transition: color 0.2s ease;
+}
+.products-faq-item-head:hover .products-faq-item-q,
+.products-faq-item.is-open .products-faq-item-q { color: #003366; }
+.products-faq-item-icon {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(13, 21, 38, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  line-height: 1;
+  color: var(--ink);
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.3s ease;
+}
+.products-faq-item.is-open .products-faq-item-icon {
+  background: #deff08;
+  border-color: #deff08;
+  color: #003366;
+  transform: rotate(180deg);
+}
+.products-faq-item-answer-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.4s ease;
+}
+.products-faq-item.is-open .products-faq-item-answer-wrap { grid-template-rows: 1fr; }
+.products-faq-item-answer-inner { overflow: hidden; }
+.products-faq-item-answer {
+  max-width: 740px;
+  margin: 0 0 26px;
+  padding-right: 58px;
+  font-family: var(--font-prata), serif;
+  font-size: 0.98rem;
+  line-height: 1.75;
+  color: var(--ink-soft);
+}
+
+@media (max-width: 900px) {
+  .products-faq { padding: 90px 24px 100px; }
+  .products-faq-item-q { font-size: 1.05rem; }
+  .products-faq-item-answer { padding-right: 0; font-size: 0.92rem; }
+}
+
 .products-section { margin-bottom: 70px; }
 .products-section:last-child { margin-bottom: 0; }
 .products-section-heading {

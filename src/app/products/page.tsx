@@ -5,6 +5,7 @@ import ScrollReveal from "@/components/ScrollReveal";
 import ProductsHeroPhoto from "@/components/products/ProductsHeroPhoto";
 import ProductsHero from "@/components/products/ProductsHero";
 import ProductsBrowser from "@/components/products/ProductsBrowser";
+import ProductsFAQ from "@/components/products/ProductsFAQ";
 import FooterCTA from "@/components/FooterCTA";
 
 export const metadata: Metadata = {
@@ -25,6 +26,8 @@ export default function ProductsPage() {
       <Suspense fallback={null}>
         <ProductsBrowser />
       </Suspense>
+
+      <ProductsFAQ />
 
       <FooterCTA />
     </>
