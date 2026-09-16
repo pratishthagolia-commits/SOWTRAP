@@ -233,11 +233,11 @@ body {
   /* was 100vh with the wordmark pinned to the very bottom edge — shrinking
      the fold and giving it real bottom breathing room moves the wordmark
      up, closing the gap before "Elevating Nutrition..." appears below it */
-  min-height: 85vh;
+  min-height: 95vh;
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  padding-bottom: 10vh;
+  padding-bottom: 0;
   pointer-events: none;
 }
 .hero-wordmark {
@@ -248,7 +248,7 @@ body {
   display: block;
   width: 100%;
   text-align: center;
-  font-weight: 800;
+  font-weight: 600;
   line-height: 1;
   letter-spacing: 0;
   white-space: nowrap;
@@ -263,11 +263,19 @@ body {
      the containing block to extend well past each individual slide) */
   position: relative;
   z-index: 3;
-  min-height: 100vh;
+  /* content is centered within this box (align-items: center below), so
+     a full 100vh here left a lot of empty space above it — shrinking the
+     box (not .hero-fold, which controls SowTrap's own position) pulls
+     the centered content closer to the wordmark above it */
+  min-height: 55vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 90px 0;
+  /* asymmetric on purpose — .hero's -160px margin-bottom pulls the next
+     section up to overlap .hero's own bottom edge; shrinking this box
+     shrank that safety buffer along with it and let the overlap start
+     slicing into the CTA buttons instead of the empty space below them */
+  padding: 60px 0 220px;
 }
 .hero-banner-container { max-width: 1400px; }
 .hero-about h2 {
@@ -601,6 +609,12 @@ h2 {
   background: #ffffff;
   padding: 64px;
   box-sizing: border-box;
+  /* same sub-pixel seam fix as .about-v2-notch/.expertise-notch above —
+     this is where the pinned "OUR CORE EXPERTISE" notch (inside
+     .about-v2-wrapper's sticky view) hands off to this section in normal
+     document flow, and the two white boxes left a hairline gap between
+     them at that boundary */
+  margin-top: -2px;
 }
 .expertise-list {
   list-style: none;
@@ -840,6 +854,22 @@ h2 {
   justify-content: center;
   background: #ffffff;
   padding: 80px 64px;
+}
+/* all four pillars' content occupy the same grid cell (see
+   PillarsSection.tsx) — CSS Grid sizes the cell to the tallest one
+   automatically, so the card stops resizing as the user clicks between
+   shorter and longer pillars. visibility:hidden (not display:none) keeps
+   every variant actually in the layout so it can contribute to that
+   height, while only the active one is ever seen. */
+.pillars-chamber-stack {
+  display: grid;
+}
+.pillars-chamber-content {
+  grid-area: 1 / 1;
+  visibility: hidden;
+}
+.pillars-chamber-content.is-active {
+  visibility: visible;
 }
 .pillars-chamber-code {
   font-family: var(--font-prata), serif;
@@ -1117,6 +1147,11 @@ h2 {
   height: 100vh;
   overflow: hidden;
   display: flex;
+  /* column, not row — stacks .pf-track above .pf-cta so the CTA sits
+     just under the cards and stays on screen (pinned) for the whole
+     horizontal scroll-jack, instead of only appearing once the pin
+     releases at the very end */
+  flex-direction: column;
   /* was centered in the full 100vh sticky box, leaving as much empty
      white space above the cards as below — pulling them up toward the
      top closes the gap right under the header panel */
@@ -1130,6 +1165,15 @@ h2 {
   width: fit-content;
   margin: 40px auto 60px;
   text-decoration: none;
+}
+/* desktop only (mobile's .pf-cta sits in normal flow after the whole
+   wrapper, where the 60px bottom margin is still wanted) — inside the
+   height:100vh, overflow:hidden .pf-sticky box, that same bottom margin
+   just risks pushing the button past the box's own clipped edge */
+.pf-sticky .pf-cta {
+  /* auto left/right margins still center it horizontally as a column
+     flex item, regardless of .pf-sticky's own align-items: flex-start */
+  margin: 40px auto 0;
 }
 .pf-track {
   position: relative;
@@ -2717,6 +2761,15 @@ h2 {
   transition: opacity 0.4s ease;
 }
 .tech-stages-evaluate-item.is-active { opacity: 1; }
+.tech-stages-evaluate-name {
+  font-family: var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #003366;
+  margin: 0 0 10px;
+}
 .tech-stages-evaluate-heading {
   font-family: var(--font-prata), serif;
   font-size: 1rem;
@@ -3693,6 +3746,15 @@ h2 {
   transition: opacity 0.4s ease;
 }
 .partnership-stages-evaluate-item.is-active { opacity: 1; }
+.partnership-stages-evaluate-name {
+  font-family: var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #003366;
+  margin: 0 0 10px;
+}
 .partnership-stages-evaluate-heading {
   font-family: var(--font-prata), serif;
   font-size: 1rem;

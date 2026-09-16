@@ -20,12 +20,14 @@ export default function Hero() {
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
       const family = getComputedStyle(el).fontFamily;
-      ctx.font = `800 ${probeSize}px ${family}`;
+      // weight must match .hero-wordmark's actual font-weight (600) —
+      // measuring at a different weight than what's rendered throws the
+      // fit off, since bolder/lighter glyphs measure different widths
+      ctx.font = `600 ${probeSize}px ${family}`;
       const textWidth = ctx.measureText(el.textContent || "SowTrap").width;
-      // 0.78x container width, not a full-bleed fit — was reading as too
-      // heavy/dominant, and left "Elevating Nutrition..." feeling
-      // disconnected below a full screen of just the wordmark
-      el.style.fontSize = `${probeSize * ((containerWidth * 0.78) / textWidth)}px`;
+      // 0.94x container width — fills edge to edge with just a small
+      // margin, was 0.78 which left a lot of unused space on both sides
+      el.style.fontSize = `${probeSize * ((containerWidth * 0.94) / textWidth)}px`;
     }
 
     document.fonts.ready.then(fitWordmark);

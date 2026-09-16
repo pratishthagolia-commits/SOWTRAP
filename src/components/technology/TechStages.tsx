@@ -144,6 +144,7 @@ export default function TechStages() {
               key={stage.name}
               className={`tech-stages-evaluate-item${i === activeIndex ? " is-active" : ""}`}
             >
+              <p className="tech-stages-evaluate-name">{stage.name}</p>
               <p className="tech-stages-evaluate-heading">{stage.evaluateHeading}</p>
               <p className="tech-stages-evaluate-list">{stage.evaluate.join(" • ")}</p>
             </div>

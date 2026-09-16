@@ -40,7 +40,6 @@ const PILLARS: Pillar[] = [
 export default function PillarsSection() {
   const isMobile = useIsMobile();
   const [active, setActive] = useState(0);
-  const current = PILLARS[active];
 
   return (
     <>
@@ -72,10 +71,26 @@ export default function PillarsSection() {
         ) : (
           <>
             <div className="pillars-chamber-left">
-              <h3 className="pillars-chamber-title">{current.title}</h3>
-              <span className="pillars-chamber-divider" />
-              <p className="pillars-chamber-tagline">{current.tagline}</p>
-              <p className="pillars-chamber-body">{current.body}</p>
+              {/* all four pillars' content is stacked in the same grid
+                  cell (only the active one visible) so the card's height
+                  is always set by the tallest one, instead of growing and
+                  shrinking as the user clicks between shorter/longer
+                  pillars — no guessed pixel value, and nothing can
+                  overflow since every variant is actually laid out */}
+              <div className="pillars-chamber-stack">
+                {PILLARS.map((pillar, i) => (
+                  <div
+                    key={pillar.code}
+                    className={`pillars-chamber-content${i === active ? " is-active" : ""}`}
+                    aria-hidden={i !== active}
+                  >
+                    <h3 className="pillars-chamber-title">{pillar.title}</h3>
+                    <span className="pillars-chamber-divider" />
+                    <p className="pillars-chamber-tagline">{pillar.tagline}</p>
+                    <p className="pillars-chamber-body">{pillar.body}</p>
+                  </div>
+                ))}
+              </div>
             </div>
 
             <div className="pillars-chamber-grid">

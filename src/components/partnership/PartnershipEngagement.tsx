@@ -112,6 +112,7 @@ export default function PartnershipEngagement() {
               key={model.name}
               className={`partnership-stages-evaluate-item${i === activeIndex ? " is-active" : ""}`}
             >
+              <p className="partnership-stages-evaluate-name">{model.name}</p>
               <p className="partnership-stages-evaluate-heading">{model.tagline}</p>
               <p className="partnership-stages-evaluate-desc">{model.description}</p>
             </div>
