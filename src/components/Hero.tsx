@@ -38,10 +38,12 @@ export default function Hero() {
 
   return (
     <section className="hero" id="home" ref={heroRef}>
-      {/* both are canvas loops running every frame; .hero already paints
-          its own navy gradient underneath them, so a phone just gets that */}
+      {/* GradientBlobs is a mouse-interaction effect (no mouse on touch
+          devices), so it stays off on phone — MatrixRain is back on
+          phone per client request, it's the ambient background rather
+          than an interaction */}
       {!isMobile && <GradientBlobs targetRef={heroRef} />}
-      {!isMobile && <MatrixRain />}
+      <MatrixRain />
 
       <div className="hero-fold">
         <h1 className="hero-wordmark" ref={wordRef}>SowTrap</h1>

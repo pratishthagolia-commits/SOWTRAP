@@ -81,7 +81,10 @@ export default function FooterCTA() {
       const family = getComputedStyle(el).fontFamily;
       ctx.font = `800 ${probeSize}px ${family}`;
       const textWidth = ctx.measureText(el.textContent || "SowTrap").width;
-      el.style.fontSize = `${probeSize * (containerWidth / textWidth)}px`;
+      // 0.98x, not a dead-exact 1x — canvas measureText and the browser's
+      // own text layout don't always agree to the pixel, and fitting to
+      // the exact width left no margin for that gap to overflow into
+      el.style.fontSize = `${probeSize * ((containerWidth * 0.98) / textWidth)}px`;
     }
 
     document.fonts.ready.then(fitWordmark);
