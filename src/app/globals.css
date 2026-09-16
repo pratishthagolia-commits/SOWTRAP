@@ -230,12 +230,12 @@ body {
 .hero-fold {
   position: relative;
   z-index: 3;
-  /* was 100vh with the wordmark pinned to the very bottom edge — shrinking
-     the fold and giving it real bottom breathing room moves the wordmark
-     up, closing the gap before "Elevating Nutrition..." appears below it */
+  /* min-height stays 95vh — keeps the slide's full scroll length, just
+     repositions the wordmark within it (flex-end -> center) instead of
+     shrinking the box to move it */
   min-height: 95vh;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
   padding-bottom: 0;
   pointer-events: none;
@@ -248,7 +248,7 @@ body {
   display: block;
   width: 100%;
   text-align: center;
-  font-weight: 600;
+  font-weight: 800;
   line-height: 1;
   letter-spacing: 0;
   white-space: nowrap;

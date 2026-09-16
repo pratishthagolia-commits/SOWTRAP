@@ -21,10 +21,10 @@ export default function Hero() {
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
       const family = getComputedStyle(el).fontFamily;
-      // weight must match .hero-wordmark's actual font-weight (600) —
+      // weight must match .hero-wordmark's actual font-weight (800) —
       // measuring at a different weight than what's rendered throws the
       // fit off, since bolder/lighter glyphs measure different widths
-      ctx.font = `600 ${probeSize}px ${family}`;
+      ctx.font = `800 ${probeSize}px ${family}`;
       const textWidth = ctx.measureText(el.textContent || "SowTrap").width;
       // 0.94x container width — fills edge to edge with just a small
       // margin, was 0.78 which left a lot of unused space on both sides
