@@ -1919,13 +1919,17 @@ h2 {
      tap away, inside the hamburger drawer, via .nav-drawer .nav-cta
      below) so the logo and links can fit on one line instead */
   .nav-inner .nav-cta { display: none; }
-  .nav-inner { flex-wrap: wrap; row-gap: 8px; }
+  .nav-inner { flex-wrap: wrap; row-gap: 8px; padding: 16px; }
   .nav-links {
     justify-content: center;
     flex-wrap: wrap;
-    gap: 8px 16px;
+    gap: 6px 10px;
   }
-  .nav-links a { font-size: 0.85rem; }
+  /* "Partnership" is the one word long enough to still wrap onto its
+     own line at the previous size (0.85rem, 16px gaps) even once the
+     logo and CTA left room for the rest — shrunk further specifically
+     so all five fit alongside the logo on one line */
+  .nav-links a { font-size: 0.72rem; }
 }
 
 /* ---------- science page — opening statement ---------- */
@@ -5752,6 +5756,13 @@ h2 {
   .logo-badge {
     font-size: 0.82rem;
     padding: 4px 14px;
+  }
+  /* smaller again specifically in the top nav (not the drawer, which has
+     its own row and room to spare) — frees up a bit more width for the
+     nav links to fit alongside it on one line */
+  .nav-inner .logo-badge {
+    font-size: 0.7rem;
+    padding: 3px 12px;
   }
 
   /* the shared fade/slide-in reveal system (26 files) stays mounted (its

@@ -54,8 +54,20 @@ export default function MatrixRain() {
     let frameId = 0;
 
     function resize() {
-      width = canvas!.width = hero!.clientWidth;
-      height = canvas!.height = hero!.clientHeight;
+      const newWidth = hero!.clientWidth;
+      const newHeight = hero!.clientHeight;
+      // mobile browsers change innerHeight (and so .hero's own height,
+      // since it's sized off viewport units) as their toolbar collapses
+      // and expands while scrolling, firing this on every scroll tick.
+      // Rebuilding every column's random letters/speed/colour each time
+      // read as the rain glitching/restarting mid-scroll — only a width
+      // change actually needs the column layout rebuilt; a height-only
+      // change just needs the canvas element resized to match.
+      const widthChanged = newWidth !== width;
+      if (!widthChanged && newHeight === height) return;
+      width = canvas!.width = newWidth;
+      height = canvas!.height = newHeight;
+      if (!widthChanged) return;
       cols = Math.ceil(width / COLUMN_WIDTH);
       const visibleRows = Math.ceil(height / CELL_SIZE);
 
