@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import Link from "next/link";
 import MatrixRain from "./MatrixRain";
 import GradientBlobs from "./GradientBlobs";
 import useIsMobile from "@/lib/useIsMobile";
@@ -53,8 +54,8 @@ export default function Hero() {
             Scientifically engineered micronutrients for better absorption and performance.
           </p>
           <div className="hero-banner-cta">
-            <button className="btn btn-lime">Explore Technology</button>
-            <button className="btn btn-outline-light">View Products</button>
+            <Link href="/technology" className="btn btn-lime">Explore Technology</Link>
+            <Link href="/products" className="btn btn-outline-light">View Products</Link>
           </div>
         </div>
       </div>
