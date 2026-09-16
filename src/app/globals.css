@@ -28,12 +28,18 @@
    ScienceExperience, TechStages, the partnership band sections, etc.) —
    sticky elements just release early and scroll away, leaving a blank
    gap where they should still be pinned. html doesn't have this problem. */
-html { scroll-behavior: smooth; overflow-x: hidden; }
+/* overscroll-behavior-x (unlike overflow-x) has no side effect on
+   overflow-y computation, so it's safe on both html and body — stops
+   iOS Safari's horizontal rubber-band/bounce on a left-right drag from
+   revealing whatever's behind the page, regardless of whether there's
+   any residual sub-pixel horizontal overflow left to trigger it */
+html { scroll-behavior: smooth; overflow-x: hidden; overscroll-behavior-x: none; }
 
 body {
   font-family: var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
   color: var(--ink);
   background: var(--white);
+  overscroll-behavior-x: none;
 }
 
 .container {
