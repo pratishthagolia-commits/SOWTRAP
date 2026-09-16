@@ -98,10 +98,12 @@ export default function AboutUsV2() {
   // spot). One shape, one value — nothing can move independently.
   const slideOffset = (1 - eased) * 100; // 100% (hidden) -> 0% (in place)
 
-  // words go grey -> black through the back half of the scroll, once the
-  // panel is mostly in place (same effect and same progress-tied approach
-  // as Research Gap)
-  const wordProgress = Math.min(1, Math.max(0, (progress - 0.55) / 0.45));
+  // words go grey -> black starting right as the panel becomes legible and
+  // finishing well before the pinned section's scroll range ends — was
+  // 0.55-1.0, which (combined with the ease-out slide-in curve visually
+  // settling by ~0.6-0.7) left the text still mostly grey for a long
+  // stretch after the panel already looked fully arrived
+  const wordProgress = Math.min(1, Math.max(0, (progress - 0.2) / 0.4));
   const activeCount = Math.round(wordProgress * TOTAL_WORDS);
 
   return (
