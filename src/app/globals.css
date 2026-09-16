@@ -1914,19 +1914,18 @@ h2 {
 .reveal-d3 { transition-delay: 0.36s; }
 
 @media (max-width: 860px) {
-  /* was display:none — hid the nav links entirely on the pre-scroll
-     full header (logo + links + CTA), leaving just the logo and "Get in
-     touch" with an empty gap between them. Wrapping to a second row
-     instead keeps them visible and legible at phone width. */
-  .nav-inner { flex-wrap: wrap; row-gap: 12px; }
+  /* the pre-scroll full header (logo + links + CTA) doesn't have room
+     for all three on a phone — the CTA is dropped here (it's still one
+     tap away, inside the hamburger drawer, via .nav-drawer .nav-cta
+     below) so the logo and links can fit on one line instead */
+  .nav-inner .nav-cta { display: none; }
+  .nav-inner { flex-wrap: wrap; row-gap: 8px; }
   .nav-links {
-    order: 3;
-    width: 100%;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 12px 22px;
+    gap: 8px 16px;
   }
-  .nav-links a { font-size: 1rem; }
+  .nav-links a { font-size: 0.85rem; }
 }
 
 /* ---------- science page — opening statement ---------- */
@@ -5751,8 +5750,8 @@ h2 {
      narrow phone screen, both in the top nav and inside the hamburger
      drawer (same shared class) */
   .logo-badge {
-    font-size: 1rem;
-    padding: 5px 18px;
+    font-size: 0.82rem;
+    padding: 4px 14px;
   }
 
   /* the shared fade/slide-in reveal system (26 files) stays mounted (its
