@@ -1196,7 +1196,14 @@ h2 {
   .cmp-header-text { padding: 32px 24px; }
   .cmp-heading { text-align: left; }
   .cmp-intro { margin: 0; padding: 40px 24px 10px; text-align: left; }
-  .cmp-row-banner { padding: 16px 24px; }
+  /* .cmp-row-banner's desktop width (100% + 60px) and the pro row's
+     margin-left:-60px/padding-left:260px all existed only to bleed into
+     the 60px of .cmp-row-content side padding that's zeroed below — left
+     unreset, they pushed the banner ~36px past the phone viewport's
+     right edge (and off the left edge for the pro row) at every phone
+     width, since those are fixed-px offsets rather than vw-relative */
+  .cmp-row-banner { width: 100%; padding: 16px 24px; }
+  .cmp-row-pro .cmp-row-banner { margin-left: 0; padding-left: 24px; }
   .cmp-row { flex-direction: column; padding: 0 24px; margin: 0 0 0 0 !important; }
   .cmp-row-image { flex: none; width: 100%; }
   .cmp-row-content,
