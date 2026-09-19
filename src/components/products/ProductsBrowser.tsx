@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import Dropdown from "@/components/Dropdown";
+import { SearchIcon, SlidersIcon } from "@/components/icons";
 import { getAllProducts, getCategories, getHealthBenefits, getProductTypes, type Product } from "@/lib/products";
 
 const SORT_OPTIONS = [
@@ -137,7 +138,21 @@ export default function ProductsBrowser() {
 
   return (
     <section className="products-browser">
+      {/* phone-only: dims the page behind a full-screen filter dropdown —
+          on desktop/tablet mobileFilterOpen never leaves null, so this
+          never becomes visible there */}
+      <div
+        className={`products-filter-scrim${mobileFilterOpen ? " is-open" : ""}`}
+        onClick={() => setMobileFilterOpen(null)}
+        aria-hidden="true"
+      />
+
       <aside className="products-filters">
+        <p className="products-filter-heading">
+          <SlidersIcon width={16} height={16} aria-hidden="true" />
+          Filter
+        </p>
+
         <div className="products-filter-tabs">
           <button
             type="button"
@@ -160,6 +175,14 @@ export default function ProductsBrowser() {
         </div>
 
         <div className={`products-filter-group${mobileFilterOpen === "category" ? " is-mobile-open" : ""}`}>
+          <button
+            type="button"
+            className="products-filter-mobile-close"
+            onClick={() => setMobileFilterOpen(null)}
+            aria-label="Close filter"
+          >
+            &times;
+          </button>
           <p className="products-filter-label">Ingredient Category</p>
           <ul className="products-filter-list">
             <li>
@@ -201,6 +224,14 @@ export default function ProductsBrowser() {
         </div>
 
         <div className={`products-filter-group${mobileFilterOpen === "indications" ? " is-mobile-open" : ""}`}>
+          <button
+            type="button"
+            className="products-filter-mobile-close"
+            onClick={() => setMobileFilterOpen(null)}
+            aria-label="Close filter"
+          >
+            &times;
+          </button>
           <p className="products-filter-label">Indications</p>
           <ul className="products-filter-list products-filter-list--checkbox">
             {benefits.map((b) => {
@@ -226,14 +257,17 @@ export default function ProductsBrowser() {
 
       <div className="products-results">
         <div className="products-toolbar">
-          <input
-            type="text"
-            className="products-search"
-            placeholder="Search ingredients…"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            aria-label="Search ingredients"
-          />
+          <div className="products-search-wrap">
+            <SearchIcon className="products-search-icon" width={16} height={16} aria-hidden="true" />
+            <input
+              type="text"
+              className="products-search"
+              placeholder="Search ingredients…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              aria-label="Search ingredients"
+            />
+          </div>
           <Dropdown
             className="products-sort"
             listClassName="products-sort-list"

@@ -143,12 +143,12 @@ body {
   height: 46px;
   border-radius: 50%;
   background: #ffffff;
-  border: 2px solid #000000;
+  border: 1px solid #000000;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 5px;
+  gap: 4px;
   cursor: pointer;
   /* hidden pre-scroll (same crossfade duration as .nav's own fade-out and
      .watermark's fade-in, so all three read as one seamless handoff) */
@@ -163,7 +163,7 @@ body {
   pointer-events: auto;
   transition: opacity 0.5s ease, visibility 0s linear 0s;
 }
-.nav-hamburger span { width: 20px; height: 2px; background: #000000; }
+.nav-hamburger span { width: 18px; height: 1.5px; background: #000000; }
 
 .nav-drawer-scrim {
   position: fixed;
@@ -5171,6 +5171,28 @@ h2 {
    replace the sidebar's inner-scroll list below 640px — hidden here so
    desktop/tablet keep the sidebar exactly as before */
 .products-filter-tabs { display: none; }
+/* only meaningful once a filter group goes full-screen on phone (see the
+   640px block below) — hidden everywhere else */
+.products-filter-mobile-close { display: none; }
+/* dims the page behind that full-screen phone sheet — inert (not just
+   invisible) at every other width regardless of React state, so there's
+   no edge case where resizing back up from phone leaves it interactive */
+.products-filter-scrim { display: none; }
+
+.products-filter-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 26px;
+  font-family: var(--font-prata), serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink);
+}
+.products-filter-heading svg { flex: none; color: #003366; }
+
 .products-filter-label {
   font-family: var(--font-prata), serif;
   font-size: 0.8rem;
@@ -5290,10 +5312,19 @@ h2 {
   padding-bottom: 20px;
   border-bottom: 1px solid rgba(13, 21, 38, 0.12);
 }
+.products-search-wrap { position: relative; flex: 1; max-width: 360px; }
+.products-search-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--ink-faint);
+  pointer-events: none;
+}
 .products-search {
-  flex: 1;
-  max-width: 360px;
-  padding: 12px 16px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 16px 12px 42px;
   border: 1px solid rgba(13, 21, 38, 0.2);
   border-radius: 100px;
   font-family: var(--font-prata), serif;
@@ -5521,7 +5552,7 @@ h2 {
   .products-filter-item { width: auto; padding: 6px 0; }
   .products-filter-list--checkbox { flex-direction: row; flex-wrap: wrap; gap: 0 20px; }
   .products-toolbar { flex-direction: column; align-items: stretch; }
-  .products-search { max-width: none; }
+  .products-search-wrap { max-width: none; }
   .products-grid, .product-detail-related-grid { grid-template-columns: repeat(2, 1fr); gap: 20px 16px; }
 }
 
@@ -6082,6 +6113,19 @@ h2 {
 .portfolio-mobile-arrow:disabled { opacity: 0.35; cursor: default; }
 
 @media (max-width: 640px) {
+  /* "Enquire About This Ingredient" sat flush left like the heading/body
+     text above it (display:inline-block just follows the column's own
+     left edge) — centering only the button itself (not its siblings)
+     needs display:block + margin:auto, not a text-align on the parent,
+     which would also re-center the heading/description/tags beside it */
+  .product-detail-cta {
+    display: block;
+    width: fit-content;
+    margin: 0 auto;
+    padding: 12px 24px;
+    font-size: 0.88rem;
+  }
+
   /* .logo-badge never had a phone-specific size — at the desktop 1.4rem
      font + 26px horizontal padding it reads as oversized against a
      narrow phone screen, both in the top nav and inside the hamburger
@@ -6335,18 +6379,58 @@ h2 {
   .products-filter-tab.is-open .products-filter-tab-chevron { transform: rotate(180deg); }
 
   .products-filters { gap: 0; }
-  .products-filter-group {
-    display: none;
-    margin: 14px 0 0;
-    padding: 16px;
-    max-height: 46vh;
+  .products-filter-group { display: none; }
+  /* opens as a full-screen sheet over the whole page (not just an inline
+     panel under the tab) with .products-filter-scrim dimming everything
+     behind it — .products-filter-mobile-close is this sheet's only way
+     back out, since the tab bar that opened it is now fully covered */
+  .products-filter-group.is-mobile-open {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 260;
+    margin: 0;
+    padding: 90px 24px 40px;
     overflow-y: auto;
-    border: 1px solid rgba(13, 21, 38, 0.12);
-    border-radius: 12px;
-    background: #fbfbfb;
+    border: none;
+    border-radius: 0;
+    background: #ffffff;
+    box-shadow: 0 0 60px rgba(13, 21, 38, 0.25);
   }
-  .products-filter-group.is-mobile-open { display: block; }
   .products-filter-group:last-of-type { margin-bottom: 0; }
+  /* display:flex here overrides the base rule's display:none — safe to
+     leave unconditional since this button only ever renders visually
+     when its parent .products-filter-group also has .is-mobile-open
+     (the group itself is display:none otherwise, per above) */
+  .products-filter-mobile-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 18px;
+    right: 20px;
+    z-index: 261;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid rgba(13, 21, 38, 0.2);
+    background: #ffffff;
+    font-size: 1.3rem;
+    line-height: 1;
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .products-filter-scrim {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 255;
+    background: rgba(13, 21, 38, 0.55);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+  .products-filter-scrim.is-open { opacity: 1; pointer-events: auto; }
   /* the 900px rule above turns these into wrapped horizontal pill rows
      (fine for the old always-visible sidebar) — inside the new dropdown
      panel there's a fixed width to work with, so go back to one column
@@ -6379,14 +6463,19 @@ h2 {
      reach them now */
   .nav-links, .nav-cta { display: none; }
 
+  /* was top:9px at 38px tall — its bottom edge (47px) landed right on
+     the bar's own bottom border (~47.4px, from .nav-inner's 12px
+     padding + the phone logo-badge's height), reading as touching the
+     line instead of sitting inside the bar. Shifted up and shrunk a
+     touch so it clears it with room to spare. */
   .nav-hamburger {
     opacity: 1 !important;
     visibility: visible !important;
     pointer-events: auto !important;
-    top: 9px;
+    top: 6px;
     right: 16px;
-    width: 38px;
-    height: 38px;
+    width: 36px;
+    height: 36px;
   }
 
   /* the logo now lives permanently in the opaque bar above instead of
@@ -6401,7 +6490,139 @@ h2 {
      point instead of a compact list. Thinner padding + smaller type,
      same navy pill look. */
   .cmp-row-list { gap: 8px; margin-top: 40px; }
-  .cmp-pill { padding: 10px 16px; font-size: 0.92rem; line-height: 1.45; }
+  .cmp-pill { padding: 10px 16px; font-size: 0.9rem; line-height: 1.45; }
+
+  /* ==========================================================================
+     Phone typography normalization — every section had its own
+     hand-tuned clamp()/rem value (much of it never revisited once this
+     640px tier was added later), so scrolling the site on a phone meant
+     the "same kind" of text (a section heading, a card/item title, a
+     paragraph) rendered at a different size every few sections. Collapse
+     everything down to exactly the three sizes matching the reference
+     section (Technology > "Our Approach to Ingredient Innovation" +
+     its accordion): 1.8rem headings, 1rem subheadings/item-titles,
+     0.9rem body copy. Desktop-only elements that never mount on phone
+     (the 6 chamber components' hover-grid/detail-card branch, replaced
+     there by ChamberAccordion — already 1rem/0.9rem by construction) are
+     intentionally left out below since touching them would be dead code. */
+
+  /* -- headings (section-level titles) -- */
+  .about-v2-heading,
+  .research-v2-heading,
+  .expertise-heading,
+  .pillars-kicker,
+  .dt-heading,
+  .portfolio-heading,
+  .science-intro-heading,
+  .science-intro-sub,
+  .bioactives-what-heading,
+  .bioactives-classes-banner,
+  .cmp-heading-sm,
+  .cmp-heading-lg,
+  .cmp-row-banner,
+  .sci-factors-heading,
+  .tech-philosophy-heading,
+  .tech-platform-heading,
+  .tech-encap-banner,
+  .sci-validation-heading,
+  .tech-materials-banner,
+  .tech-evidence-heading,
+  .partnership-what-heading,
+  .partnership-who-heading,
+  .partnership-models-title,
+  .partnership-models-heading,
+  .contact-hero-heading,
+  .contact-form-heading,
+  .partnership-brands-heading,
+  .partnership-brands-strategist-heading,
+  .partnership-touch-heading,
+  .partnership-build-heading,
+  .products-hero-heading,
+  .products-faq-heading,
+  .products-section-heading,
+  .product-detail-section-heading,
+  .product-detail-tag-list--info .product-detail-section-heading,
+  .product-detail-related-heading {
+    font-size: 1.8rem;
+  }
+
+  /* -- subheadings (card/item titles, FAQ questions, modal titles) -- */
+  .bioactives-item-title,
+  .tech-encap-item-title,
+  .tech-materials-item-title,
+  .tech-philo-card-header h4,
+  .partnership-brands-item-title,
+  .products-faq-item-q,
+  .product-card-name,
+  .contact-form-subheading,
+  .partnership-who-subheading,
+  .partnership-who-point h4,
+  .partnership-brands-subheading,
+  .partnership-brands-strategist-subheading,
+  .doc-request-title,
+  .cookie-modal-title {
+    font-size: 1rem;
+  }
+
+  /* -- body copy / subtext (paragraphs, descriptions, kickers/eyebrows) -- */
+  .lead,
+  .body-text,
+  .about-v2-body p,
+  .research-v2-para,
+  .research-v2-quote,
+  .expertise-list li,
+  .expertise-closing,
+  .cmp-intro-body,
+  .cmp-tagline,
+  .science-intro-block p,
+  .bioactives-what-tab p,
+  .bioactives-what-body,
+  .bioactives-item-desc,
+  .sci-factors-intro,
+  .sci-factors-kicker,
+  .tech-intro-body,
+  .tech-philosophy-kicker,
+  .tech-philosophy-intro,
+  .tech-philo-card-eyebrow,
+  .tech-philo-card-solution,
+  .tech-platform-body,
+  .tech-encap-item-desc,
+  .sci-validation-intro-body,
+  .tech-evidence-body,
+  .tech-materials-intro,
+  .tech-materials-item-materials,
+  .partnership-what-body,
+  .partnership-models-body,
+  .partnership-closing-statement,
+  .contact-hero-kicker,
+  .contact-hero-intro,
+  .contact-form-kicker,
+  .contact-form-intro,
+  .contact-form-success,
+  .partnership-eval-intro,
+  .partnership-eval-closing,
+  .partnership-brands-intro-body,
+  .partnership-brands-item-tagline,
+  .partnership-brands-item-body,
+  .partnership-brands-item-outcome,
+  .partnership-brands-strategist-body,
+  .partnership-touch-body,
+  .partnership-touch-link p,
+  .partnership-build-body,
+  .partnership-farm-path,
+  .partnership-farm-body,
+  .products-hero-body,
+  .products-faq-kicker,
+  .products-faq-item-answer,
+  .indication-description,
+  .product-detail-description,
+  .product-detail-tag,
+  .dt-box p,
+  .science-checkpoint-eyebrow,
+  .kicker,
+  .doc-request-error {
+    font-size: 0.9rem;
+  }
 }
 
 /* ---------- cookie consent — full modal with per-category toggles,
