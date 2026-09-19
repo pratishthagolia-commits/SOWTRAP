@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import Nav from "@/components/Nav";
+import Watermark from "@/components/Watermark";
 import ScrollReveal from "@/components/ScrollReveal";
 import ProductsHeroPhoto from "@/components/products/ProductsHeroPhoto";
 import ProductsHero from "@/components/products/ProductsHero";
@@ -16,6 +17,7 @@ export const metadata: Metadata = {
 export default function ProductsPage() {
   return (
     <>
+      <Watermark />
       <Nav />
       <ScrollReveal />
 

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Nav from "@/components/Nav";
+import Watermark from "@/components/Watermark";
 import ScrollReveal from "@/components/ScrollReveal";
 import ScienceHero from "@/components/science/ScienceHero";
 import ScienceIntro from "@/components/science/ScienceIntro";
@@ -16,6 +17,7 @@ export const metadata: Metadata = {
 export default function SciencePage() {
   return (
     <>
+      <Watermark />
       <Nav />
       <ScrollReveal />
 

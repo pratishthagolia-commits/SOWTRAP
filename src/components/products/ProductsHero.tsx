@@ -45,10 +45,10 @@ export default function ProductsHero() {
       </p>
       <h1 className="products-hero-heading">Our Ingredient Portfolio</h1>
       <p className="products-hero-body">
-        Every ingredient in the SowTrap&trade; portfolio is engineered around the same principle:
+        Every ingredient in the SowTrap&trade; is engineered around the same principle:
         protect the active, mask what needs masking, and deliver it intact to where it works.
         Explore our encapsulated herbal extracts, vitamins, minerals, bioactives, biopeptides, and
-        microbial ingredients below.
+        microbial ingredients.
       </p>
     </section>
   );

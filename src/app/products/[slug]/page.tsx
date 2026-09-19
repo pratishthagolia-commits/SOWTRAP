@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Nav from "@/components/Nav";
+import Watermark from "@/components/Watermark";
 import ScrollReveal from "@/components/ScrollReveal";
 import ProductDetail from "@/components/products/ProductDetail";
 import FooterCTA from "@/components/FooterCTA";
@@ -31,6 +32,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
 
   return (
     <>
+      <Watermark />
       <Nav />
       <ScrollReveal />
 

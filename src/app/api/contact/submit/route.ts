@@ -1,13 +1,10 @@
 import { NextResponse } from "next/server";
 import { verifyVerifiedTicket } from "@/lib/otp";
 import { checkRateLimit } from "@/lib/rateLimit";
+import { escapeHtml, getNotifyEmail } from "@/lib/notify";
 
 export const runtime = "nodejs";
 
-// overridable via env so submissions can be pointed at a test inbox
-// during development without touching code — CONTACT_NOTIFY_EMAIL unset
-// falls back to the real client address
-const NOTIFY_TO = process.env.CONTACT_NOTIFY_EMAIL || "sowtrap@scienceonwheels.in";
 const MAX_ATTACHMENT_BYTES = 5 * 1024 * 1024; // 5MB per file
 
 const SUBJECTS: Record<string, string> = {
@@ -29,10 +26,6 @@ const LABELS: Record<string, string> = {
   experience: "Experience",
   message: "Message / Brief Profile",
 };
-
-function escapeHtml(s: string): string {
-  return s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c] as string));
-}
 
 export async function POST(request: Request) {
   let formData: FormData;
@@ -118,7 +111,7 @@ export async function POST(request: Request) {
     },
     body: JSON.stringify({
       from: fromEmail,
-      to: NOTIFY_TO,
+      to: getNotifyEmail(),
       reply_to: email,
       subject: `${SUBJECTS[formType]} — ${formData.get("name") ?? email}`,
       html: `<div style="font-family:Arial,sans-serif;font-size:15px;"><table>${rowsHtml}</table></div>`,

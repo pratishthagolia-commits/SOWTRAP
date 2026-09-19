@@ -59,7 +59,22 @@ body {
   background: transparent;
   border-bottom: 1px solid transparent;
   backdrop-filter: none;
-  transition: background 0.3s ease, border-color 0.3s ease, backdrop-filter 0.3s ease;
+  /* visible by default (pre-scroll) — visibility flips to hidden
+     immediately (0s delay) so it never blocks clicks/tabbing */
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.5s ease, visibility 0s linear 0s, background 0.3s ease,
+    border-color 0.3s ease, backdrop-filter 0.3s ease;
+}
+/* scrolled past the hero: crossfades out instead of the old instant
+   unmount-swap to the hamburger — visibility only flips to hidden once
+   the opacity fade finishes, so it stays interactive/visible mid-fade */
+.nav.nav-is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.5s ease, visibility 0s linear 0.5s, background 0.3s ease,
+    border-color 0.3s ease, backdrop-filter 0.3s ease;
 }
 .nav-inner {
   /* was max-width:1280px + margin:0 auto — centered the bar, which on any
@@ -135,6 +150,18 @@ body {
   justify-content: center;
   gap: 5px;
   cursor: pointer;
+  /* hidden pre-scroll (same crossfade duration as .nav's own fade-out and
+     .watermark's fade-in, so all three read as one seamless handoff) */
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.5s ease, visibility 0s linear 0.5s;
+}
+.nav-hamburger.is-visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity 0.5s ease, visibility 0s linear 0s;
 }
 .nav-hamburger span { width: 20px; height: 2px; background: #000000; }
 
@@ -277,7 +304,7 @@ body {
   /* padding-top is already at 0, so this is the next lever to pull
      content up further — negative margin, not a min-height change, so
      the box's own size (the "slide") stays exactly as it was */
-  margin-top: -110px;
+  margin-top: -170px;
   display: flex;
   /* was center — vertically centering within this box pushed the
      heading well down the page regardless of padding-top, needing a
@@ -2166,7 +2193,10 @@ h2 {
   opacity: 0;
   pointer-events: none;
   user-select: none;
-  transition: opacity 0.6s ease;
+  /* same duration/easing as .nav's fade-out and .nav-hamburger's fade-in
+     (all three keyed off the same #home IntersectionObserver trigger) so
+     the whole handoff reads as one continuous crossfade */
+  transition: opacity 0.5s ease;
 }
 .watermark.is-visible { opacity: 0.18; }
 
@@ -4711,8 +4741,10 @@ h2 {
   pointer-events: none;
 }
 
+/* was 900px — same "fill the screen width, wrap to fewer lines" widen
+   as .partnership-build-inner, applied here for the same reason */
 .partnership-brands-strategist {
-  max-width: 900px;
+  max-width: 1300px;
   margin: 90px auto 0;
   text-align: center;
 }
@@ -4948,7 +4980,11 @@ h2 {
   padding: 110px 60px;
   text-align: center;
 }
-.partnership-build-inner { max-width: 820px; margin: 0 auto; }
+/* was 820px — kept the paragraph to a narrow column, wrapping across
+   many short lines. Widening the whole block (not just the paragraph)
+   so the heading/CTA stay visually aligned with it lets the body text
+   span most of the screen and wrap to far fewer lines. */
+.partnership-build-inner { max-width: 1300px; margin: 0 auto; }
 .partnership-build-heading {
   font-family: var(--font-prata), serif;
   font-weight: 400;
@@ -5124,6 +5160,10 @@ h2 {
 }
 .products-filter-group { margin-bottom: 40px; }
 .products-filter-group:last-of-type { margin-bottom: 24px; }
+/* phone-only dropdown tabs (Ingredient Category / Indications) that
+   replace the sidebar's inner-scroll list below 640px — hidden here so
+   desktop/tablet keep the sidebar exactly as before */
+.products-filter-tabs { display: none; }
 .products-filter-label {
   font-family: var(--font-prata), serif;
   font-size: 0.8rem;
@@ -5279,7 +5319,9 @@ h2 {
   position: relative;
   z-index: 2;
   background: #ffffff;
-  max-width: 900px;
+  /* was 900px — same "fill the screen width" widen used elsewhere on
+     the site (.partnership-build-inner, .partnership-brands-strategist) */
+  max-width: 1300px;
   margin: 0 auto;
   padding: 130px 60px 140px;
 }
@@ -5540,6 +5582,18 @@ h2 {
 .indication-products-filters { flex: 0 0 220px; }
 .indication-products-grid { flex: 1; min-width: 0; }
 
+/* desktop only (explicit min-width guard, not just "the base rule" —
+   avoids fighting the existing tablet/phone column-count overrides
+   below, which are later in the cascade at their own breakpoints but
+   earlier in the file than this) — thin the sidebar and add a 5th
+   column so a full row of 8 products has no leftover gap on a wide
+   monitor, instead of 4 fixed columns leaving the container's own
+   max-width unused past them. */
+@media (min-width: 901px) {
+  .indication-products-filters { flex-basis: 170px; }
+  .indication-products-grid { grid-template-columns: repeat(5, 1fr); }
+}
+
 @media (max-width: 900px) {
   .indication-products { flex-direction: column; gap: 24px; }
   .indication-products-filters { position: static; width: 100%; max-height: none; }
@@ -5677,13 +5731,89 @@ h2 {
 .product-detail-download-row:last-child { border-bottom: none; }
 .product-detail-download-label { font-size: 1rem; color: var(--ink); }
 .product-detail-download-action {
+  font-family: inherit;
   font-size: 0.9rem;
   font-weight: 700;
   color: #003366;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: color 0.2s ease;
 }
-.product-detail-download-action.is-disabled {
-  color: var(--ink-faint);
-  cursor: default;
+.product-detail-download-action:hover { color: var(--blue); }
+
+/* ---------- document request modal ---------- */
+.doc-request-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  background: rgba(13, 21, 38, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.doc-request-modal {
+  position: relative;
+  background: #ffffff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 440px;
+  padding: 40px;
+  box-sizing: border-box;
+  box-shadow: 0 40px 100px -20px rgba(13, 21, 38, 0.5);
+}
+.doc-request-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: none;
+  font-size: 1.2rem;
+  line-height: 1;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.doc-request-close:hover { color: var(--ink); border-color: rgba(13, 21, 38, 0.3); }
+.doc-request-title {
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: 1.3rem;
+  color: var(--ink);
+  margin: 0 0 12px;
+}
+.doc-request-body {
+  font-family: var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  margin: 0 0 22px;
+}
+.doc-request-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.doc-request-form input {
+  font-family: var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.95rem;
+  padding: 12px 16px;
+  border-radius: 6px;
+  border: 1px solid rgba(13, 21, 38, 0.25);
+  background: #ffffff;
+  color: var(--ink);
+}
+.doc-request-form input:focus { outline: none; border-color: #003366; }
+.doc-request-form .btn { border: none; }
+.doc-request-error {
+  margin: 14px 0 0;
+  font-family: var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.85rem;
+  color: #c0392b;
 }
 
 /* health benefits: an icon-led row list (per Native Extracts' "Phyto
@@ -6162,6 +6292,91 @@ h2 {
     font-size: clamp(0.9rem, 3.8vw, 1.1rem);
   }
   .hero-banner-cta { flex-wrap: wrap; }
+
+  /* the sidebar's two filter groups (Ingredient Category, Indications)
+     used to just sit stacked with their own inner scroll on phone —
+     replace that with two tap-to-open dropdown tabs so only one facet's
+     list is on screen at a time instead of a tall scrolling column */
+  .products-filter-tabs { display: flex; gap: 10px; }
+  .products-filter-tab {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    background: #ffffff;
+    border: 1px solid rgba(13, 21, 38, 0.2);
+    border-radius: 100px;
+    padding: 12px 16px;
+    text-align: left;
+    font-family: var(--font-prata), serif;
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+    cursor: pointer;
+  }
+  .products-filter-tab.is-open { color: #003366; border-color: #003366; font-weight: 700; }
+  .products-filter-tab-chevron { font-size: 0.7em; transition: transform 0.2s ease; flex: none; }
+  .products-filter-tab.is-open .products-filter-tab-chevron { transform: rotate(180deg); }
+
+  .products-filters { gap: 0; }
+  .products-filter-group {
+    display: none;
+    margin: 14px 0 0;
+    padding: 16px;
+    max-height: 46vh;
+    overflow-y: auto;
+    border: 1px solid rgba(13, 21, 38, 0.12);
+    border-radius: 12px;
+    background: #fbfbfb;
+  }
+  .products-filter-group.is-mobile-open { display: block; }
+  .products-filter-group:last-of-type { margin-bottom: 0; }
+  /* the 900px rule above turns these into wrapped horizontal pill rows
+     (fine for the old always-visible sidebar) — inside the new dropdown
+     panel there's a fixed width to work with, so go back to one column
+     per row like the desktop list */
+  .products-filter-list { flex-direction: column; flex-wrap: nowrap; gap: 0; }
+  .products-filter-list--checkbox { flex-direction: column; flex-wrap: nowrap; gap: 2px; }
+
+  /* phone-only header: one persistent opaque bar (logo left, hamburger
+     right) for the entire scroll on every page, replacing the desktop
+     behaviour above (transparent full nav -> crossfade -> hamburger +
+     faint watermark) — the nav-links row alone (5 links + a CTA) is
+     wider than a phone screen, and a bar that fades/disappears works
+     against the reference the client gave (Native Extracts' mobile
+     header: a solid bar that never leaves the top of the screen, from
+     the hero all the way to the footer). !important because .nav and
+     .nav-hamburger both carry scroll-driven state classes (.nav-is-hidden
+     / .is-visible) of higher specificity that this needs to always beat
+     on phone, regardless of scroll position. */
+  .nav {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    background: #ffffff;
+    border-bottom: 1px solid rgba(13, 21, 38, 0.1);
+    box-shadow: 0 1px 6px rgba(13, 21, 38, 0.06);
+  }
+  .nav-inner { padding: 12px 16px; justify-content: flex-start; }
+  /* no room for these inline at phone width — the drawer (opened via the
+     hamburger, still built from the same nav-links) is the only way to
+     reach them now */
+  .nav-links, .nav-cta { display: none; }
+
+  .nav-hamburger {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    top: 9px;
+    right: 16px;
+    width: 38px;
+    height: 38px;
+  }
+
+  /* the logo now lives permanently in the opaque bar above instead of
+     disappearing past the hero, so the faint fixed-position duplicate
+     that used to stand in for it has nothing left to fill in */
+  .watermark { display: none; }
 }
 
 /* ---------- cookie consent — full modal with per-category toggles,

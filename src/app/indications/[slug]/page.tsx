@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Nav from "@/components/Nav";
+import Watermark from "@/components/Watermark";
 import ScrollReveal from "@/components/ScrollReveal";
 import IndicationDetail from "@/components/products/IndicationDetail";
 import FooterCTA from "@/components/FooterCTA";
@@ -36,6 +37,7 @@ export default async function IndicationPage({ params }: { params: Promise<{ slu
 
   return (
     <>
+      <Watermark />
       <Nav />
       <ScrollReveal />
 

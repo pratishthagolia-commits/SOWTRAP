@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Nav from "@/components/Nav";
+import Watermark from "@/components/Watermark";
 import ScrollReveal from "@/components/ScrollReveal";
 import ContactHeroPhoto from "@/components/contact/ContactHeroPhoto";
 import ContactHero from "@/components/contact/ContactHero";
@@ -25,6 +26,7 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <>
+      <Watermark />
       <Nav />
       <ScrollReveal />
 

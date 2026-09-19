@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Nav from "@/components/Nav";
+import Watermark from "@/components/Watermark";
 import ScrollReveal from "@/components/ScrollReveal";
 import PartnershipHero from "@/components/partnership/PartnershipHero";
 import PartnershipIntro from "@/components/partnership/PartnershipIntro";
@@ -26,6 +27,7 @@ export const metadata: Metadata = {
 export default function PartnershipPage() {
   return (
     <>
+      <Watermark />
       <Nav />
       <ScrollReveal />
 

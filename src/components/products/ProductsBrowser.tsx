@@ -61,6 +61,10 @@ export default function ProductsBrowser() {
   const [activeBenefits, setActiveBenefits] = useState<string[]>([]);
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<"default" | "az" | "za" | "category" | "most-benefits">("default");
+  // phone-only: which of the two filter groups is expanded as a dropdown
+  // tab (see .products-filter-tabs in globals.css) — irrelevant above
+  // 640px, where both groups just render normally via CSS
+  const [mobileFilterOpen, setMobileFilterOpen] = useState<"category" | "indications" | null>(null);
 
   const allProducts = useMemo(() => getAllProducts(), []);
 
@@ -134,7 +138,28 @@ export default function ProductsBrowser() {
   return (
     <section className="products-browser">
       <aside className="products-filters">
-        <div className="products-filter-group">
+        <div className="products-filter-tabs">
+          <button
+            type="button"
+            className={`products-filter-tab${mobileFilterOpen === "category" ? " is-open" : ""}`}
+            onClick={() => setMobileFilterOpen((prev) => (prev === "category" ? null : "category"))}
+            aria-expanded={mobileFilterOpen === "category"}
+          >
+            Ingredient Category
+            <span className="products-filter-tab-chevron" aria-hidden="true">&#9662;</span>
+          </button>
+          <button
+            type="button"
+            className={`products-filter-tab${mobileFilterOpen === "indications" ? " is-open" : ""}`}
+            onClick={() => setMobileFilterOpen((prev) => (prev === "indications" ? null : "indications"))}
+            aria-expanded={mobileFilterOpen === "indications"}
+          >
+            Indications
+            <span className="products-filter-tab-chevron" aria-hidden="true">&#9662;</span>
+          </button>
+        </div>
+
+        <div className={`products-filter-group${mobileFilterOpen === "category" ? " is-mobile-open" : ""}`}>
           <p className="products-filter-label">Ingredient Category</p>
           <ul className="products-filter-list">
             <li>
@@ -175,7 +200,7 @@ export default function ProductsBrowser() {
           </ul>
         </div>
 
-        <div className="products-filter-group">
+        <div className={`products-filter-group${mobileFilterOpen === "indications" ? " is-mobile-open" : ""}`}>
           <p className="products-filter-label">Indications</p>
           <ul className="products-filter-list products-filter-list--checkbox">
             {benefits.map((b) => {

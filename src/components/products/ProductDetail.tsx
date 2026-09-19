@@ -1,5 +1,7 @@
 import Link from "next/link";
 import IndicationStrip from "./IndicationStrip";
+import DocumentRequestButton from "./DocumentRequestButton";
+import ProductsFAQ from "./ProductsFAQ";
 import type { Product } from "@/lib/products";
 
 // per Native Extracts' product page: image area, title + botanical-style
@@ -80,31 +82,17 @@ export default function ProductDetail({ product, related }: { product: Product; 
         <div className="product-detail-section reveal-up">
           <h2 className="product-detail-section-heading">Documents</h2>
           <ul className="product-detail-downloads">
-            <li className="product-detail-download-row">
-              <span className="product-detail-download-label">COA</span>
-              <span className="product-detail-download-action is-disabled" aria-disabled="true">
-                Download
-              </span>
-            </li>
-            <li className="product-detail-download-row">
-              <span className="product-detail-download-label">TDS</span>
-              <span className="product-detail-download-action is-disabled" aria-disabled="true">
-                Download
-              </span>
-            </li>
-            <li className="product-detail-download-row">
-              <span className="product-detail-download-label">MSDS</span>
-              <span className="product-detail-download-action is-disabled" aria-disabled="true">
-                Download
-              </span>
-            </li>
-            <li className="product-detail-download-row">
-              <span className="product-detail-download-label">Clinical Evidence</span>
-              <span className="product-detail-download-action">On Request</span>
-            </li>
+            {["COA", "TDS", "MSDS", "Clinical Evidence"].map((doc) => (
+              <li className="product-detail-download-row" key={doc}>
+                <span className="product-detail-download-label">{doc}</span>
+                <DocumentRequestButton document={doc} productName={product.name} productSlug={product.slug} />
+              </li>
+            ))}
           </ul>
         </div>
       </div>
+
+      <ProductsFAQ />
 
       {related.length > 0 && (
         <div className="product-detail-related">
