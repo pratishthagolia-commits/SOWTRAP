@@ -6130,6 +6130,15 @@ h2 {
     padding: 0 20px;
     font-size: clamp(1.2rem, 5vw, 1.9rem);
   }
+  .pillars-kicker-sub { padding: 0 20px; }
+  /* .pillars-heading-slide's 32vh min-height + align-items:flex-end was
+     sized to reserve room for the desktop clamp's much bigger type —
+     at the phone font-size above, that left most of the box as empty
+     navy space between .fail-v2-chamber's accordion (ending just above
+     it) and this section's own text. Let the box size to its content
+     instead of reserving a fixed viewport fraction. */
+  .pillars-heading-slide { min-height: 0; padding: 48px 0 32px; }
+  .fail-v2-chamber { padding-bottom: 40px; }
 
   /* the timeline's little connector dashes off the side of each box */
   .dt-row.is-left .dt-box::after,
@@ -6384,6 +6393,15 @@ h2 {
      disappearing past the hero, so the faint fixed-position duplicate
      that used to stand in for it has nothing left to fill in */
   .watermark { display: none; }
+
+  /* comparison table pills (both the "Conventional" and "SowTrap"
+     rows share .cmp-pill) — desktop's 14px/22px padding + 1.19rem type
+     was sized for a wide column next to a full-height image; at phone
+     width, stacked full-bleed, that reads as one oversized slab per
+     point instead of a compact list. Thinner padding + smaller type,
+     same navy pill look. */
+  .cmp-row-list { gap: 8px; margin-top: 40px; }
+  .cmp-pill { padding: 10px 16px; font-size: 0.92rem; line-height: 1.45; }
 }
 
 /* ---------- cookie consent — full modal with per-category toggles,
