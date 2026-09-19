@@ -3,10 +3,13 @@
 import { useEffect, useRef, useState } from "react";
 import useIsMobile from "@/lib/useIsMobile";
 
+// third paragraph ("At SowTrap™, every solution is developed through a
+// science-first approach...") removed — it's a verbatim duplicate of
+// CoreExpertiseSection.tsx's CLOSING_LINE, which sits directly below this
+// section on the same page.
 const PARAGRAPHS = [
   "SowTrap™ is the advanced microencapsulation technology platform of ScienceOnWheels Bio Pvt. Ltd., dedicated to developing scientifically engineered ingredient delivery systems that improve the stability, bioavailability, functionality, and performance of bioactive compounds. Leveraging cutting-edge encapsulation technologies, material science, and formulation expertise, SowTrap™ transforms sensitive nutraceutical, botanical, probiotic, pharmaceutical, and functional food ingredients into high-performance solutions tailored for modern product applications. We engineer advanced delivery systems that convert unstable, poorly bioavailable bioactives into highly stable, bioavailable, and commercially scalable ingredients.",
   "From concept development and formulation optimization to pilot-scale validation and commercial manufacturing, SowTrap™ delivers innovative ingredient systems that enable superior product efficacy, improved shelf life, enhanced processing stability, and consistent consumer experience.",
-  "At SowTrap™, every solution is developed through a science-first approach, combining rigorous research, application-focused formulation, and scalable manufacturing to help partners accelerate innovation and bring differentiated, high-quality products to market.",
 ];
 
 const PARAGRAPH_WORDS = PARAGRAPHS.map((p) => p.split(" "));

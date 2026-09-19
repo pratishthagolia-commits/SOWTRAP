@@ -29,11 +29,11 @@ const ITEMS: GrowerItem[] = [
     title: "Advanced Processing & Value Addition",
     body: "High-quality raw materials can lose significant functional value during processing and storage. SowTrap™ supports suppliers through advanced processing technologies, quality optimization, and value-addition strategies that improve ingredient recovery, stability, and commercial value while minimizing post-harvest losses.",
   },
-  {
-    title: "Build with SowTrap™",
-    body: "Have a Bioactive, Formulation Challenge, Or a New Product Idea? Whether you are a grower seeking to add value to a bioactive-rich crop, an ingredient manufacturer developing a differentiated ingredient, or a brand looking for a high-performance delivery system, SowTrap™ provides a collaborative pathway from scientific concept to application-ready product. Our scientists and formulation experts work with you to understand the challenge, define the development objectives, identify the appropriate material and technology, and establish a pathway toward validation and scale-up.",
-  },
 ];
+// "Build with SowTrap™" used to be a 6th item here, but it isn't a
+// Growers & Suppliers-specific point like the other five — it's a
+// general call to action. Moved out into its own standalone section,
+// PartnershipBuildCTA, placed right after this one.
 
 // "For GROWERS & SUPPLIERS" — same click-to-select chamber pattern as
 // .sci-factors-chamber (detail panel + list, single active item), but only

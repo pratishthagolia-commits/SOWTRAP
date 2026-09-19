@@ -108,7 +108,7 @@ export default function TechStages() {
     >
       <div className="tech-stages-sticky">
         <div className="tech-stages-header">
-          <span className="reveal-left">We Solve</span>
+          <span className="reveal-left">What We Do</span>
           <span className="reveal-right">What we create</span>
         </div>
 

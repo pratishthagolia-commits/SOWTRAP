@@ -274,14 +274,23 @@ body {
      box (not .hero-fold, which controls SowTrap's own position) pulls
      the centered content closer to the wordmark above it */
   min-height: 55vh;
+  /* padding-top is already at 0, so this is the next lever to pull
+     content up further — negative margin, not a min-height change, so
+     the box's own size (the "slide") stays exactly as it was */
+  margin-top: -110px;
   display: flex;
-  align-items: center;
+  /* was center — vertically centering within this box pushed the
+     heading well down the page regardless of padding-top, needing a
+     scroll to see it alongside "SowTrap" above. flex-start + a small
+     padding-top instead pulls it right up under .hero-fold, without
+     touching .hero-fold itself (SowTrap's own position stays put). */
+  align-items: flex-start;
   justify-content: center;
   /* asymmetric on purpose — .hero's -160px margin-bottom pulls the next
      section up to overlap .hero's own bottom edge; shrinking this box
      shrank that safety buffer along with it and let the overlap start
      slicing into the CTA buttons instead of the empty space below them */
-  padding: 60px 0 220px;
+  padding: 0 0 220px;
 }
 .hero-banner-container { max-width: 1400px; }
 .hero-about h2 {
@@ -289,6 +298,7 @@ body {
   font-size: clamp(1.9rem, 3.4vw, 2.7rem);
   line-height: 1.25;
   white-space: nowrap;
+  margin: 0 0 22px;
 }
 .hero-about .lead {
   color: rgba(255, 255, 255, 0.92);
@@ -488,7 +498,6 @@ h2 {
   line-height: 1.75;
   color: var(--ink);
   text-align: justify;
-  hyphens: auto;
 }
 
 @media (max-width: 860px) {
@@ -1617,7 +1626,9 @@ h2 {
   /* only tall enough for the heading's first line — any wrapped lines
      after that overflow downward, past this box's own background, onto
      the wider panel directly beneath it (no bottom padding, since there's
-     no room for it inside this shorter box) */
+     no room for it inside this shorter box). This desktop/tablet shape
+     is intentional (client confirmed) — only the phone breakpoint below
+     switches to height:auto, it doesn't change here. */
   height: 52px;
   padding: 20px 24px 0;
   max-width: 300px;
@@ -1651,20 +1662,17 @@ h2 {
   align-items: center;
   justify-content: center;
 }
+/* one consistent size for every industry logo at this (desktop/base)
+   size — two of these (Sports Nutrition, Contract Manufacturers &
+   Formulators) used to carry their own one-off oversized overrides
+   (255px/188px against everyone else's 34px), which read as broken/
+   inconsistent rather than intentional. The "too small" complaint was
+   phone-specific, so only the phone breakpoint's size actually changed
+   (below) — this stays at the original 34px. */
 .ind-slide-logo {
   width: 34px;
   height: 34px;
   object-fit: contain;
-}
-/* Sports Nutrition logo only */
-.ind-slide:nth-child(2) .ind-slide-half:first-child .ind-slide-logo {
-  width: 255px;
-  height: 255px;
-}
-/* Contract Manufacturers & Formulators logo only */
-.ind-slide:nth-child(4) .ind-slide-half:last-child .ind-slide-logo {
-  width: 188px;
-  height: 188px;
 }
 
 @media (max-width: 860px) {
@@ -1677,6 +1685,14 @@ h2 {
   .ind-slide-divider { flex: 0 0 6px; width: 100%; }
   .ind-slide-card { left: 24px; }
   .ind-slide-card--right { left: auto; right: 24px; }
+  /* the desktop per-card nudges (±48-144px, meant for the side-by-side
+     staggered-entrance effect) were only reset to centered at <=640px —
+     this stacked single-column layout already starts here at 860px, so
+     anything in the 641-860px gap still used e.g. Sports Nutrition's
+     +144px alongside Pharma's -48px, making the two look inconsistent.
+     !important for the same reason as the phone rule below: the nudges
+     are written at higher selector specificity. */
+  .ind-slide-card { top: 50% !important; transform: translateY(-50%); }
   .ind-slide-notch { padding: 14px 18px; max-width: 170px; }
   .ind-slide-notch p { font-size: 1.05rem; }
   .ind-slide-panel { width: 220px; height: 110px; }
@@ -1871,7 +1887,9 @@ h2 {
   white-space: nowrap;
   font-size: 20vw; /* CSS fallback before the JS fit runs */
   font-weight: 800;
-  letter-spacing: -0.03em;
+  /* was -0.03em — now matches .hero-wordmark's letter-spacing exactly,
+     same weight (800) both already shared */
+  letter-spacing: 0;
   line-height: 1;
   /* dulled, higher-contrast gradient within the same lime hue — pale/dusty
      at the top easing down through the brand lime into a muted dark olive,
@@ -2239,7 +2257,6 @@ h2 {
   line-height: 1.7;
   color: var(--ink-soft);
   text-align: justify;
-  hyphens: auto;
 }
 
 .bioactives-classes {
@@ -2445,7 +2462,6 @@ h2 {
   margin: 0 0 60px auto;
   text-align: justify;
   text-align-last: right;
-  hyphens: auto;
   font-family: var(--font-prata), serif;
   font-size: 0.95rem;
   line-height: 1.85;
@@ -2871,7 +2887,29 @@ h2 {
   .tech-philo-cards { padding: 40px 24px 20px; gap: 20px; }
   .tech-philo-card { flex: 0 0 80vw; }
 
-  .tech-stages-header { display: none; }
+  /* was display:none — desktop's left/right split header
+     ("We Solve" / "What we create") doesn't fit the stacked mobile
+     layout (photo on top, text below, not side by side), so instead of
+     hiding the labels entirely, reposition them as a caption above each
+     stacked block: "We Solve" near the very top, "What we create" just
+     above the white band that holds the evaluate text. */
+  .tech-stages-header {
+    display: block;
+    top: 20px;
+    left: 24px;
+    right: 24px;
+    font-size: 1.05rem;
+  }
+  .tech-stages-header span:first-child,
+  .tech-stages-header span:last-child {
+    position: absolute;
+    left: 0;
+    right: 0;
+    width: auto;
+    text-align: left;
+  }
+  .tech-stages-header span:first-child { top: 0; }
+  .tech-stages-header span:last-child { top: calc(42% - 46px); }
   .tech-stages-divider { display: none; }
   .tech-stages-progress { display: none; }
   .tech-stages-white-band { top: 42%; height: 40%; }
@@ -3573,7 +3611,6 @@ h2 {
   line-height: 1.7;
   color: var(--ink-soft);
   text-align: justify;
-  hyphens: auto;
   margin: 0 0 32px;
 }
 .partnership-cta { display: inline-block; text-decoration: none; }
@@ -3735,8 +3772,12 @@ h2 {
   font-size: 1.6rem;
   color: #ffffff;
 }
-.partnership-stages-header span:first-child { position: absolute; left: 30vw; }
-.partnership-stages-header span:last-child { position: absolute; left: 40vw; }
+/* same right-aligned-to-the-divider / left-aligned-just-past-it fix as
+   .tech-stages-header (this is the identical twin component) — two
+   independent left-anchored spans could overlap since the left span's
+   text just flowed rightward past the right span's start point */
+.partnership-stages-header span:first-child { position: absolute; left: 0; width: calc(40vw - 40px); text-align: right; }
+.partnership-stages-header span:last-child { position: absolute; left: calc(40vw + 40px); }
 
 .partnership-stages-white-band {
   position: absolute;
@@ -3886,7 +3927,25 @@ h2 {
 .partnership-closing-cta .btn { text-decoration: none; }
 
 @media (max-width: 900px) {
-  .partnership-stages-header { display: none; }
+  /* same "We Solve/What we create" -> stacked-caption fix as
+     .tech-stages-header (identical twin component) */
+  .partnership-stages-header {
+    display: block;
+    top: 20px;
+    left: 24px;
+    right: 24px;
+    font-size: 1.05rem;
+  }
+  .partnership-stages-header span:first-child,
+  .partnership-stages-header span:last-child {
+    position: absolute;
+    left: 0;
+    right: 0;
+    width: auto;
+    text-align: left;
+  }
+  .partnership-stages-header span:first-child { top: 0; }
+  .partnership-stages-header span:last-child { top: calc(42% - 46px); }
   .partnership-stages-divider { display: none; }
   .partnership-stages-progress { display: none; }
   .partnership-stages-white-band { top: 42%; height: 40%; }
@@ -4878,6 +4937,38 @@ h2 {
   .partnership-growers-list { grid-template-columns: 1fr; gap: 26px; }
 }
 
+/* ---------- build with sowtrap (standalone CTA, between "For Growers &
+   Suppliers" and "From Farm to Functional Ingredient") — plain centered
+   navy band, same statement+CTA shape as .partnership-closing, giving a
+   navy beat between the two white sections either side of it ---------- */
+.partnership-build {
+  position: relative;
+  z-index: 2;
+  background: #003366;
+  padding: 110px 60px;
+  text-align: center;
+}
+.partnership-build-inner { max-width: 820px; margin: 0 auto; }
+.partnership-build-heading {
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: clamp(1.9rem, 3.4vw, 2.6rem);
+  color: #ffffff;
+  margin: 0 0 24px;
+}
+.partnership-build-body {
+  font-family: var(--font-prata), serif;
+  font-size: 1rem;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0 0 36px;
+}
+.partnership-build-cta { text-decoration: none; }
+
+@media (max-width: 900px) {
+  .partnership-build { padding: 70px 24px; }
+}
+
 /* ---------- from farm to functional ingredient (closing) ---------- */
 .partnership-farm {
   position: relative;
@@ -5435,7 +5526,6 @@ h2 {
   line-height: 1.85;
   color: var(--ink-soft);
   text-align: justify;
-  hyphens: auto;
 }
 
 /* indication page's ingredient grid: category filter on the left,
@@ -5517,7 +5607,6 @@ h2 {
   color: var(--ink-soft);
   margin: 0 0 34px;
   text-align: justify;
-  hyphens: auto;
 }
 .product-detail-cta { display: inline-block; text-decoration: none; }
 
@@ -5943,6 +6032,12 @@ h2 {
   }
   .portfolio-mobile-scroller .pf-card-body {
     flex: 1;
+    /* was the base rule's 24px — sized for a tab title that fits on one
+       line. At this narrower mobile card width, longer titles ("Adaptogenic
+       Blends - Targeted health and wellness") wrap to two lines and need
+       more room before this white box's own top edge/border starts, or
+       its rounded corner paints straight over the tab's second line. */
+    margin-top: 46px;
     height: auto;
     overflow: visible;
     padding: 52px 20px 26px;
@@ -5983,14 +6078,12 @@ h2 {
   .ind-slide-notch { height: auto; padding: 14px 18px 16px; }
   .ind-slide-panel { height: 92px; }
 
-  /* Sports Nutrition (255px) and Contract Manufacturers (188px) carry
-     desktop-sized per-card logo overrides that dwarf the phone panel and
-     spill past it. Drop every logo back to the shared base size, so they
-     all match Beauty & Nutricosmetics — the proportion we're matching.
-     !important because those two are written at a higher specificity. */
+  /* was 34px, same complaint as elsewhere — too small to read on a
+     phone. Sized to fit the 92px-tall phone panel above with room to
+     spare, consistent with the bigger base/tablet sizes now used too. */
   .ind-slide .ind-slide-logo {
-    width: 34px !important;
-    height: 34px !important;
+    width: 50px;
+    height: 50px;
   }
   /* smaller title: long names like "Botanical Growers & Extract
      Producers" were wrapping to four lines, running the tab far taller
@@ -6071,46 +6164,93 @@ h2 {
   .hero-banner-cta { flex-wrap: wrap; }
 }
 
-/* ---------- cookie consent ---------- */
-.cookie-consent {
+/* ---------- cookie consent — full modal with per-category toggles,
+   replacing the earlier plain bottom banner ---------- */
+.cookie-overlay {
   position: fixed;
-  left: 24px;
-  right: 24px;
-  bottom: 24px;
-  z-index: 200;
-  max-width: 900px;
-  margin: 0 auto;
+  inset: 0;
+  z-index: 300;
+  background: rgba(13, 21, 38, 0.6);
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 20px;
-  background: #003366;
-  color: #ffffff;
-  padding: 22px 28px;
-  border-radius: 12px;
-  box-shadow: 0 20px 50px rgba(13, 21, 38, 0.35);
+  justify-content: center;
+  padding: 24px;
 }
-.cookie-consent-text {
-  flex: 1 1 380px;
-  margin: 0;
+.cookie-modal {
+  background: #ffffff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 640px;
+  max-height: 88vh;
+  overflow-y: auto;
+  padding: 44px 48px;
+  box-sizing: border-box;
+  box-shadow: 0 40px 100px -20px rgba(13, 21, 38, 0.5);
+}
+.cookie-modal-title {
   font-family: var(--font-prata), serif;
-  font-size: 0.9rem;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.9);
+  font-weight: 400;
+  font-size: 1.6rem;
+  color: var(--ink);
+  text-align: center;
+  margin: 0 0 24px;
 }
-.cookie-consent-actions {
+.cookie-modal-body p {
+  font-family: var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.92rem;
+  line-height: 1.75;
+  color: var(--ink-soft);
+  text-align: center;
+  margin: 0 0 18px;
+}
+.cookie-modal-body a {
+  color: #003366;
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+.cookie-modal-body a:hover { color: var(--blue); }
+
+.cookie-modal-categories {
   display: flex;
-  gap: 12px;
-  flex: 0 0 auto;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 18px 26px;
+  margin: 4px 0 28px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(13, 21, 38, 0.12);
 }
-.cookie-consent-decline {
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  color: #ffffff;
+.cookie-category {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink);
+  cursor: pointer;
 }
-.cookie-consent-decline:hover { background: rgba(255, 255, 255, 0.1); }
+.cookie-category.is-locked { cursor: default; color: var(--ink-faint); }
+.cookie-category input {
+  width: 18px;
+  height: 18px;
+  accent-color: #003366;
+  cursor: inherit;
+}
+
+.cookie-modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.cookie-modal-actions .btn { text-decoration: none; }
 
 @media (max-width: 640px) {
-  .cookie-consent { left: 12px; right: 12px; bottom: 12px; padding: 18px 20px; }
-  .cookie-consent-actions { width: 100%; }
-  .cookie-consent-actions .btn { flex: 1; }
+  .cookie-overlay { padding: 16px; }
+  .cookie-modal { padding: 32px 24px; }
+  .cookie-modal-title { font-size: 1.3rem; }
+  .cookie-modal-actions { flex-direction: column-reverse; width: 100%; }
+  .cookie-modal-actions .btn { width: 100%; }
 }

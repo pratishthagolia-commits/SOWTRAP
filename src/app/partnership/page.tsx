@@ -14,6 +14,7 @@ import PartnershipBrands from "@/components/partnership/PartnershipBrands";
 import PartnershipTouchHero from "@/components/partnership/PartnershipTouchHero";
 import PartnershipTouch from "@/components/partnership/PartnershipTouch";
 import PartnershipGrowers from "@/components/partnership/PartnershipGrowers";
+import PartnershipBuildCTA from "@/components/partnership/PartnershipBuildCTA";
 import PartnershipFarmClosing from "@/components/partnership/PartnershipFarmClosing";
 import FooterCTA from "@/components/FooterCTA";
 
@@ -53,6 +54,8 @@ export default function PartnershipPage() {
       <PartnershipTouch />
 
       <PartnershipGrowers />
+
+      <PartnershipBuildCTA />
 
       <PartnershipFarmClosing />
 
