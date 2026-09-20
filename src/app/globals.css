@@ -5388,8 +5388,24 @@ h2 {
 }
 .products-faq-item {
   border-bottom: 1px solid rgba(13, 21, 38, 0.14);
+  transition: background 0.2s ease;
 }
 .products-faq-item:first-child { border-top: 1px solid rgba(13, 21, 38, 0.14); }
+/* the whole open item — question row and its answer together, not just
+   the row or the icon — highlights in the site's lime accent (the same
+   #deff08 used on .btn-lime etc.), matching the box/card the client
+   pointed at; a bit of side padding on the item itself (compensated by
+   a matching negative margin so closed rows don't shift) keeps the
+   lime fill from looking like it's bleeding flush to the edge, and the
+   icon flips to a white circle with navy border/glyph so it still
+   reads clearly against it. */
+.products-faq-item.is-open {
+  background: #deff08;
+  border-radius: 6px;
+  border-bottom-color: transparent;
+  padding: 0 20px;
+  margin: 0 -20px;
+}
 .products-faq-item-head {
   width: 100%;
   display: flex;
@@ -5426,8 +5442,8 @@ h2 {
   transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.3s ease;
 }
 .products-faq-item.is-open .products-faq-item-icon {
-  background: #deff08;
-  border-color: #deff08;
+  background: #ffffff;
+  border-color: #003366;
   color: #003366;
   transform: rotate(180deg);
 }
@@ -5447,6 +5463,9 @@ h2 {
   line-height: 1.75;
   color: var(--ink-soft);
 }
+/* the muted grey used on white loses too much contrast against the open
+   item's lime fill — darken to navy there, matching the question text */
+.products-faq-item.is-open .products-faq-item-answer { color: #003366; }
 
 @media (max-width: 900px) {
   .products-faq { padding: 90px 24px 100px; }
