@@ -1947,19 +1947,16 @@ h2 {
   display: block;
   text-align: center;
   white-space: nowrap;
-  font-size: 20vw; /* CSS fallback before the JS fit runs */
+  font-size: 21vw; /* CSS fallback before the JS fit runs — matches .hero-wordmark's */
   font-weight: 800;
-  /* was -0.03em — now matches .hero-wordmark's letter-spacing exactly,
-     same weight (800) both already shared */
+  /* letter-spacing/weight/size all now match .hero-wordmark exactly —
+     the gradient fill this used to have (dulled/dusty within the lime
+     hue) read as a noticeably different, muted treatment next to the
+     hero's flat bright wordmark; a plain solid color matches it exactly
+     instead of just approximating it */
   letter-spacing: 0;
   line-height: 1;
-  /* dulled, higher-contrast gradient within the same lime hue — pale/dusty
-     at the top easing down through the brand lime into a muted dark olive,
-     rather than a flat bright fill */
-  background: linear-gradient(180deg, #edf0a6 0%, #c7d400 38%, #8b9612 72%, #4a5208 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: #deff08;
 }
 
 @media (max-width: 900px) {
@@ -2820,7 +2817,16 @@ h2 {
    past it, instead of two independent left-anchored spans — those could
    overlap since the left span's text just flowed rightward past the
    right span's start point with no width limit */
-.tech-stages-header span:first-child { position: absolute; left: 0; width: calc(40vw - 40px); text-align: right; }
+/* was width: calc(40vw - 40px), right-aligned toward the 40vw divider —
+   .tech-stages-photo-col sits at left:11vw with a FIXED 360px width, so
+   as those two numbers diverge (a narrower desktop/laptop window makes
+   40vw shrink while the photo's own width stays fixed), the header's
+   text run and the photo end up occupying overlapping horizontal
+   ranges below roughly ~1700px wide — this only cleared the photo on
+   genuinely wide monitors. Anchoring the box's right edge just ahead of
+   the photo's own left edge (11vw, with a 20px gap) instead keeps it
+   clear of the photo at every desktop width, not just wide ones. */
+.tech-stages-header span:first-child { position: absolute; left: 0; width: calc(11vw - 20px); text-align: right; }
 .tech-stages-header span:last-child { position: absolute; left: calc(40vw + 40px); }
 
 .tech-stages-white-band {
@@ -3210,7 +3216,15 @@ h2 {
 .tech-encap-item-features li { margin-bottom: 4px; }
 
 @media (max-width: 900px) {
-  .tech-encap-banner { padding: 24px; }
+  /* .tech-encap-banner's desktop width/margin (a "break out to the true
+     left edge, shortened 150px from the right" calc) was never reset
+     here — at phone width that calc resolves to a box only ~225px
+     wide, well short of the section's own full width. Long words like
+     "Encapsulation"/"Technologies" at this heading's font-size don't
+     fit that box and don't wrap mid-word by default, so they ran past
+     the navy box's own right edge into the white page background
+     (illegible white-on-white), reading as cropped text. */
+  .tech-encap-banner { padding: 24px; margin-left: 0; width: 100%; }
   .tech-encap-body { flex-direction: column; }
   .tech-encap-list { flex: none; min-height: auto; justify-content: flex-start; padding: 0; width: 100%; }
   .tech-encap-gallery { position: static; width: 100%; height: 320px; margin-top: 20px; }
@@ -3869,7 +3883,11 @@ h2 {
    .tech-stages-header (this is the identical twin component) — two
    independent left-anchored spans could overlap since the left span's
    text just flowed rightward past the right span's start point */
-.partnership-stages-header span:first-child { position: absolute; left: 0; width: calc(40vw - 40px); text-align: right; }
+/* see .tech-stages-header span:first-child's comment (identical twin,
+   same fix) — anchored to clear .partnership-stages-photo-col's own
+   left:11vw/360px-fixed-width box at every desktop width instead of
+   only on wide monitors */
+.partnership-stages-header span:first-child { position: absolute; left: 0; width: calc(11vw - 20px); text-align: right; }
 .partnership-stages-header span:last-child { position: absolute; left: calc(40vw + 40px); }
 
 .partnership-stages-white-band {
@@ -5453,15 +5471,15 @@ h2 {
 }
 .products-faq-item:first-child { border-top: 1px solid rgba(13, 21, 38, 0.14); }
 /* the whole open item — question row and its answer together, not just
-   the row or the icon — highlights in the site's lime accent (the same
-   #deff08 used on .btn-lime etc.), matching the box/card the client
-   pointed at; a bit of side padding on the item itself (compensated by
-   a matching negative margin so closed rows don't shift) keeps the
-   lime fill from looking like it's bleeding flush to the edge, and the
-   icon flips to a white circle with navy border/glyph so it still
-   reads clearly against it. */
+   the row or the icon — highlights in the site's navy (matching the
+   dark panels used elsewhere, e.g. .bioactives-what-tab), not the lime
+   accent; a bit of side padding on the item itself (compensated by a
+   matching negative margin so closed rows don't shift) keeps the fill
+   from looking like it's bleeding flush to the edge, and the icon stays
+   a white circle with navy border/glyph so it still reads clearly
+   against it. */
 .products-faq-item.is-open {
-  background: #deff08;
+  background: #003366;
   border-radius: 6px;
   border-bottom-color: transparent;
   padding: 0 20px;
@@ -5486,8 +5504,8 @@ h2 {
   color: var(--ink);
   transition: color 0.2s ease;
 }
-.products-faq-item-head:hover .products-faq-item-q,
-.products-faq-item.is-open .products-faq-item-q { color: #003366; }
+.products-faq-item-head:hover .products-faq-item-q { color: #003366; }
+.products-faq-item.is-open .products-faq-item-q { color: #ffffff; }
 .products-faq-item-icon {
   flex: none;
   width: 34px;
@@ -5525,8 +5543,9 @@ h2 {
   color: var(--ink-soft);
 }
 /* the muted grey used on white loses too much contrast against the open
-   item's lime fill — darken to navy there, matching the question text */
-.products-faq-item.is-open .products-faq-item-answer { color: #003366; }
+   item's navy fill — a soft white there instead, matching the navy
+   panels used elsewhere (e.g. .hero-about .lead) */
+.products-faq-item.is-open .products-faq-item-answer { color: rgba(255, 255, 255, 0.85); }
 
 @media (max-width: 900px) {
   .products-faq { padding: 90px 24px 100px; }
