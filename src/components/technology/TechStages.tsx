@@ -108,7 +108,7 @@ export default function TechStages() {
     >
       <div className="tech-stages-sticky">
         <div className="tech-stages-header">
-          <span className="reveal-left">What We Do</span>
+          <span className="reveal-left">What We Solve</span>
           <span className="reveal-right">What we create</span>
         </div>
 
@@ -144,7 +144,6 @@ export default function TechStages() {
               key={stage.name}
               className={`tech-stages-evaluate-item${i === activeIndex ? " is-active" : ""}`}
             >
-              <p className="tech-stages-evaluate-name">{stage.name}</p>
               <p className="tech-stages-evaluate-heading">{stage.evaluateHeading}</p>
               <p className="tech-stages-evaluate-list">{stage.evaluate.join(" • ")}</p>
             </div>

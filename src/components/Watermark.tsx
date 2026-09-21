@@ -24,7 +24,14 @@ export default function Watermark() {
     const hero = document.getElementById("home");
     if (!hero) return;
 
-    const io = new IntersectionObserver(([entry]) => setVisible(!entry.isIntersecting), { threshold: 0 });
+    // rootMargin kept identical to Nav.tsx's own observer — see its
+    // comment for why (the hero's own trailing overlap animation, not
+    // just threshold: 0, needs accounting for) — must stay in sync or
+    // the double-logo overlap this was written to fix comes back.
+    const io = new IntersectionObserver(([entry]) => setVisible(!entry.isIntersecting), {
+      threshold: 0,
+      rootMargin: "0px 0px -55% 0px",
+    });
     io.observe(hero);
     return () => io.disconnect();
   }, []);

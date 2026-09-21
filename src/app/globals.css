@@ -63,7 +63,13 @@ body {
      immediately (0s delay) so it never blocks clicks/tabbing */
   opacity: 1;
   visibility: visible;
-  transition: opacity 0.5s ease, visibility 0s linear 0s, background 0.3s ease,
+  /* was 0.5s — smooth enough not to pop, but still long enough that a
+     normal scroll speed left it fading (still partially opaque, still
+     fixed on top of everything) over content that had already scrolled
+     up underneath it. Shortened across .nav/.nav-hamburger/.watermark
+     together (still synced with each other) so the crossfade reads as
+     quick rather than laggy. */
+  transition: opacity 0.25s ease, visibility 0s linear 0s, background 0.3s ease,
     border-color 0.3s ease, backdrop-filter 0.3s ease;
 }
 /* scrolled past the hero: crossfades out instead of the old instant
@@ -73,7 +79,7 @@ body {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity 0.5s ease, visibility 0s linear 0.5s, background 0.3s ease,
+  transition: opacity 0.25s ease, visibility 0s linear 0.25s, background 0.3s ease,
     border-color 0.3s ease, backdrop-filter 0.3s ease;
 }
 .nav-inner {
@@ -135,6 +141,13 @@ body {
 /* ---------- hamburger + drawer — replaces the full header past the hero,
    instead of a header that follows every slide ---------- */
 .nav-hamburger {
+  /* real <button>, so mobile browsers paint their own tap-highlight/focus
+     ring on it by default — a translucent halo bleeding out around the
+     visible circle on tap. Cleared here, with a visible focus-visible
+     ring kept for keyboard users so this doesn't just remove focus
+     indication outright. */
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
   position: fixed;
   top: 22px;
   right: 32px;
@@ -155,15 +168,16 @@ body {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity 0.5s ease, visibility 0s linear 0.5s;
+  transition: opacity 0.25s ease, visibility 0s linear 0.25s;
 }
 .nav-hamburger.is-visible {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
-  transition: opacity 0.5s ease, visibility 0s linear 0s;
+  transition: opacity 0.25s ease, visibility 0s linear 0s;
 }
 .nav-hamburger span { width: 18px; height: 1.5px; background: #000000; }
+.nav-hamburger:focus-visible { box-shadow: 0 0 0 3px rgba(0, 51, 102, 0.35); }
 
 .nav-drawer-scrim {
   position: fixed;
@@ -301,10 +315,11 @@ body {
      box (not .hero-fold, which controls SowTrap's own position) pulls
      the centered content closer to the wordmark above it */
   min-height: 55vh;
-  /* padding-top is already at 0, so this is the next lever to pull
-     content up further — negative margin, not a min-height change, so
-     the box's own size (the "slide") stays exactly as it was */
-  margin-top: -170px;
+  /* was -170px (pulled all the way up to sit right under the wordmark)
+     — at that distance the wordmark's own descenders (the "p" in
+     "SowTrap") overlapped the heading below it. Positive now, so the
+     heading clears the wordmark with real breathing room instead. */
+  margin-top: 40px;
   display: flex;
   /* was center — vertically centering within this box pushed the
      heading well down the page regardless of padding-top, needing a
@@ -332,8 +347,11 @@ body {
   font-size: clamp(1.05rem, 1.6vw, 1.35rem);
   line-height: 1.6;
   max-width: 1000px;
-  margin-left: auto;
-  margin-right: auto;
+  /* pushes the lead (and the CTA row right after it, in normal flow)
+     well below the heading — vh-based so it reads as "appears on the
+     next bit of scroll" at any screen height, rather than sitting
+     tight under the heading the way it used to */
+  margin: 28vh auto 0;
   white-space: nowrap;
 }
 
@@ -1549,7 +1567,14 @@ h2 {
    way the sticky+margin combinations elsewhere did. */
 .ind-section {
   background: #003366;
-  padding: 120px 0 0;
+  /* bottom padding, was 0 — FooterCTA pulls itself up over whatever
+     precedes it by up to 8% of the viewport height as it scrolls in
+     (see .cta-footer's scroll-tracked marginTop). With zero buffer here,
+     that overlap started eating directly into the last slide's own
+     card content (Botanical Growers & Extract Producers, the lowest-
+     positioned card of the last slide) instead of empty trailing space.
+     This padding gives it empty space to eat into first. */
+  padding: 120px 0 110px;
 }
 .ind-heading {
   /* shifted left: no auto-centering, sits flush at the section's own
@@ -1700,17 +1725,20 @@ h2 {
    size — two of these (Sports Nutrition, Contract Manufacturers &
    Formulators) used to carry their own one-off oversized overrides
    (255px/188px against everyone else's 34px), which read as broken/
-   inconsistent rather than intentional. The "too small" complaint was
-   phone-specific, so only the phone breakpoint's size actually changed
-   (below) — this stays at the original 34px. */
+   inconsistent rather than intentional. Shrunk further still (was
+   34px) since the Sports Nutrition icon specifically kept getting
+   reported as oversized/cropped even after that fix — verified
+   directly against the live production CSS bundle multiple times and
+   34px was already in effect there with no larger override anywhere,
+   so this goes smaller again as a hard guarantee regardless of cause. */
 .ind-slide-logo {
-  width: 34px;
-  height: 34px;
+  width: 24px;
+  height: 24px;
   object-fit: contain;
 }
 
 @media (max-width: 860px) {
-  .ind-section { padding: 90px 0 0; }
+  .ind-section { padding: 90px 0 90px; }
   .ind-heading { padding: 0 24px; white-space: normal; font-size: 1.8rem; }
   .ind-slide { flex-direction: column; }
   .ind-slide-half { height: 50%; }
@@ -2203,7 +2231,7 @@ h2 {
   /* same duration/easing as .nav's fade-out and .nav-hamburger's fade-in
      (all three keyed off the same #home IntersectionObserver trigger) so
      the whole handoff reads as one continuous crossfade */
-  transition: opacity 0.5s ease;
+  transition: opacity 0.25s ease;
 }
 .watermark.is-visible { opacity: 0.18; }
 
@@ -2773,7 +2801,14 @@ h2 {
 }
 .tech-stages-header {
   position: absolute;
-  top: 130px;
+  /* was a fixed 130px against a sticky 100vh box, while the photo column
+     right below it starts at a relative 22% — on a shorter viewport
+     (e.g. a laptop) 22% resolves to less than 130px + this text's own
+     height, so the two boxes' vertical ranges intersected and the
+     header painted straight over the photo. Percentage-based like every
+     other box in this stack keeps a consistent gap above the photo's
+     22% start at any viewport height instead. */
+  top: 12%;
   left: 0;
   right: 0;
   z-index: 4;
@@ -2936,6 +2971,15 @@ h2 {
     left: 24px;
     right: 24px;
     font-size: 1.05rem;
+    /* both children are position:absolute, which collapses this box's
+       own auto height to 0 — span:last-child's "top: calc(42% - 46px)"
+       below was meant to resolve against .tech-stages-sticky's 100vh,
+       but with a 0-height parent it resolves to 42% of 0 instead,
+       landing the text ~26px above the sticky viewport's top edge
+       (clipped by its overflow:hidden) rather than near the white
+       band. An explicit height ties this box back to its sticky
+       ancestor's real height so the percentage means what it says. */
+    height: 100%;
   }
   .tech-stages-header span:first-child,
   .tech-stages-header span:last-child {
@@ -3638,7 +3682,11 @@ h2 {
   font-size: clamp(1.7rem, 2.6vw, 2.3rem);
   line-height: 1.35;
   color: var(--ink);
-  margin: 20px 0 0;
+  /* was 20px 0 0 — that top offset pushed this column down below the
+     panel beside it despite the row's own align-items:flex-start,
+     leaving the two columns starting on different lines instead of
+     level with each other */
+  margin: 0;
 }
 .partnership-what-panel { flex: 1; }
 .partnership-what-body {
@@ -3647,10 +3695,14 @@ h2 {
   font-size: 0.95rem;
   line-height: 1.7;
   color: var(--ink-soft);
-  text-align: justify;
-  margin: 0 0 32px;
+  /* was justify, which right-justifies wrapped lines too — left, to
+     mirror the heading's own right-alignment on the opposite column */
+  text-align: left;
+  /* was 0 0 32px — that bottom margin existed to space the paragraph
+     from the "Partner With Us" CTA that used to follow it; now it's the
+     last element in the panel, so trailing margin is just dead space */
+  margin: 0;
 }
-.partnership-cta { display: inline-block; text-decoration: none; }
 
 @media (max-width: 900px) {
   .partnership-intro { padding: 200px 24px 90px; }
@@ -3801,7 +3853,11 @@ h2 {
 }
 .partnership-stages-header {
   position: absolute;
-  top: 130px;
+  /* same fixed-px-vs-percentage mismatch as .tech-stages-header (its
+     identical twin) caused it to overlap the photo column below on
+     shorter viewports — percentage-based instead, see that rule's
+     comment for the full explanation */
+  top: 12%;
   left: 0;
   right: 0;
   z-index: 4;
@@ -3972,6 +4028,11 @@ h2 {
     left: 24px;
     right: 24px;
     font-size: 1.05rem;
+    /* see .tech-stages-header's comment — both children are absolute,
+       collapsing this box to 0 height and breaking span:last-child's
+       percentage-based top; tying it to the sticky ancestor's real
+       height fixes it here too */
+    height: 100%;
   }
   .partnership-stages-header span:first-child,
   .partnership-stages-header span:last-child {
@@ -5616,7 +5677,19 @@ h2 {
   overflow: hidden;
   background: var(--bg-soft);
 }
-.indication-image { display: block; width: 100%; height: 100%; object-fit: cover; }
+/* every other indication's source photo happened to already be
+   monochrome; this one (Immunity Support's hands-under-water shot)
+   wasn't, so it stood out in full colour next to the rest — same
+   grayscale+contrast treatment already used on .indication-strip-photo
+   guarantees every indication photo reads consistently regardless of
+   what the source file itself looks like. */
+.indication-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.05);
+}
 .indication-description {
   max-width: 780px;
   margin: 20px 0 0;
@@ -6250,6 +6323,16 @@ h2 {
     height: auto;
     overflow: visible;
     padding: 52px 20px 26px;
+    /* every card is stretched to the tallest one in the strip (by
+       design, see the comment above .pf-card-body's flex parent) so a
+       short one-line description otherwise left a block of empty white
+       space below it. Centering the text vertically distributes that
+       leftover space evenly instead of dumping it all beneath the
+       copy — box size stays identical card to card, only where the
+       text sits inside it changes. */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
   .portfolio-mobile-scroller .pf-card-body p { font-size: 0.92rem; line-height: 1.6; }
   .portfolio-mobile-scroller .pf-card-tab { font-size: 0.9rem; padding: 10px 16px; }
@@ -6366,9 +6449,17 @@ h2 {
     white-space: normal;
     font-size: clamp(1.4rem, 6.4vw, 2rem);
   }
+  /* .lead's 28vh top margin was sized for desktop, where the heading
+     above it is always exactly one line — on phone the heading wraps
+     (white-space: normal, right above) to 2-3 lines instead, adding
+     its own real height before this margin even starts, so the same
+     28vh on top of that stacked up to a much taller gap than intended
+     and pushed the lead/CTA an inconsistent distance down depending on
+     how many lines the heading happened to wrap to on a given phone. */
   .hero-about .lead {
     white-space: normal;
     font-size: clamp(0.9rem, 3.8vw, 1.1rem);
+    margin-top: 8vh;
   }
   .hero-banner-cta { flex-wrap: wrap; }
 
@@ -6479,8 +6570,12 @@ h2 {
   .nav-inner { padding: 12px 16px; justify-content: flex-start; }
   /* no room for these inline at phone width — the drawer (opened via the
      hamburger, still built from the same nav-links) is the only way to
-     reach them now */
-  .nav-links, .nav-cta { display: none; }
+     reach them now. Scoped to .nav-inner specifically — .nav-cta is the
+     same class on the drawer's OWN "Get in touch" link (Nav.tsx renders
+     it a second time inside .nav-drawer), and an unscoped `.nav-cta`
+     here was hiding that one too, leaving the open drawer with no way
+     to reach Contact at all. */
+  .nav-links, .nav-inner .nav-cta { display: none; }
 
   /* was top:9px at 38px tall — its bottom edge (47px) landed right on
      the bar's own bottom border (~47.4px, from .nav-inner's 12px
