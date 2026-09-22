@@ -6527,20 +6527,34 @@ h2 {
   .products-filter-tab-chevron { font-size: 0.7em; transition: transform 0.2s ease; flex: none; }
   .products-filter-tab.is-open .products-filter-tab-chevron { transform: rotate(180deg); }
 
-  .products-filters { gap: 0; }
+  /* overflow-y:auto + max-height from the desktop base rule were never
+     reset here — with the dropdown panel below now position:absolute,
+     that ancestor overflow would clip it exactly the way its own
+     max-height used to, just one level up */
+  .products-filters { gap: 0; position: relative; overflow: visible; max-height: none; }
   .products-filter-group { display: none; }
-  /* was a full-screen fixed sheet with a dimming scrim — reverted to a
-     plain inline panel that expands the page's own scroll instead. No
-     max-height/inner scroll here — that clipped even short lists like
-     Ingredient Category mid-item; full content just shows, growing the
-     page's own scroll if a list happens to be long. */
+  /* floats over the search bar/sort control/grid below instead of
+     pushing them down the page or being fixed full-screen — a normal
+     dropdown-menu pattern. Positioned relative to .products-filters
+     (above), right under the tab bar. max-height + inner scroll is
+     back (safe here since it's an overlay, not inline content — a
+     floating panel scrolling internally reads as a normal dropdown,
+     not as clipped page content the way it did inline). */
   .products-filter-group.is-mobile-open {
     display: block;
-    margin: 14px 0 0;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 40;
+    margin: 8px 0 0;
     padding: 16px;
+    max-height: 50vh;
+    overflow-y: auto;
     border: 1px solid rgba(13, 21, 38, 0.12);
     border-radius: 12px;
     background: #fbfbfb;
+    box-shadow: 0 16px 40px -12px rgba(13, 21, 38, 0.3);
   }
   .products-filter-group:last-of-type { margin-bottom: 0; }
   /* Indications is multi-select, so there's no single tap that closes
