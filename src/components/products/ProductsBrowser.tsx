@@ -144,95 +144,102 @@ export default function ProductsBrowser() {
           Filter
         </p>
 
-        <div className="products-filter-tabs">
-          <button
-            type="button"
-            className={`products-filter-tab${mobileFilterOpen === "category" ? " is-open" : ""}`}
-            onClick={() => setMobileFilterOpen((prev) => (prev === "category" ? null : "category"))}
-            aria-expanded={mobileFilterOpen === "category"}
-          >
-            Ingredient Category
-            <span className="products-filter-tab-chevron" aria-hidden="true">&#9662;</span>
-          </button>
-          <button
-            type="button"
-            className={`products-filter-tab${mobileFilterOpen === "indications" ? " is-open" : ""}`}
-            onClick={() => setMobileFilterOpen((prev) => (prev === "indications" ? null : "indications"))}
-            aria-expanded={mobileFilterOpen === "indications"}
-          >
-            Indications
-            <span className="products-filter-tab-chevron" aria-hidden="true">&#9662;</span>
-          </button>
-        </div>
+        {/* wraps just the tabs + their two dropdown panels, nothing else
+            (not the "Filter" heading above) — on phone the panels anchor
+            to this wrapper specifically via position:absolute/top:100%,
+            so they always open flush under the tabs regardless of
+            whatever else sits in .products-filters */}
+        <div className="products-filter-tabs-wrap">
+          <div className="products-filter-tabs">
+            <button
+              type="button"
+              className={`products-filter-tab${mobileFilterOpen === "category" ? " is-open" : ""}`}
+              onClick={() => setMobileFilterOpen((prev) => (prev === "category" ? null : "category"))}
+              aria-expanded={mobileFilterOpen === "category"}
+            >
+              Ingredient Category
+              <span className="products-filter-tab-chevron" aria-hidden="true">&#9662;</span>
+            </button>
+            <button
+              type="button"
+              className={`products-filter-tab${mobileFilterOpen === "indications" ? " is-open" : ""}`}
+              onClick={() => setMobileFilterOpen((prev) => (prev === "indications" ? null : "indications"))}
+              aria-expanded={mobileFilterOpen === "indications"}
+            >
+              Indications
+              <span className="products-filter-tab-chevron" aria-hidden="true">&#9662;</span>
+            </button>
+          </div>
 
-        <div className={`products-filter-group${mobileFilterOpen === "category" ? " is-mobile-open" : ""}`}>
-          <p className="products-filter-label">Ingredient Category</p>
-          <ul className="products-filter-list">
-            <li>
-              <button
-                type="button"
-                className={`products-filter-item${activeCategory === ALL ? " is-active" : ""}`}
-                onClick={() => selectCategory(ALL)}
-              >
-                All Ingredients
-              </button>
-            </li>
-            {categories.map((c) => (
-              <li key={c}>
+          <div className={`products-filter-group${mobileFilterOpen === "category" ? " is-mobile-open" : ""}`}>
+            <p className="products-filter-label">Ingredient Category</p>
+            <ul className="products-filter-list">
+              <li>
                 <button
                   type="button"
-                  className={`products-filter-item${activeCategory === c ? " is-active" : ""}`}
-                  onClick={() => selectCategory(c)}
+                  className={`products-filter-item${activeCategory === ALL ? " is-active" : ""}`}
+                  onClick={() => selectCategory(ALL)}
                 >
-                  {c}
+                  All Ingredients
                 </button>
-                {c === BIOACTIVES && activeCategory === BIOACTIVES && productTypes.length > 0 && (
-                  <ul className="products-filter-sublist">
-                    {productTypes.map((t) => (
-                      <li key={t}>
-                        <button
-                          type="button"
-                          className={`products-filter-subitem${activeProductType === t ? " is-active" : ""}`}
-                          onClick={() => toggleProductType(t)}
-                        >
-                          {t}
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                )}
               </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className={`products-filter-group${mobileFilterOpen === "indications" ? " is-mobile-open" : ""}`}>
-          <p className="products-filter-label">Indications</p>
-          <ul className="products-filter-list products-filter-list--checkbox">
-            {benefits.map((b) => {
-              const checked = activeBenefits.includes(b);
-              return (
-                <li key={b}>
-                  <label className={`products-filter-checkbox${checked ? " is-active" : ""}`}>
-                    <input type="checkbox" checked={checked} onChange={() => toggleBenefit(b)} />
-                    <span>{b}</span>
-                  </label>
+              {categories.map((c) => (
+                <li key={c}>
+                  <button
+                    type="button"
+                    className={`products-filter-item${activeCategory === c ? " is-active" : ""}`}
+                    onClick={() => selectCategory(c)}
+                  >
+                    {c}
+                  </button>
+                  {c === BIOACTIVES && activeCategory === BIOACTIVES && productTypes.length > 0 && (
+                    <ul className="products-filter-sublist">
+                      {productTypes.map((t) => (
+                        <li key={t}>
+                          <button
+                            type="button"
+                            className={`products-filter-subitem${activeProductType === t ? " is-active" : ""}`}
+                            onClick={() => toggleProductType(t)}
+                          >
+                            {t}
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </li>
-              );
-            })}
-          </ul>
-          {/* phone-only: Indications is a multi-select checkbox list, so
-              unlike Ingredient Category (which collapses itself the
-              instant you tap a single-select option) there's no natural
-              "I'm done" moment — this closes the panel back up once
-              you've picked what you want */}
-          <button
-            type="button"
-            className="products-filter-mobile-done"
-            onClick={() => setMobileFilterOpen(null)}
-          >
-            Done
-          </button>
+              ))}
+            </ul>
+          </div>
+
+          <div className={`products-filter-group${mobileFilterOpen === "indications" ? " is-mobile-open" : ""}`}>
+            <p className="products-filter-label">Indications</p>
+            <ul className="products-filter-list products-filter-list--checkbox">
+              {benefits.map((b) => {
+                const checked = activeBenefits.includes(b);
+                return (
+                  <li key={b}>
+                    <label className={`products-filter-checkbox${checked ? " is-active" : ""}`}>
+                      <input type="checkbox" checked={checked} onChange={() => toggleBenefit(b)} />
+                      <span>{b}</span>
+                    </label>
+                  </li>
+                );
+              })}
+            </ul>
+            {/* phone-only: Indications is a multi-select checkbox list, so
+                unlike Ingredient Category (which collapses itself the
+                instant you tap a single-select option) there's no natural
+                "I'm done" moment — this closes the panel back up once
+                you've picked what you want */}
+            <button
+              type="button"
+              className="products-filter-mobile-done"
+              onClick={() => setMobileFilterOpen(null)}
+            >
+              Done
+            </button>
+          </div>
         </div>
 
         {hasActiveFilters && (

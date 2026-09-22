@@ -6531,15 +6531,19 @@ h2 {
      reset here — with the dropdown panel below now position:absolute,
      that ancestor overflow would clip it exactly the way its own
      max-height used to, just one level up */
-  .products-filters { gap: 0; position: relative; overflow: visible; max-height: none; }
+  .products-filters { gap: 0; overflow: visible; max-height: none; }
+  /* the group panels anchor to THIS (top:100% below), not .products-filters
+     — .products-filters also contains the "Filter" heading above the
+     tabs, so anchoring there left a gap the height of that heading (plus
+     whatever came after it) between the tabs and the open panel */
+  .products-filter-tabs-wrap { position: relative; }
   .products-filter-group { display: none; }
   /* floats over the search bar/sort control/grid below instead of
      pushing them down the page or being fixed full-screen — a normal
-     dropdown-menu pattern. Positioned relative to .products-filters
-     (above), right under the tab bar. max-height + inner scroll is
-     back (safe here since it's an overlay, not inline content — a
-     floating panel scrolling internally reads as a normal dropdown,
-     not as clipped page content the way it did inline). */
+     dropdown-menu pattern. max-height + inner scroll is back (safe
+     here since it's an overlay, not inline content — a floating panel
+     scrolling internally reads as a normal dropdown, not as clipped
+     page content the way it did inline). */
   .products-filter-group.is-mobile-open {
     display: block;
     position: absolute;
