@@ -3011,7 +3011,16 @@ h2 {
     text-align: left;
   }
   .tech-stages-header span:first-child { top: 0; }
-  .tech-stages-header span:last-child { top: calc(42% - 46px); }
+  /* was "42% - 46px" — landed inside the photo's own 14%-48% range
+     (overlapping its "Sensory Challenges" caption, both painted white
+     on the still-navy background there) instead of the white band
+     below it. Anchored just past where the photo actually ends
+     (14% + 34%) instead, with a dark color override since it's sitting
+     on white now, not navy. */
+  .tech-stages-header span:last-child {
+    top: calc(48% + 12px);
+    color: var(--ink);
+  }
   .tech-stages-divider { display: none; }
   .tech-stages-progress { display: none; }
   .tech-stages-white-band { top: 42%; height: 40%; }
@@ -4075,7 +4084,13 @@ h2 {
     text-align: left;
   }
   .partnership-stages-header span:first-child { top: 0; }
-  .partnership-stages-header span:last-child { top: calc(42% - 46px); }
+  /* see .tech-stages-header span:last-child's comment (identical twin,
+     same fix) — moved from overlapping the photo to sitting just below
+     it on the white band, with a matching dark color override */
+  .partnership-stages-header span:last-child {
+    top: calc(48% + 12px);
+    color: var(--ink);
+  }
   .partnership-stages-divider { display: none; }
   .partnership-stages-progress { display: none; }
   .partnership-stages-white-band { top: 42%; height: 40%; }
@@ -5264,13 +5279,9 @@ h2 {
    replace the sidebar's inner-scroll list below 640px — hidden here so
    desktop/tablet keep the sidebar exactly as before */
 .products-filter-tabs { display: none; }
-/* only meaningful once a filter group goes full-screen on phone (see the
-   640px block below) — hidden everywhere else */
-.products-filter-mobile-close { display: none; }
-/* dims the page behind that full-screen phone sheet — inert (not just
-   invisible) at every other width regardless of React state, so there's
-   no edge case where resizing back up from phone leaves it interactive */
-.products-filter-scrim { display: none; }
+/* only meaningful inside the phone dropdown panel (see the 640px block
+   below) — hidden everywhere else */
+.products-filter-mobile-done { display: none; }
 
 .products-filter-heading {
   display: flex;
@@ -6518,57 +6529,38 @@ h2 {
 
   .products-filters { gap: 0; }
   .products-filter-group { display: none; }
-  /* opens as a full-screen sheet over the whole page (not just an inline
-     panel under the tab) with .products-filter-scrim dimming everything
-     behind it — .products-filter-mobile-close is this sheet's only way
-     back out, since the tab bar that opened it is now fully covered */
+  /* was a full-screen fixed sheet with a dimming scrim — reverted to a
+     plain inline panel that expands the page's own scroll instead,
+     with its own max-height + overflow-y so a long list (Indications)
+     scrolls internally rather than growing the panel without limit */
   .products-filter-group.is-mobile-open {
     display: block;
-    position: fixed;
-    inset: 0;
-    z-index: 260;
-    margin: 0;
-    padding: 90px 24px 40px;
+    margin: 14px 0 0;
+    padding: 16px;
+    max-height: 46vh;
     overflow-y: auto;
-    border: none;
-    border-radius: 0;
-    background: #ffffff;
-    box-shadow: 0 0 60px rgba(13, 21, 38, 0.25);
+    border: 1px solid rgba(13, 21, 38, 0.12);
+    border-radius: 12px;
+    background: #fbfbfb;
   }
   .products-filter-group:last-of-type { margin-bottom: 0; }
-  /* display:flex here overrides the base rule's display:none — safe to
-     leave unconditional since this button only ever renders visually
-     when its parent .products-filter-group also has .is-mobile-open
-     (the group itself is display:none otherwise, per above) */
-  .products-filter-mobile-close {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: fixed;
-    top: 18px;
-    right: 20px;
-    z-index: 261;
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    border: 1px solid rgba(13, 21, 38, 0.2);
-    background: #ffffff;
-    font-size: 1.3rem;
-    line-height: 1;
-    color: var(--ink);
+  /* Indications is multi-select, so there's no single tap that closes
+     it the way picking an Ingredient Category option does — this is
+     what lets you collapse it back up once you're done checking boxes */
+  .products-filter-mobile-done {
+    display: block;
+    width: 100%;
+    margin-top: 14px;
+    padding: 12px;
+    border: none;
+    border-radius: 100px;
+    background: #003366;
+    color: #ffffff;
+    font-family: var(--font-prata), serif;
+    font-size: 0.9rem;
+    font-weight: 700;
     cursor: pointer;
   }
-  .products-filter-scrim {
-    display: block;
-    position: fixed;
-    inset: 0;
-    z-index: 255;
-    background: rgba(13, 21, 38, 0.55);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.25s ease;
-  }
-  .products-filter-scrim.is-open { opacity: 1; pointer-events: auto; }
   /* the 900px rule above turns these into wrapped horizontal pill rows
      (fine for the old always-visible sidebar) — inside the new dropdown
      panel there's a fixed width to work with, so go back to one column

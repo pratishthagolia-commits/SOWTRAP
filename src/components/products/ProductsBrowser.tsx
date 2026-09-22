@@ -138,15 +138,6 @@ export default function ProductsBrowser() {
 
   return (
     <section className="products-browser">
-      {/* phone-only: dims the page behind a full-screen filter dropdown —
-          on desktop/tablet mobileFilterOpen never leaves null, so this
-          never becomes visible there */}
-      <div
-        className={`products-filter-scrim${mobileFilterOpen ? " is-open" : ""}`}
-        onClick={() => setMobileFilterOpen(null)}
-        aria-hidden="true"
-      />
-
       <aside className="products-filters">
         <p className="products-filter-heading">
           <SlidersIcon width={16} height={16} aria-hidden="true" />
@@ -175,14 +166,6 @@ export default function ProductsBrowser() {
         </div>
 
         <div className={`products-filter-group${mobileFilterOpen === "category" ? " is-mobile-open" : ""}`}>
-          <button
-            type="button"
-            className="products-filter-mobile-close"
-            onClick={() => setMobileFilterOpen(null)}
-            aria-label="Close filter"
-          >
-            &times;
-          </button>
           <p className="products-filter-label">Ingredient Category</p>
           <ul className="products-filter-list">
             <li>
@@ -224,14 +207,6 @@ export default function ProductsBrowser() {
         </div>
 
         <div className={`products-filter-group${mobileFilterOpen === "indications" ? " is-mobile-open" : ""}`}>
-          <button
-            type="button"
-            className="products-filter-mobile-close"
-            onClick={() => setMobileFilterOpen(null)}
-            aria-label="Close filter"
-          >
-            &times;
-          </button>
           <p className="products-filter-label">Indications</p>
           <ul className="products-filter-list products-filter-list--checkbox">
             {benefits.map((b) => {
@@ -246,6 +221,18 @@ export default function ProductsBrowser() {
               );
             })}
           </ul>
+          {/* phone-only: Indications is a multi-select checkbox list, so
+              unlike Ingredient Category (which collapses itself the
+              instant you tap a single-select option) there's no natural
+              "I'm done" moment — this closes the panel back up once
+              you've picked what you want */}
+          <button
+            type="button"
+            className="products-filter-mobile-done"
+            onClick={() => setMobileFilterOpen(null)}
+          >
+            Done
+          </button>
         </div>
 
         {hasActiveFilters && (
