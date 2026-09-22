@@ -6530,15 +6530,14 @@ h2 {
   .products-filters { gap: 0; }
   .products-filter-group { display: none; }
   /* was a full-screen fixed sheet with a dimming scrim — reverted to a
-     plain inline panel that expands the page's own scroll instead,
-     with its own max-height + overflow-y so a long list (Indications)
-     scrolls internally rather than growing the panel without limit */
+     plain inline panel that expands the page's own scroll instead. No
+     max-height/inner scroll here — that clipped even short lists like
+     Ingredient Category mid-item; full content just shows, growing the
+     page's own scroll if a list happens to be long. */
   .products-filter-group.is-mobile-open {
     display: block;
     margin: 14px 0 0;
     padding: 16px;
-    max-height: 46vh;
-    overflow-y: auto;
     border: 1px solid rgba(13, 21, 38, 0.12);
     border-radius: 12px;
     background: #fbfbfb;
