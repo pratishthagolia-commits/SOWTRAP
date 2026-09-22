@@ -1293,6 +1293,12 @@ h2 {
   min-width: var(--pf-card-w);
   max-width: var(--pf-card-w);
   position: relative;
+  /* flex column (not plain block) so .pf-card-tab's negative top margin
+     can't collapse through into .pf-card's own margin/position — it
+     should only pull the tab up relative to the body that follows it,
+     not shift the whole card (and the row it sits in) up too */
+  display: flex;
+  flex-direction: column;
 }
 /* per the figma source (Rectangle 52/53): the tab is its own fully
    bordered rounded rectangle — SAME border weight and corner radius as
@@ -1300,13 +1306,16 @@ h2 {
    border underneath. Its width is ~94.5% of the card (2582/2731 in the
    figma export), overlapping the box's top-left corner. */
 .pf-card-tab {
-  position: absolute;
-  top: -18px;
-  left: 0;
-  /* behind the white card, not in front of it — where the box's own
-     rounded corner/border overlaps the tab, the box wins; the tab only
-     shows through in the small area outside the box's own boundary */
-  z-index: 0;
+  /* normal flow (not position:absolute) with a negative top margin —
+     pulls it up 18px to poke above the card exactly like the old
+     absolute+top:-18px did, but because it's still in-flow, the body
+     box below it (next in the DOM) now starts right where the tab's
+     OWN rendered bottom edge actually is, whatever that is for this
+     card's title. The old fixed-position version needed .pf-card-body's
+     own margin-top to independently guess the tab's height — sized for
+     a 2-line-wrapped title, that guess left a visible white gap above
+     any card whose title fit on a single line instead. */
+  margin-top: -18px;
   width: calc(var(--pf-card-w) * 0.945);
   box-sizing: border-box;
   background: #003366;
@@ -1325,7 +1334,6 @@ h2 {
 .pf-card-body {
   position: relative;
   z-index: 1;
-  margin-top: 24px;
   /* fixed (not min-) height so every card box is an identical rectangle
      regardless of how long its own body copy runs — a min-height let
      longer cards grow taller than shorter ones, breaking the uniform
@@ -6353,17 +6361,13 @@ h2 {
   .portfolio-mobile-scroller { align-items: stretch; }
   .portfolio-mobile-scroller .pf-card {
     scroll-snap-align: start;
-    display: flex;
-    flex-direction: column;
   }
   .portfolio-mobile-scroller .pf-card-body {
     flex: 1;
-    /* was the base rule's 24px — sized for a tab title that fits on one
-       line. At this narrower mobile card width, longer titles ("Adaptogenic
-       Blends - Targeted health and wellness") wrap to two lines and need
-       more room before this white box's own top edge/border starts, or
-       its rounded corner paints straight over the tab's second line. */
-    margin-top: 46px;
+    /* no margin-top override needed anymore — .pf-card-tab is normal
+       flow now (see its own comment), so this box already starts
+       right after however tall the tab actually rendered, whether the
+       title wrapped to one line or two */
     height: auto;
     overflow: visible;
     padding: 52px 20px 26px;
