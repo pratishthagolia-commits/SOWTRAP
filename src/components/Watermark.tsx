@@ -21,19 +21,47 @@ export default function Watermark() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    // kept identical to Nav.tsx's own #home observer — see its comment
-    // for why it watches #home directly (not the section after it) —
-    // must stay in sync or the double-logo overlap this was written to
-    // fix comes back.
+    // kept identical to Nav.tsx's own pair of observers — see its
+    // comment for the full reasoning. Must stay in sync or the
+    // double-logo overlap this was written to fix comes back.
     const hero = document.getElementById("home");
     if (!hero) return;
 
-    const io = new IntersectionObserver(([entry]) => setVisible(!entry.isIntersecting), {
-      threshold: 0,
-      rootMargin: "0px 0px -50% 0px",
-    });
-    io.observe(hero);
-    return () => io.disconnect();
+    const heroObserver = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) setVisible(false);
+      },
+      { threshold: 0.4 }
+    );
+    heroObserver.observe(hero);
+
+    const slideTwo = document.getElementById("slide-two");
+    let slideTwoObserver: IntersectionObserver | null = null;
+    let fallbackObserver: IntersectionObserver | null = null;
+
+    if (slideTwo) {
+      slideTwoObserver = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) setVisible(true);
+        },
+        { threshold: 0 }
+      );
+      slideTwoObserver.observe(slideTwo);
+    } else {
+      fallbackObserver = new IntersectionObserver(
+        ([entry]) => {
+          if (!entry.isIntersecting) setVisible(true);
+        },
+        { threshold: 0, rootMargin: "0px 0px -50% 0px" }
+      );
+      fallbackObserver.observe(hero);
+    }
+
+    return () => {
+      heroObserver.disconnect();
+      slideTwoObserver?.disconnect();
+      fallbackObserver?.disconnect();
+    };
   }, []);
 
   return (

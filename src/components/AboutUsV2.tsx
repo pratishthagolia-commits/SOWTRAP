@@ -110,7 +110,7 @@ export default function AboutUsV2() {
   const activeCount = Math.round(wordProgress * TOTAL_WORDS);
 
   return (
-    <div className="about-v2-wrapper" ref={wrapperRef}>
+    <div className="about-v2-wrapper" ref={wrapperRef} id="slide-two">
       <div className="about-v2-sticky">
         <div className="about-v2-image">
           {/* eslint-disable-next-line @next/next/no-img-element */}

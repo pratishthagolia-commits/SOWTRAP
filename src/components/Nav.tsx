@@ -26,29 +26,67 @@ export default function Nav() {
   const hideFullNav = scrolledPastHero || alwaysHamburger;
 
   useEffect(() => {
-    // watches #home (the hero itself) directly, not the section after it —
-    // an earlier version watched id="slide-two" instead, on the theory
-    // that "hamburger the instant the next section appears" was more
-    // precise. It was: slide-two is its own ordinary-height element, so
-    // once the user scrolled PAST it too (into slide three, four, ...) it
-    // stopped intersecting again, and the observer fired isIntersecting:
-    // false — which flipped the full header back ON for the rest of the
-    // page. #home never has that problem: once scrolled past, it simply
-    // never re-enters the viewport again (short of scrolling back up to
-    // the very top), so "hamburger past the hero, for every later slide,
-    // no exceptions" holds automatically. rootMargin makes it switch
-    // before #home is 100% out of view — roughly matching when each
-    // page's own overlap animation starts covering the hero — without
-    // needing a hero-height-exact threshold.
+    // two one-directional observers, combined, instead of one observer
+    // whose signal has to serve both jobs at once:
+    //
+    // - slideTwoObserver ONLY ever sets scrolledPastHero to true, the
+    //   instant id="slide-two" (the section that wraps up over the hero
+    //   on every page) starts entering the viewport. That's the exact
+    //   moment the overlap animation begins covering the hero, so the
+    //   header disappears right as that section's own text arrives —
+    //   no lag, no window where both are visible at once (a fixed
+    //   rootMargin percentage on #home alone couldn't match this
+    //   precisely, since each page's own overlap ratio differs).
+    // - heroObserver ONLY ever sets scrolledPastHero back to false, and
+    //   only when #home itself is substantially back in view — i.e.
+    //   the user has scrolled back up to the actual top of the page.
+    //
+    // Neither observer can undo what the other one sets, so scrolling
+    // further down past slide two, into slide three, four, ... can't
+    // flip the header back on (that was the previous bug, from a
+    // single observer watching slide-two both ways) — only scrolling
+    // back up to the hero itself does.
     const hero = document.getElementById("home");
     if (!hero) return;
 
-    const io = new IntersectionObserver(
-      ([entry]) => setScrolledPastHero(!entry.isIntersecting),
-      { threshold: 0, rootMargin: "0px 0px -50% 0px" }
+    const heroObserver = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) setScrolledPastHero(false);
+      },
+      { threshold: 0.4 }
     );
-    io.observe(hero);
-    return () => io.disconnect();
+    heroObserver.observe(hero);
+
+    const slideTwo = document.getElementById("slide-two");
+    let slideTwoObserver: IntersectionObserver | null = null;
+    let fallbackObserver: IntersectionObserver | null = null;
+
+    if (slideTwo) {
+      slideTwoObserver = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) setScrolledPastHero(true);
+        },
+        { threshold: 0 }
+      );
+      slideTwoObserver.observe(slideTwo);
+    } else {
+      // no slide-two marker on this page (e.g. indication pages, which
+      // have no hero+overlap pair) — fall back to watching #home's own
+      // exit so hamburger still switches on eventually
+      fallbackObserver = new IntersectionObserver(
+        ([entry]) => {
+          if (!entry.isIntersecting) setScrolledPastHero(true);
+        },
+        { threshold: 0, rootMargin: "0px 0px -50% 0px" }
+      );
+      fallbackObserver.observe(hero);
+    }
+
+    return () => {
+      heroObserver.disconnect();
+      slideTwoObserver?.disconnect();
+      fallbackObserver?.disconnect();
+    };
   }, []);
 
   // back on the landing page — close the drawer so it isn't left open

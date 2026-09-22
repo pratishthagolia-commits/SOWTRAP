@@ -35,7 +35,7 @@ export default function ProductsHero() {
   }, []);
 
   return (
-    <section className="products-hero" ref={sectionRef} style={{ marginTop: `${-overlapPx}px` }}>
+    <section className="products-hero" ref={sectionRef} id="slide-two" style={{ marginTop: `${-overlapPx}px` }}>
       <h2 className="products-hero-tab">PRODUCT</h2>
 
       <p className="products-hero-breadcrumb">
