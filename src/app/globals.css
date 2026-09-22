@@ -315,11 +315,12 @@ body {
      box (not .hero-fold, which controls SowTrap's own position) pulls
      the centered content closer to the wordmark above it */
   min-height: 55vh;
-  /* was -170px (pulled all the way up to sit right under the wordmark)
-     — at that distance the wordmark's own descenders (the "p" in
-     "SowTrap") overlapped the heading below it. Positive now, so the
-     heading clears the wordmark with real breathing room instead. */
-  margin-top: 40px;
+  /* -170px is the confirmed point where the wordmark's own descenders
+     (the "p" in "SowTrap") start overlapping this heading — capped
+     just short of it here (was -140px, before that -80px, -20px,
+     10px, 40px) rather than the usual full step, since that would have
+     landed past -170px and reintroduced that exact overlap. */
+  margin-top: -168px;
   display: flex;
   /* was center — vertically centering within this box pushed the
      heading well down the page regardless of padding-top, needing a
@@ -347,11 +348,12 @@ body {
   font-size: clamp(1.05rem, 1.6vw, 1.35rem);
   line-height: 1.6;
   max-width: 1000px;
-  /* pushes the lead (and the CTA row right after it, in normal flow)
-     well below the heading — vh-based so it reads as "appears on the
-     next bit of scroll" at any screen height, rather than sitting
-     tight under the heading the way it used to */
-  margin: 28vh auto 0;
+  /* was 28vh — staggered the lead (and the CTA row right after it)
+     well below the heading, reading as its own "next bit of scroll"
+     reveal. Back to a small, tight gap so the heading/lead/CTAs sit
+     together as one compact block near the top instead of spread
+     across a much taller hero. */
+  margin: 24px auto 0;
   white-space: nowrap;
 }
 
@@ -1732,8 +1734,8 @@ h2 {
    34px was already in effect there with no larger override anywhere,
    so this goes smaller again as a hard guarantee regardless of cause. */
 .ind-slide-logo {
-  width: 24px;
-  height: 24px;
+  width: 18px;
+  height: 18px;
   object-fit: contain;
 }
 
@@ -1949,14 +1951,17 @@ h2 {
   white-space: nowrap;
   font-size: 21vw; /* CSS fallback before the JS fit runs — matches .hero-wordmark's */
   font-weight: 800;
-  /* letter-spacing/weight/size all now match .hero-wordmark exactly —
-     the gradient fill this used to have (dulled/dusty within the lime
-     hue) read as a noticeably different, muted treatment next to the
-     hero's flat bright wordmark; a plain solid color matches it exactly
-     instead of just approximating it */
+  /* letter-spacing/weight/size still match .hero-wordmark exactly — only
+     the fill is back to the gradient (briefly swapped for a flat
+     #deff08 to match the hero exactly, then asked back): pale/dusty at
+     the top easing down through the brand lime into a muted dark olive,
+     rather than a flat bright fill */
   letter-spacing: 0;
   line-height: 1;
-  color: #deff08;
+  background: linear-gradient(180deg, #edf0a6 0%, #c7d400 38%, #8b9612 72%, #4a5208 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 @media (max-width: 900px) {
@@ -6392,12 +6397,12 @@ h2 {
   .ind-slide-notch { height: auto; padding: 14px 18px 16px; }
   .ind-slide-panel { height: 92px; }
 
-  /* was 34px, same complaint as elsewhere — too small to read on a
-     phone. Sized to fit the 92px-tall phone panel above with room to
-     spare, consistent with the bigger base/tablet sizes now used too. */
+  /* was 50px — repeated reports of this logo specifically (Sports
+     Nutrition) still reading as oversized, so shrinking it here too,
+     not just the base/desktop rule */
   .ind-slide .ind-slide-logo {
-    width: 50px;
-    height: 50px;
+    width: 36px;
+    height: 36px;
   }
   /* smaller title: long names like "Botanical Growers & Extract
      Producers" were wrapping to four lines, running the tab far taller
@@ -6471,17 +6476,12 @@ h2 {
     white-space: normal;
     font-size: clamp(1.4rem, 6.4vw, 2rem);
   }
-  /* .lead's 28vh top margin was sized for desktop, where the heading
-     above it is always exactly one line — on phone the heading wraps
-     (white-space: normal, right above) to 2-3 lines instead, adding
-     its own real height before this margin even starts, so the same
-     28vh on top of that stacked up to a much taller gap than intended
-     and pushed the lead/CTA an inconsistent distance down depending on
-     how many lines the heading happened to wrap to on a given phone. */
+  /* the base rule's margin-top is now a small fixed 24px (no longer
+     vh-based), so it no longer needs its own phone override — same
+     tight gap regardless of how many lines the heading wraps to */
   .hero-about .lead {
     white-space: normal;
     font-size: clamp(0.9rem, 3.8vw, 1.1rem);
-    margin-top: 8vh;
   }
   .hero-banner-cta { flex-wrap: wrap; }
 

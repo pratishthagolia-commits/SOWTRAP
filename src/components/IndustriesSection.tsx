@@ -73,6 +73,11 @@ function NameText({ name }: { name: string }) {
   );
 }
 
+// temporarily off while diagnosing repeated "logo renders oversized"
+// reports that didn't reproduce server-side — flip back to true to
+// bring the per-industry logos back
+const SHOW_LOGOS = false;
+
 // each slide pins to the top of the viewport (plain position:sticky, no
 // scroll-jack JS, no negative margins on any ancestor) — later slides sit
 // later in the DOM, so they simply paint over the earlier ones as the user
@@ -98,7 +103,7 @@ export default function IndustriesSection() {
                   </p>
                 </div>
                 <div className="ind-slide-panel">
-                  {slide.left.logo && (
+                  {SHOW_LOGOS && slide.left.logo && (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img className="ind-slide-logo" src={slide.left.logo} alt="" />
                   )}
@@ -118,7 +123,7 @@ export default function IndustriesSection() {
                   </p>
                 </div>
                 <div className="ind-slide-panel">
-                  {slide.right.logo && (
+                  {SHOW_LOGOS && slide.right.logo && (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img className="ind-slide-logo" src={slide.right.logo} alt="" />
                   )}
