@@ -1612,7 +1612,17 @@ h2 {
   height: 100%;
   overflow: hidden;
 }
-.ind-slide-half img {
+/* direct-child combinator, not a plain descendant selector — this is
+   meant to style only the background photo (the img that's an actual
+   direct child of .ind-slide-half), but as a descendant selector it
+   also matched .ind-slide-logo three levels deeper (.ind-slide-half >
+   .ind-slide-card > .ind-slide-panel > img), and at higher specificity
+   than .ind-slide-logo's own rule, silently overrode it — every size
+   change made there was real but never actually visible, since this
+   width:100%/height:100% always won and stretched the logo to fill
+   the whole panel regardless. This is the actual bug behind every
+   "the logo renders oversized" report this session. */
+.ind-slide-half > img {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -1724,18 +1734,14 @@ h2 {
   justify-content: center;
 }
 /* one consistent size for every industry logo at this (desktop/base)
-   size — two of these (Sports Nutrition, Contract Manufacturers &
-   Formulators) used to carry their own one-off oversized overrides
-   (255px/188px against everyone else's 34px), which read as broken/
-   inconsistent rather than intentional. Shrunk further still (was
-   34px) since the Sports Nutrition icon specifically kept getting
-   reported as oversized/cropped even after that fix — verified
-   directly against the live production CSS bundle multiple times and
-   34px was already in effect there with no larger override anywhere,
-   so this goes smaller again as a hard guarantee regardless of cause. */
+   size — now that .ind-slide-half > img (above) no longer silently
+   overrides this, sizing here actually takes effect. 306px (204 * 1.5)
+   — taller than the panel's own 220px height now, so it spills past
+   the panel's top/bottom edges (no overflow:hidden there to clip it);
+   still narrower than the panel's 380px width. */
 .ind-slide-logo {
-  width: 18px;
-  height: 18px;
+  width: 306px;
+  height: 306px;
   object-fit: contain;
 }
 
@@ -6397,12 +6403,12 @@ h2 {
   .ind-slide-notch { height: auto; padding: 14px 18px 16px; }
   .ind-slide-panel { height: 92px; }
 
-  /* was 50px — repeated reports of this logo specifically (Sports
-     Nutrition) still reading as oversized, so shrinking it here too,
-     not just the base/desktop rule */
+  /* was 34px, same complaint as elsewhere — too small to read on a
+     phone. Sized to fit the 92px-tall phone panel above with room to
+     spare, consistent with the bigger base/tablet sizes now used too. */
   .ind-slide .ind-slide-logo {
-    width: 36px;
-    height: 36px;
+    width: 50px;
+    height: 50px;
   }
   /* smaller title: long names like "Botanical Growers & Extract
      Producers" were wrapping to four lines, running the tab far taller
