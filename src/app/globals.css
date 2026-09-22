@@ -6779,6 +6779,22 @@ h2 {
   .doc-request-error {
     font-size: 0.9rem;
   }
+
+  /* these 4 hero photos are only 768x512 source files, stretched via
+     background-size:cover across a full 100vh section — on a phone's
+     high-DPR screen (2-3x) that's asking a 512px-tall image to cover
+     roughly 1700-2500 physical pixels of height, which reads as visibly
+     soft/pixelated. There's no higher-resolution source to swap in
+     right now, so this is a display-size mitigation, not a true fix:
+     a shorter box needs less upscaling from the same file, cutting the
+     blur roughly in half. The real fix is re-exporting these three (and
+     partnership-get-in-touch.jpeg) at a higher native resolution. */
+  .science-hero,
+  .tech-hero,
+  .contact-hero-photo,
+  .partnership-touch-hero {
+    height: 65vh;
+  }
 }
 
 /* ---------- cookie consent — full modal with per-category toggles,
