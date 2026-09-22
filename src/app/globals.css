@@ -6338,9 +6338,14 @@ h2 {
      at the phone font-size above, that left most of the box as empty
      navy space between .fail-v2-chamber's accordion (ending just above
      it) and this section's own text. Let the box size to its content
-     instead of reserving a fixed viewport fraction. */
-  .pillars-heading-slide { min-height: 0; padding: 48px 0 32px; }
-  .fail-v2-chamber { padding-bottom: 40px; }
+     instead of reserving a fixed viewport fraction.
+     Verified directly against the live sowtrap.in CSS bundle that this
+     rule (and .fail-v2-chamber's own padding-bottom below) really is
+     shipped and active — the combined 40px + 48px gap it left was just
+     still visible as a block of blank navy, not literally broken.
+     Cut both down much further here. */
+  .pillars-heading-slide { min-height: 0; padding: 16px 0 16px; }
+  .fail-v2-chamber { padding-bottom: 12px; }
 
   /* the timeline's little connector dashes off the side of each box */
   .dt-row.is-left .dt-box::after,
