@@ -36,7 +36,6 @@ export default function ContactHero() {
     <section
       className="contact-hero"
       ref={sectionRef}
-      id="slide-two"
       style={{ marginTop: `${-overlapPx}px` }}
     >
       <h2 className="contact-hero-tab">CONTACT</h2>

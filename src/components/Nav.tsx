@@ -18,28 +18,28 @@ export default function Nav() {
   const hideFullNav = scrolledPastHero || alwaysHamburger;
 
   useEffect(() => {
-    // every hero page's very next section carries id="slide-two" (the one
-    // that wraps UP over the hero via a scroll-tracked negative margin —
-    // AboutUsV2, BioactivesIntro, TechIntro, ProductsHero, PartnershipIntro,
-    // ContactHero). Watching for THAT to start entering the viewport — not
-    // guessing at when #home (100vh, fixed) must have "mostly" scrolled
-    // away — is what actually matches "full header only on the hero,
-    // hamburger from the moment slide two appears": a plain threshold:0
-    // fires the instant any pixel of slide-two is on screen, which is
-    // exactly when the overlap animation starts covering the hero,
-    // whatever fraction of the hero's own scroll that happens to be on a
-    // given page. Pages without a slide-two marker (e.g. indication pages,
-    // which have no hero+overlap pair) fall back to the older #home-exited
-    // check so they still get a working hamburger switch at some point.
-    const slideTwo = document.getElementById("slide-two");
-    const target = slideTwo ?? document.getElementById("home");
-    if (!target) return;
+    // watches #home (the hero itself) directly, not the section after it —
+    // an earlier version watched id="slide-two" instead, on the theory
+    // that "hamburger the instant the next section appears" was more
+    // precise. It was: slide-two is its own ordinary-height element, so
+    // once the user scrolled PAST it too (into slide three, four, ...) it
+    // stopped intersecting again, and the observer fired isIntersecting:
+    // false — which flipped the full header back ON for the rest of the
+    // page. #home never has that problem: once scrolled past, it simply
+    // never re-enters the viewport again (short of scrolling back up to
+    // the very top), so "hamburger past the hero, for every later slide,
+    // no exceptions" holds automatically. rootMargin makes it switch
+    // before #home is 100% out of view — roughly matching when each
+    // page's own overlap animation starts covering the hero — without
+    // needing a hero-height-exact threshold.
+    const hero = document.getElementById("home");
+    if (!hero) return;
 
     const io = new IntersectionObserver(
-      ([entry]) => setScrolledPastHero(slideTwo ? entry.isIntersecting : !entry.isIntersecting),
-      { threshold: 0 }
+      ([entry]) => setScrolledPastHero(!entry.isIntersecting),
+      { threshold: 0, rootMargin: "0px 0px -50% 0px" }
     );
-    io.observe(target);
+    io.observe(hero);
     return () => io.disconnect();
   }, []);
 

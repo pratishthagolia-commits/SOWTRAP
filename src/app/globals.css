@@ -6532,6 +6532,11 @@ h2 {
      that ancestor overflow would clip it exactly the way its own
      max-height used to, just one level up */
   .products-filters { gap: 0; overflow: visible; max-height: none; }
+  /* was 40px (the shared tablet value at 900px, untouched) — with the
+     filter panel now a floating dropdown rather than always-visible
+     inline content, that much space between the tab bar and the
+     search bar below just reads as an empty gap on phone specifically */
+  .products-browser { gap: 12px; }
   /* the group panels anchor to THIS (top:100% below), not .products-filters
      — .products-filters also contains the "Filter" heading above the
      tabs, so anchoring there left a gap the height of that heading (plus

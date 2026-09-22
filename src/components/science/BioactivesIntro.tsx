@@ -180,7 +180,6 @@ export default function BioactivesIntro() {
     <section
       className="bioactives-intro"
       ref={sectionRef}
-      id="slide-two"
       style={{ marginTop: `${-overlapPx}px` }}
     >
       <h2 className="bioactives-title">SCIENCE</h2>

@@ -34,7 +34,7 @@ export default function PartnershipIntro() {
   }, []);
 
   return (
-    <section className="partnership-intro" ref={sectionRef} id="slide-two" style={{ marginTop: `${-overlapPx}px` }}>
+    <section className="partnership-intro" ref={sectionRef} style={{ marginTop: `${-overlapPx}px` }}>
       <h1 className="partnership-hero-tab">PARTNERSHIP</h1>
 
       <div className="partnership-what">
