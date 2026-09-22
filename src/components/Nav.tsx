@@ -18,25 +18,28 @@ export default function Nav() {
   const hideFullNav = scrolledPastHero || alwaysHamburger;
 
   useEffect(() => {
-    const hero = document.getElementById("home");
-    if (!hero) return;
+    // every hero page's very next section carries id="slide-two" (the one
+    // that wraps UP over the hero via a scroll-tracked negative margin —
+    // AboutUsV2, BioactivesIntro, TechIntro, ProductsHero, PartnershipIntro,
+    // ContactHero). Watching for THAT to start entering the viewport — not
+    // guessing at when #home (100vh, fixed) must have "mostly" scrolled
+    // away — is what actually matches "full header only on the hero,
+    // hamburger from the moment slide two appears": a plain threshold:0
+    // fires the instant any pixel of slide-two is on screen, which is
+    // exactly when the overlap animation starts covering the hero,
+    // whatever fraction of the hero's own scroll that happens to be on a
+    // given page. Pages without a slide-two marker (e.g. indication pages,
+    // which have no hero+overlap pair) fall back to the older #home-exited
+    // check so they still get a working hamburger switch at some point.
+    const slideTwo = document.getElementById("slide-two");
+    const target = slideTwo ?? document.getElementById("home");
+    if (!target) return;
 
-    // rootMargin (not just threshold: 0) — every hero is a full 100vh, and
-    // the section right after it wraps UP over it by as much as 55% of the
-    // viewport height as the user scrolls (see e.g. ContactHero's own
-    // MAX_OVERLAP_RATIO), so that section's own heading is already on
-    // screen well before #home has fully left the viewport. threshold: 0
-    // alone waits for 100% exit (a full 100vh of scrolling), leaving the
-    // still-transparent full nav bar overlapping that heading for a long
-    // stretch in between. Shrinking the observer's effective viewport by
-    // 55% from the bottom makes it report "exited" around the same point
-    // the overlap animation actually covers the hero, instead of lagging
-    // a full viewport height behind what's visually on screen.
     const io = new IntersectionObserver(
-      ([entry]) => setScrolledPastHero(!entry.isIntersecting),
-      { threshold: 0, rootMargin: "0px 0px -55% 0px" }
+      ([entry]) => setScrolledPastHero(slideTwo ? entry.isIntersecting : !entry.isIntersecting),
+      { threshold: 0 }
     );
-    io.observe(hero);
+    io.observe(target);
     return () => io.disconnect();
   }, []);
 

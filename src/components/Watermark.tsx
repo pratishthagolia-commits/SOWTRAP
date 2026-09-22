@@ -21,18 +21,18 @@ export default function Watermark() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const hero = document.getElementById("home");
-    if (!hero) return;
-
-    // rootMargin kept identical to Nav.tsx's own observer — see its
-    // comment for why (the hero's own trailing overlap animation, not
-    // just threshold: 0, needs accounting for) — must stay in sync or
+    // kept identical to Nav.tsx's own observer (same #slide-two-or-#home
+    // target, same logic) — see its comment for why. Must stay in sync or
     // the double-logo overlap this was written to fix comes back.
-    const io = new IntersectionObserver(([entry]) => setVisible(!entry.isIntersecting), {
-      threshold: 0,
-      rootMargin: "0px 0px -55% 0px",
-    });
-    io.observe(hero);
+    const slideTwo = document.getElementById("slide-two");
+    const target = slideTwo ?? document.getElementById("home");
+    if (!target) return;
+
+    const io = new IntersectionObserver(
+      ([entry]) => setVisible(slideTwo ? entry.isIntersecting : !entry.isIntersecting),
+      { threshold: 0 }
+    );
+    io.observe(target);
     return () => io.disconnect();
   }, []);
 

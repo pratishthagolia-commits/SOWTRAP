@@ -2823,10 +2823,14 @@ h2 {
    40vw shrink while the photo's own width stays fixed), the header's
    text run and the photo end up occupying overlapping horizontal
    ranges below roughly ~1700px wide — this only cleared the photo on
-   genuinely wide monitors. Anchoring the box's right edge just ahead of
-   the photo's own left edge (11vw, with a 20px gap) instead keeps it
-   clear of the photo at every desktop width, not just wide ones. */
-.tech-stages-header span:first-child { position: absolute; left: 0; width: calc(11vw - 20px); text-align: right; }
+   genuinely wide monitors. Squeezing the box flush to the left edge
+   fixed the overlap but read as stranded in the corner, far from
+   "What we create" on the right — sitting directly ABOVE the photo
+   instead (same left/width as .tech-stages-photo-col) both guarantees
+   no horizontal overlap at any width (there's a full 10% of vertical
+   navy space between this header's top:12% and the photo's top:22%)
+   and reads as paired with it, not off in a corner. */
+.tech-stages-header span:first-child { position: absolute; left: 11vw; width: 360px; text-align: left; }
 .tech-stages-header span:last-child { position: absolute; left: calc(40vw + 40px); }
 
 .tech-stages-white-band {
@@ -3884,10 +3888,9 @@ h2 {
    independent left-anchored spans could overlap since the left span's
    text just flowed rightward past the right span's start point */
 /* see .tech-stages-header span:first-child's comment (identical twin,
-   same fix) — anchored to clear .partnership-stages-photo-col's own
-   left:11vw/360px-fixed-width box at every desktop width instead of
-   only on wide monitors */
-.partnership-stages-header span:first-child { position: absolute; left: 0; width: calc(11vw - 20px); text-align: right; }
+   same fix) — sits directly above .partnership-stages-photo-col
+   instead of squeezed into the left corner */
+.partnership-stages-header span:first-child { position: absolute; left: 11vw; width: 360px; text-align: left; }
 .partnership-stages-header span:last-child { position: absolute; left: calc(40vw + 40px); }
 
 .partnership-stages-white-band {

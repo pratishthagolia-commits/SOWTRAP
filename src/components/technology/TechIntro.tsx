@@ -31,7 +31,7 @@ export default function TechIntro() {
   }, []);
 
   return (
-    <section className="tech-intro" ref={sectionRef} style={{ marginTop: `${-overlapPx}px` }}>
+    <section className="tech-intro" ref={sectionRef} id="slide-two" style={{ marginTop: `${-overlapPx}px` }}>
       <h1 className="tech-hero-tab">TECHNOLOGY</h1>
       <p className="tech-intro-body reveal-up">
         SowTrap&trade; integrates material science, formulation engineering, encapsulation
