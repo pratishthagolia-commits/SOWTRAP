@@ -6403,12 +6403,12 @@ h2 {
   .ind-slide-notch { height: auto; padding: 14px 18px 16px; }
   .ind-slide-panel { height: 92px; }
 
-  /* was 34px, same complaint as elsewhere — too small to read on a
-     phone. Sized to fit the 92px-tall phone panel above with room to
-     spare, consistent with the bigger base/tablet sizes now used too. */
+  /* was 50px, bumped 2.5x — taller than the panel's own 92px height
+     now, so it spills slightly past its top/bottom edges (panel width
+     is 220px, so it still fits horizontally) */
   .ind-slide .ind-slide-logo {
-    width: 50px;
-    height: 50px;
+    width: 125px;
+    height: 125px;
   }
   /* smaller title: long names like "Botanical Growers & Extract
      Producers" were wrapping to four lines, running the tab far taller
