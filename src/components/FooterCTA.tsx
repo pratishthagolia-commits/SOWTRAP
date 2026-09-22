@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import GradientBlobs from "./GradientBlobs";
 import useIsMobile from "@/lib/useIsMobile";
+import { OPEN_COOKIE_SETTINGS_EVENT } from "./CookieConsent";
 
 // overlap is a fraction of the viewport height — wraps the footer up over
 // whatever section precedes it (different on every page this is used on:
@@ -154,10 +155,17 @@ export default function FooterCTA() {
         <div className="footer-legal">
           <span>&copy; 2026 SowTrap&trade;. All rights reserved.</span>
           <div className="footer-legal-links">
-            <a href="#">Cookie Policy</a>
-            <a href="#">Cookie Settings</a>
-            <a href="#">Terms and Conditions</a>
-            <a href="#">Privacy Policy</a>
+            <Link href="/cookie-policy">Cookie Policy</Link>
+            <button
+              type="button"
+              className="footer-legal-link-btn"
+              onClick={() => window.dispatchEvent(new Event(OPEN_COOKIE_SETTINGS_EVENT))}
+            >
+              Cookie Settings
+            </button>
+            <Link href="/terms-and-conditions">Terms and Conditions</Link>
+            <Link href="/privacy-policy">Privacy Policy</Link>
+            <Link href="/whistleblowing">Whistleblowing</Link>
           </div>
         </div>
       </div>

@@ -1951,6 +1951,20 @@ h2 {
   transition: color 0.2s ease;
 }
 .footer-legal-links a:hover { color: #deff08; }
+/* "Cookie Settings" re-opens the CookieConsent modal via a button (not
+   a real link, since it has no href of its own) — reset to look
+   identical to its sibling <a>s */
+.footer-legal-link-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: inherit;
+  color: rgba(255, 255, 255, 0.65);
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+.footer-legal-link-btn:hover { color: #deff08; }
 
 .cta-wordmark {
   position: relative;
@@ -6847,34 +6861,70 @@ h2 {
 }
 .cookie-modal-body a:hover { color: var(--blue); }
 
+/* was a wrapped row of short single-word labels (Statistics, Targeting,
+   ...) — now each category carries a full description sentence per the
+   client's cookie-policy copy, so this is a vertical stack of rows
+   instead, checkbox aligned to the label's own top line rather than
+   vertically centered against the now much taller multi-line text. */
 .cookie-modal-categories {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 18px 26px;
+  flex-direction: column;
+  gap: 18px;
   margin: 4px 0 28px;
   padding-top: 24px;
   border-top: 1px solid rgba(13, 21, 38, 0.12);
 }
 .cookie-category {
   display: flex;
-  align-items: center;
-  gap: 9px;
+  align-items: flex-start;
+  gap: 12px;
   font-family: var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
   color: var(--ink);
   cursor: pointer;
 }
-.cookie-category.is-locked { cursor: default; color: var(--ink-faint); }
+.cookie-category.is-locked { cursor: default; }
+.cookie-category.is-locked span { color: var(--ink-faint); }
 .cookie-category input {
+  flex: none;
+  margin-top: 2px;
   width: 18px;
   height: 18px;
   accent-color: #003366;
   cursor: inherit;
 }
+.cookie-category span {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.cookie-category span em {
+  font-style: normal;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: normal;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+
+.cookie-modal-footnote {
+  font-family: var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  text-align: center;
+  margin: 0 0 26px;
+}
+.cookie-modal-footnote a {
+  color: #003366;
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+.cookie-modal-footnote a:hover { color: var(--blue); }
 
 .cookie-modal-actions {
   display: flex;
@@ -6890,4 +6940,82 @@ h2 {
   .cookie-modal-title { font-size: 1.3rem; }
   .cookie-modal-actions { flex-direction: column-reverse; width: 100%; }
   .cookie-modal-actions .btn { width: 100%; }
+}
+
+/* ---------- legal pages (Cookie Policy, Terms & Conditions, Privacy
+   Policy, Whistleblowing) — plain long-form text, no hero image, so
+   Nav forces hamburger-only on these routes (see Nav.tsx's
+   alwaysHamburger) rather than showing the transparent full bar
+   (white nav-links) over this page's own white background. ---------- */
+.legal-page {
+  position: relative;
+  z-index: 2;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 140px 24px 120px;
+  background: #ffffff;
+}
+.legal-page-eyebrow {
+  font-family: var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin: 0 0 14px;
+}
+.legal-page h1 {
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  line-height: 1.15;
+  color: var(--ink);
+  margin: 0 0 10px;
+}
+.legal-page-meta {
+  font-family: var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.85rem;
+  color: var(--ink-faint);
+  margin: 0 0 50px;
+  padding-bottom: 36px;
+  border-bottom: 1px solid rgba(13, 21, 38, 0.1);
+}
+.legal-page h2 {
+  font-family: var(--font-prata), serif;
+  font-weight: 400;
+  font-size: 1.4rem;
+  color: var(--ink);
+  margin: 46px 0 14px;
+}
+.legal-page h2:first-of-type { margin-top: 0; }
+.legal-page p {
+  font-family: var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.98rem;
+  line-height: 1.75;
+  color: var(--ink-soft);
+  margin: 0 0 16px;
+}
+.legal-page ul {
+  margin: 0 0 16px;
+  padding-left: 22px;
+}
+.legal-page li {
+  font-family: var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.98rem;
+  line-height: 1.75;
+  color: var(--ink-soft);
+  margin-bottom: 8px;
+}
+.legal-page strong { color: var(--ink); font-weight: 700; }
+.legal-page a {
+  color: #003366;
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+.legal-page a:hover { color: var(--blue); }
+
+@media (max-width: 640px) {
+  .legal-page { padding: 100px 20px 80px; }
+  .legal-page-meta { margin-bottom: 36px; padding-bottom: 24px; }
+  .legal-page h2 { margin: 34px 0 12px; font-size: 1.2rem; }
 }

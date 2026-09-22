@@ -14,7 +14,15 @@ export default function Nav() {
   // transparent bar flashed back in at the top of every single product a
   // visitor clicked through, however briefly they'd scrolled on the last
   // one — hamburger-only always on this route, never the full bar.
-  const alwaysHamburger = pathname.startsWith("/products/");
+  //
+  // the legal pages (Cookie Policy, Terms & Conditions, Privacy Policy,
+  // Whistleblowing) have no hero image at all — just plain white-page
+  // text — so per "the full header only ever shows on an actual hero
+  // slide" this forces hamburger-only there too, rather than the
+  // transparent full bar (white nav-links) rendering unreadable over
+  // this page's own white background.
+  const LEGAL_PAGES = ["/cookie-policy", "/terms-and-conditions", "/privacy-policy", "/whistleblowing"];
+  const alwaysHamburger = pathname.startsWith("/products/") || LEGAL_PAGES.includes(pathname);
   const hideFullNav = scrolledPastHero || alwaysHamburger;
 
   useEffect(() => {
