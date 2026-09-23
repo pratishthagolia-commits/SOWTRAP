@@ -10,6 +10,7 @@ export default function Hero() {
   const isMobile = useIsMobile();
   const heroRef = useRef<HTMLElement>(null);
   const wordRef = useRef<HTMLHeadingElement>(null);
+  const aboutRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     function fitWordmark() {
@@ -29,6 +30,28 @@ export default function Hero() {
       // 0.94x container width — fills edge to edge with just a small
       // margin, was 0.78 which left a lot of unused space on both sides
       el.style.fontSize = `${probeSize * ((containerWidth * 0.94) / textWidth)}px`;
+
+      // .hero-about used to close the gap to this wordmark with a flat
+      // -168px CSS margin, tuned by eye on one screen. That only holds
+      // up when the wordmark happens to render at the same size it did
+      // there — but its font-size is fit to viewport WIDTH (above)
+      // while .hero-fold's own box is sized off viewport HEIGHT (95vh),
+      // so on any other aspect ratio the two drift apart: too much
+      // leftover gap on some screens, the "p"'s descender overlapping
+      // "Elevating Nutrition..." on others (reported across several
+      // different laptops/monitors). Measuring the wordmark's actual
+      // rendered bottom edge here and pulling .hero-about up to sit a
+      // fixed, small gap below it makes the spacing identical on every
+      // screen by construction, instead of hoping a flat pixel guess
+      // still lines up.
+      const about = aboutRef.current;
+      if (about) {
+        about.style.marginTop = "0px";
+        const wordmarkBottom = el.getBoundingClientRect().bottom;
+        const aboutTop = about.getBoundingClientRect().top;
+        const gap = 32;
+        about.style.marginTop = `${wordmarkBottom + gap - aboutTop}px`;
+      }
     }
 
     document.fonts.ready.then(fitWordmark);
@@ -49,7 +72,7 @@ export default function Hero() {
         <h1 className="hero-wordmark" ref={wordRef}>SowTrap</h1>
       </div>
 
-      <div className="hero-about reveal" id="about">
+      <div className="hero-about reveal" id="about" ref={aboutRef}>
         <div className="container hero-banner-container center">
           <h2>Elevating Nutrition Through Intelligent Delivery Science</h2>
           <p className="lead">

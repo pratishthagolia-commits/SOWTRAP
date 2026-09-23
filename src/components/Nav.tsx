@@ -3,10 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import useScrolledPastHero from "@/lib/useScrolledPastHero";
 
 export default function Nav() {
   const pathname = usePathname();
-  const [scrolledPastHero, setScrolledPastHero] = useState(false);
+  const scrolledPastHero = useScrolledPastHero();
   const [menuOpen, setMenuOpen] = useState(false);
 
   // every product detail page ("/products/<slug>") mounts a fresh Nav on
@@ -24,70 +25,6 @@ export default function Nav() {
   const LEGAL_PAGES = ["/cookie-policy", "/terms-and-conditions", "/privacy-policy", "/whistleblowing"];
   const alwaysHamburger = pathname.startsWith("/products/") || LEGAL_PAGES.includes(pathname);
   const hideFullNav = scrolledPastHero || alwaysHamburger;
-
-  useEffect(() => {
-    // two one-directional observers, combined, instead of one observer
-    // whose signal has to serve both jobs at once:
-    //
-    // - slideTwoObserver ONLY ever sets scrolledPastHero to true, the
-    //   instant id="slide-two" (the section that wraps up over the hero
-    //   on every page) starts entering the viewport. That's the exact
-    //   moment the overlap animation begins covering the hero, so the
-    //   header disappears right as that section's own text arrives —
-    //   no lag, no window where both are visible at once (a fixed
-    //   rootMargin percentage on #home alone couldn't match this
-    //   precisely, since each page's own overlap ratio differs).
-    // - heroObserver ONLY ever sets scrolledPastHero back to false, and
-    //   only when #home itself is substantially back in view — i.e.
-    //   the user has scrolled back up to the actual top of the page.
-    //
-    // Neither observer can undo what the other one sets, so scrolling
-    // further down past slide two, into slide three, four, ... can't
-    // flip the header back on (that was the previous bug, from a
-    // single observer watching slide-two both ways) — only scrolling
-    // back up to the hero itself does.
-    const hero = document.getElementById("home");
-    if (!hero) return;
-
-    const heroObserver = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) setScrolledPastHero(false);
-      },
-      { threshold: 0.4 }
-    );
-    heroObserver.observe(hero);
-
-    const slideTwo = document.getElementById("slide-two");
-    let slideTwoObserver: IntersectionObserver | null = null;
-    let fallbackObserver: IntersectionObserver | null = null;
-
-    if (slideTwo) {
-      slideTwoObserver = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) setScrolledPastHero(true);
-        },
-        { threshold: 0 }
-      );
-      slideTwoObserver.observe(slideTwo);
-    } else {
-      // no slide-two marker on this page (e.g. indication pages, which
-      // have no hero+overlap pair) — fall back to watching #home's own
-      // exit so hamburger still switches on eventually
-      fallbackObserver = new IntersectionObserver(
-        ([entry]) => {
-          if (!entry.isIntersecting) setScrolledPastHero(true);
-        },
-        { threshold: 0, rootMargin: "0px 0px -50% 0px" }
-      );
-      fallbackObserver.observe(hero);
-    }
-
-    return () => {
-      heroObserver.disconnect();
-      slideTwoObserver?.disconnect();
-      fallbackObserver?.disconnect();
-    };
-  }, []);
 
   // back on the landing page — close the drawer so it isn't left open
   // if the user scrolls back up past the hero

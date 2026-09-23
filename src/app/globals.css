@@ -315,11 +315,16 @@ body {
      box (not .hero-fold, which controls SowTrap's own position) pulls
      the centered content closer to the wordmark above it */
   min-height: 55vh;
-  /* -170px is the confirmed point where the wordmark's own descenders
-     (the "p" in "SowTrap") start overlapping this heading — capped
-     just short of it here (was -140px, before that -80px, -20px,
-     10px, 40px) rather than the usual full step, since that would have
-     landed past -170px and reintroduced that exact overlap. */
+  /* static fallback only, for the brief window before Hero.tsx's own
+     effect measures the wordmark's actual rendered size and sets this
+     via inline style (which always wins over this rule). A flat px
+     value here used to be the ONLY source of truth — tuned by eye on
+     one screen, it silently drifted out of sync on any other aspect
+     ratio (the wordmark's font-size is fit to viewport width, this
+     box's height comes from viewport height — two different screens
+     can disagree on that trade even at the same window size), leaving
+     either a too-big gap or the "p" in SowTrap overlapping this
+     heading depending on the device. See Hero.tsx for the real fix. */
   margin-top: -168px;
   display: flex;
   /* was center — vertically centering within this box pushed the
@@ -1752,6 +1757,37 @@ h2 {
   height: 306px;
   object-fit: contain;
 }
+/* Nutraceutical & Dietary Supplements logo only — 0.20x bigger than
+   every other card's (306px * 1.20 = 367px) */
+.ind-slide:nth-child(1) .ind-slide-half:first-child .ind-slide-logo {
+  width: 367px;
+  height: 367px;
+}
+/* Functional Foods & Beverages logo only — 0.20x bigger than every
+   other card's (306px * 1.20 = 367px) */
+.ind-slide:nth-child(1) .ind-slide-half:last-child .ind-slide-logo {
+  width: 367px;
+  height: 367px;
+}
+/* Pharmaceutical & Healthcare logo only — 0.35x bigger than every other
+   card's (306px * 1.35 = 413px), same nth-child targeting already used
+   above for this card's own position tweak */
+.ind-slide:nth-child(2) .ind-slide-half:last-child .ind-slide-logo {
+  width: 413px;
+  height: 413px;
+}
+/* Beauty & Nutricosmetics logo only — 0.45x bigger than every other
+   card's (306px * 1.45 = 444px) */
+.ind-slide:nth-child(3) .ind-slide-half:first-child .ind-slide-logo {
+  width: 444px;
+  height: 444px;
+}
+/* Ingredient Manufacturers & Suppliers logo only — 0.20x bigger than
+   every other card's (306px * 1.20 = 367px) */
+.ind-slide:nth-child(3) .ind-slide-half:last-child .ind-slide-logo {
+  width: 367px;
+  height: 367px;
+}
 
 @media (max-width: 860px) {
   .ind-section { padding: 90px 0 90px; }
@@ -1978,6 +2014,13 @@ h2 {
   text-align: center;
   white-space: nowrap;
   font-size: 21vw; /* CSS fallback before the JS fit runs — matches .hero-wordmark's */
+  /* .hero-wordmark gets Inter for free from .hero's own font-family
+     override — .cta-footer has no such override, so without this the
+     footer's wordmark was silently falling back to body's Montserrat
+     instead. Same font-weight/letter-spacing on two different typefaces
+     still reads as a visible mismatch (different glyph shapes/spacing
+     at 800 weight), which is what this was fixing. */
+  font-family: var(--font-inter), "Helvetica Neue", Arial, sans-serif;
   font-weight: 800;
   /* letter-spacing/weight/size still match .hero-wordmark exactly — only
      the fill is back to the gradient (briefly swapped for a flat
