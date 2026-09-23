@@ -1757,36 +1757,49 @@ h2 {
   height: 306px;
   object-fit: contain;
 }
-/* Nutraceutical & Dietary Supplements logo only — 0.20x bigger than
-   every other card's (306px * 1.20 = 367px) */
-.ind-slide:nth-child(1) .ind-slide-half:first-child .ind-slide-logo {
-  width: 367px;
-  height: 367px;
-}
-/* Functional Foods & Beverages logo only — 0.20x bigger than every
-   other card's (306px * 1.20 = 367px) */
-.ind-slide:nth-child(1) .ind-slide-half:last-child .ind-slide-logo {
-  width: 367px;
-  height: 367px;
-}
-/* Pharmaceutical & Healthcare logo only — 0.35x bigger than every other
-   card's (306px * 1.35 = 413px), same nth-child targeting already used
-   above for this card's own position tweak */
-.ind-slide:nth-child(2) .ind-slide-half:last-child .ind-slide-logo {
-  width: 413px;
-  height: 413px;
-}
-/* Beauty & Nutricosmetics logo only — 0.45x bigger than every other
-   card's (306px * 1.45 = 444px) */
-.ind-slide:nth-child(3) .ind-slide-half:first-child .ind-slide-logo {
-  width: 444px;
-  height: 444px;
-}
-/* Ingredient Manufacturers & Suppliers logo only — 0.20x bigger than
-   every other card's (306px * 1.20 = 367px) */
-.ind-slide:nth-child(3) .ind-slide-half:last-child .ind-slide-logo {
-  width: 367px;
-  height: 367px;
+/* five per-card logo size bumps below (Nutraceutical & Dietary
+   Supplements, Functional Foods & Beverages, Pharmaceutical &
+   Healthcare, Beauty & Nutricosmetics, Ingredient Manufacturers &
+   Suppliers) — desktop/tablet only. These selectors carry more classes
+   than the phone breakpoint's own ".ind-slide .ind-slide-logo" rule
+   (125px, uniform), so left unguarded they'd win there too on
+   specificity alone regardless of source order, silently resizing
+   logos the phone layout was never meant to touch. Same trap as the
+   .ind-slide-half > img bug above — same fix, keep new size rules out
+   of any breakpoint they're not meant for instead of trusting source
+   order. */
+@media (min-width: 861px) {
+  /* Nutraceutical & Dietary Supplements logo only — 0.20x bigger than
+     every other card's (306px * 1.20 = 367px) */
+  .ind-slide:nth-child(1) .ind-slide-half:first-child .ind-slide-logo {
+    width: 367px;
+    height: 367px;
+  }
+  /* Functional Foods & Beverages logo only — 0.20x bigger than every
+     other card's (306px * 1.20 = 367px) */
+  .ind-slide:nth-child(1) .ind-slide-half:last-child .ind-slide-logo {
+    width: 367px;
+    height: 367px;
+  }
+  /* Pharmaceutical & Healthcare logo only — 0.35x bigger than every
+     other card's (306px * 1.35 = 413px), same nth-child targeting
+     already used above for this card's own position tweak */
+  .ind-slide:nth-child(2) .ind-slide-half:last-child .ind-slide-logo {
+    width: 413px;
+    height: 413px;
+  }
+  /* Beauty & Nutricosmetics logo only — 0.45x bigger than every other
+     card's (306px * 1.45 = 444px) */
+  .ind-slide:nth-child(3) .ind-slide-half:first-child .ind-slide-logo {
+    width: 444px;
+    height: 444px;
+  }
+  /* Ingredient Manufacturers & Suppliers logo only — 0.20x bigger than
+     every other card's (306px * 1.20 = 367px) */
+  .ind-slide:nth-child(3) .ind-slide-half:last-child .ind-slide-logo {
+    width: 367px;
+    height: 367px;
+  }
 }
 
 @media (max-width: 860px) {
