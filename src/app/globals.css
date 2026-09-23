@@ -6376,6 +6376,19 @@ h2 {
      wrapping, which is the actual page-wide horizontal overflow */
   .dt-heading { white-space: normal; padding: 0 12px; }
 
+  /* .tech-platform is still the base rule's row-flex align-items:center
+     when it switches to a column at 900px (that breakpoint only resets
+     flex-direction/text-align, not align-items) — text-align:left makes
+     the copy inside each box left-aligned, but the boxes themselves stay
+     horizontally centered as flex items. .tech-platform-body's paragraph
+     wraps to fill the available width either way so this is invisible
+     there, but .tech-platform-heading breaks after two short words
+     ("Our Technology" / "Platform"), so its own narrow box visibly sits
+     centered instead of flush left like every other section heading on
+     phone. Phone-only per instruction — tablet keeps its current
+     centered-box look. */
+  .tech-platform { align-items: flex-start; }
+
   /* the portfolio cards sized off --pf-card-w, which is declared on
      .pf-sticky — and .pf-sticky doesn't exist in the phone branch, so the
      variable resolved to nothing and every card collapsed to a sliver.
@@ -6387,25 +6400,41 @@ h2 {
        clipped by the scroller's own overflow */
     padding-top: 24px;
   }
-  /* every card stretches to the tallest one in the strip (the flex
-     container's own height), so the boxes stay one uniform rectangle
-     sized to the longest copy — rather than each card shrink-wrapping
-     its own text at a different height */
+  /* kept as a defensive backstop, though the fixed min-heights below
+     already make every card's natural height identical on their own */
   .portfolio-mobile-scroller { align-items: stretch; }
   .portfolio-mobile-scroller .pf-card {
     scroll-snap-align: start;
   }
+  /* the tab's own height used to be whatever its title's line count
+     needed (1 line for "Encapsulated Minerals", 2 for most others) —
+     since .pf-card-body sat right below it in normal flow, that
+     variation carried straight into the white box below, so cards with
+     a 1-line title had a visibly taller body than cards with a 2-line
+     title even though their total height matched. A shared min-height,
+     sized to fit any of this strip's titles at 2 lines, removes that
+     variable so every tab (and therefore every body under it) lines up
+     the same regardless of how long its own title runs. */
+  .portfolio-mobile-scroller .pf-card-tab {
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+  }
   .portfolio-mobile-scroller .pf-card-body {
-    flex: 1;
-    /* no margin-top override needed anymore — .pf-card-tab is normal
-       flow now (see its own comment), so this box already starts
-       right after however tall the tab actually rendered, whether the
-       title wrapped to one line or two */
-    height: auto;
+    /* fixed min-height, not the previous height:auto + flex:1 — sized to
+       comfortably fit this strip's longest single body copy ("Speciality
+       Functional Ingredient Systems", ~11-12 wrapped lines at this card
+       width/font-size) so every card's white box is the same rectangle,
+       "the max card needed", rather than each one shrink-wrapping its
+       own shorter paragraph. overflow stays visible as a safety net, not
+       a fixed height + overflow:hidden — if a future edit makes some
+       card's copy even longer than this estimate, it grows the box
+       instead of silently clipping text (same trap the desktop card
+       height comment above already warns about). */
+    min-height: 380px;
     overflow: visible;
     padding: 52px 20px 26px;
-    /* every card is stretched to the tallest one in the strip (by
-       design, see the comment above .pf-card-body's flex parent) so a
+    /* every card is now the same height by construction (see above) so a
        short one-line description otherwise left a block of empty white
        space below it. Centering the text vertically distributes that
        leftover space evenly instead of dumping it all beneath the
