@@ -12,7 +12,6 @@ const SORT_OPTIONS = [
   { value: "az", label: "Alphabetically, A–Z" },
   { value: "za", label: "Alphabetically, Z–A" },
   { value: "category", label: "By Category" },
-  { value: "most-benefits", label: "Most Health Benefits" },
 ];
 
 const ALL = "All";
@@ -61,7 +60,7 @@ export default function ProductsBrowser() {
   const [activeProductType, setActiveProductType] = useState<string | null>(null);
   const [activeBenefits, setActiveBenefits] = useState<string[]>([]);
   const [search, setSearch] = useState("");
-  const [sort, setSort] = useState<"default" | "az" | "za" | "category" | "most-benefits">("default");
+  const [sort, setSort] = useState<"default" | "az" | "za" | "category">("default");
   // phone-only: which of the two filter groups is expanded as a dropdown
   // tab (see .products-filter-tabs in globals.css) — irrelevant above
   // 640px, where both groups just render normally via CSS
@@ -116,8 +115,6 @@ export default function ProductsBrowser() {
             categories.indexOf(a.category) - categories.indexOf(b.category) ||
             a.name.localeCompare(b.name)
           );
-        case "most-benefits":
-          return b.healthBenefits.length - a.healthBenefits.length || a.name.localeCompare(b.name);
         default:
           return 0;
       }
@@ -267,7 +264,7 @@ export default function ProductsBrowser() {
             listClassName="products-sort-list"
             options={SORT_OPTIONS}
             value={sort}
-            onChange={(v) => setSort(v as "default" | "az" | "za" | "category" | "most-benefits")}
+            onChange={(v) => setSort(v as "default" | "az" | "za" | "category")}
             listWidth={220}
             ariaLabel="Sort ingredients"
           />

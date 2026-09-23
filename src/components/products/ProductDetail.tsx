@@ -1,7 +1,6 @@
 import Link from "next/link";
 import IndicationStrip from "./IndicationStrip";
 import DocumentRequestButton from "./DocumentRequestButton";
-import ProductsFAQ from "./ProductsFAQ";
 import type { Product } from "@/lib/products";
 
 // per Native Extracts' product page: image area, title + botanical-style
@@ -91,8 +90,6 @@ export default function ProductDetail({ product, related }: { product: Product; 
           </ul>
         </div>
       </div>
-
-      <ProductsFAQ />
 
       {related.length > 0 && (
         <div className="product-detail-related">

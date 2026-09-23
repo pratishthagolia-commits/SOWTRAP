@@ -6325,6 +6325,20 @@ h2 {
      lazy, so hiding the wrapper also means it's never fetched) */
   .partnership-who-image-wrap { display: none; }
 
+  /* "Who We Partner With" / "What We Help You Achieve" / "How We Create
+     Value" run one after another, all white, with nothing to tell them
+     apart on phone (no photo breaking them up there, unlike desktop) —
+     the middle one goes navy for contrast. .partnership-who-heading /
+     -subheading / -point h4 / -point p are shared by all three
+     sections, so these overrides are scoped under .partnership-achieve
+     specifically — an unscoped edit would also whiten the other two
+     sections' text, which stay white-background. */
+  .partnership-achieve { background: #003366; }
+  .partnership-achieve .partnership-who-heading,
+  .partnership-achieve .partnership-who-point h4 { color: #ffffff; }
+  .partnership-achieve .partnership-who-subheading,
+  .partnership-achieve .partnership-who-point p { color: rgba(255, 255, 255, 0.75); }
+
   /* "BRIDGING / NUTRITION GAP" ran off the right edge: the base clamp
      bottoms out at 2.8rem and -big doubles it to 5.6rem, which is wider
      than a phone screen before the 60px side padding is even counted */
