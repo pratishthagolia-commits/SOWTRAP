@@ -6445,9 +6445,24 @@ h2 {
      longer entries like "Application-Ready Ingredient Systems" overflow
      past the box's bottom edge uncontained at phone width. The fixed
      height was there only to keep the connector line centered, which is
-     already hidden on phone (above), so min-height is safe here and
-     lets the box grow to fit its own text instead of spilling out of it. */
-  .dt-box { height: auto; min-height: 260px; }
+     already hidden on phone (above).
+     A min-height:260px floor was tried here first, but this is a
+     vertical stack of 10 cards (not a row where siblings need to match
+     each other), so there was never a reason for every card to share
+     one height — it just left a block of empty white space at the
+     bottom of every shorter entry ("Engineered Release Profiles",
+     "Optimized Encapsulation Efficiency", etc.), which repeats card
+     after card all the way down the list and reads as one long
+     unresolved gap that only "ends" once Industries We Serve begins.
+     height: auto alone already prevents the long entries from
+     overflowing — no floor needed. */
+  .dt-box { height: auto; }
+  /* .dt-section's 100px bottom padding (860px block above) is a
+     navy-to-navy boundary before Industries We Serve (same background
+     colour, so less visible on its own) but still stacks needlessly on
+     top of Industries' own 120px top padding. Standard phone gap, same
+     as the other section boundaries trimmed elsewhere in this file. */
+  .dt-section { padding-bottom: 24px; }
   /* "WHAT MAKES SowTrap™ DIFFERENT" at white-space:nowrap can't shrink
      to fit a phone screen — forces the whole page wider instead of
      wrapping, which is the actual page-wide horizontal overflow */
