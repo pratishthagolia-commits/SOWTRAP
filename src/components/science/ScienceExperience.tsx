@@ -45,6 +45,11 @@ export default function ScienceExperience() {
   const [progress, setProgress] = useState(0);
   const naturalTopRef = useRef<number | null>(null);
   const [overlapPx, setOverlapPx] = useState(0);
+  // last value actually committed to state — lets the loop below skip
+  // the setState call (and the re-render it triggers) on frames where
+  // nothing changed, rather than on every single frame regardless
+  const lastProgressRef = useRef(0);
+  const lastOverlapRef = useRef(0);
 
   useEffect(() => {
     let frameId = 0;
@@ -54,7 +59,7 @@ export default function ScienceExperience() {
         const rect = el.getBoundingClientRect();
         const total = rect.height - window.innerHeight;
         const p = total > 0 ? -rect.top / total : 0;
-        setProgress(Math.min(1, Math.max(0, p)));
+        const nextProgress = Math.min(1, Math.max(0, p));
 
         if (naturalTopRef.current === null) {
           naturalTopRef.current = rect.top + window.scrollY;
@@ -64,7 +69,30 @@ export default function ScienceExperience() {
           1,
           Math.max(0, (window.innerHeight - naturalViewportTop) / (window.innerHeight * 0.4))
         );
-        setOverlapPx(window.innerHeight * MAX_OVERLAP_RATIO * wrapProgress);
+        const nextOverlapPx = window.innerHeight * MAX_OVERLAP_RATIO * wrapProgress;
+
+        // this section's child scene is a full React-Three-Fiber canvas
+        // (a real 3D body model, sparkles, bloom post-processing) — every
+        // setState here re-renders that whole tree, which React has to
+        // reconcile even though R3F's actual WebGL draw loop is decoupled
+        // from React's own render cycle. Calling setState unconditionally
+        // every frame (this component's original behaviour, same as ~24
+        // other scroll-tracked sections on the site) meant reconciling
+        // that heavy tree 60 times a second even while sitting still not
+        // scrolling — harmless on a plain CSS section, but this is the one
+        // page with an expensive component paying that cost, which is
+        // exactly the "science page lags" report. Skipping the update
+        // when nothing meaningfully moved removes that constant
+        // background re-render entirely without changing how the scroll
+        // animation itself looks.
+        if (Math.abs(nextProgress - lastProgressRef.current) > 0.0008) {
+          lastProgressRef.current = nextProgress;
+          setProgress(nextProgress);
+        }
+        if (Math.abs(nextOverlapPx - lastOverlapRef.current) > 0.5) {
+          lastOverlapRef.current = nextOverlapPx;
+          setOverlapPx(nextOverlapPx);
+        }
       }
       frameId = requestAnimationFrame(tick);
     }

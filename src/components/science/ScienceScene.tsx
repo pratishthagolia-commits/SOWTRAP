@@ -125,6 +125,8 @@ function TravelingParticle({ progress, solidRef }: { progress: number; solidRef:
   const rayOrigin = useMemo(() => new THREE.Vector3(), []);
   const rayDir = useMemo(() => new THREE.Vector3(0, 0, -1), []);
   const fallback = useMemo(() => new THREE.Vector3(), []);
+  const lastTarget = useRef(new THREE.Vector3(0, PARTICLE_Y[0], 0.3));
+  const frameParity = useRef(false);
 
   useFrame(() => {
     const scaled = progress * (PARTICLE_Y.length - 1);
@@ -132,28 +134,35 @@ function TravelingParticle({ progress, solidRef }: { progress: number; solidRef:
     const t = scaled - idx;
     const targetY = THREE.MathUtils.lerp(PARTICLE_Y[idx], PARTICLE_Y[idx + 1], t);
 
-    let targetPos: THREE.Vector3 | null = null;
-    const solid = solidRef.current;
-    if (solid) {
-      rayOrigin.set(0, targetY, 4);
-      raycaster.set(rayOrigin, rayDir);
-      const hits = raycaster.intersectObject(solid, true);
-      if (hits.length > 0) {
-        // nudge slightly back toward the ray origin (outward) so the
-        // ball sits just outside the surface instead of clipped into it
-        targetPos = hits[0].point.addScaledVector(rayDir, -0.02);
+    // raycasting against the full body mesh every single frame is real
+    // CPU cost (this runs continuously whenever the pinned section is in
+    // view, not just while actively scrolling, since the body itself is
+    // always slowly rotating). The existing lerp below already glides
+    // the ball toward its target rather than snapping to it, so
+    // recomputing the raycast every other frame instead of every frame
+    // is invisible in motion but halves this cost.
+    frameParity.current = !frameParity.current;
+    if (frameParity.current) {
+      const solid = solidRef.current;
+      if (solid) {
+        rayOrigin.set(0, targetY, 4);
+        raycaster.set(rayOrigin, rayDir);
+        const hits = raycaster.intersectObject(solid, true);
+        if (hits.length > 0) {
+          // nudge slightly back toward the ray origin (outward) so the
+          // ball sits just outside the surface instead of clipped into it
+          lastTarget.current.copy(hits[0].point).addScaledVector(rayDir, -0.02);
+        }
+      } else {
+        // the model hasn't finished loading yet — hold at a sane
+        // fallback position rather than doing nothing
+        lastTarget.current.copy(fallback.set(0, targetY, 0.3));
       }
-    }
-    if (!targetPos) {
-      // the model hasn't finished loading yet, or this particular ray
-      // happened not to hit anything (e.g. a gap in the mesh) — hold at
-      // a sane fallback position rather than doing nothing
-      targetPos = fallback.set(0, targetY, 0.3);
     }
 
     // ease toward the target instead of snapping straight to it each
     // frame, so the ball glides along the surface rather than jumping
-    currentPos.current.lerp(targetPos, 0.15);
+    currentPos.current.lerp(lastTarget.current, 0.15);
     meshRef.current?.position.copy(currentPos.current);
     lightRef.current?.position.copy(currentPos.current);
   });
