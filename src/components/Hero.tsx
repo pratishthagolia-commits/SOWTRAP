@@ -63,27 +63,37 @@ export default function Hero() {
       // in "SowTrap" above. Measured with canvas the same way the
       // wordmark's own size is, instead of a guessed offset, since the
       // "a"'s position shifts with the wordmark's fitted size on every
-      // screen.
+      // screen. Desktop/tablet only — this was asked for specifically on
+      // desktop ("checked on 4 different desktops"), and on phone the
+      // heading wraps to two lines (white-space: normal there), so its
+      // bounding box's "right" edge is whichever line happens to be
+      // wider, not the end of "Science" — targeting that threw the whole
+      // block visibly off-center instead of aligning anything.
       const heading = headingRef.current;
       const banner = bannerRef.current;
+      const isPhoneWidth = window.matchMedia("(max-width: 640px)").matches;
       if (heading && banner) {
-        ctx.font = `800 ${fittedSize}px ${family}`;
-        const aIndex = text.toLowerCase().indexOf("a");
-        if (aIndex !== -1) {
-          const upToAndIncludingA = text.slice(0, aIndex + 1);
-          const aRightWidth = ctx.measureText(upToAndIncludingA).width;
-          const wordmarkBox = el.getBoundingClientRect();
-          // the wordmark's rendered glyph run is exactly containerWidth
-          // * 0.94 wide (that's what fittedSize was solved for above),
-          // centered within the full-width box via text-align: center
-          const renderedTextWidth = containerWidth * 0.94;
-          const textLeft = wordmarkBox.left + (wordmarkBox.width - renderedTextWidth) / 2;
-          const aRightAbs = textLeft + aRightWidth;
+        if (isPhoneWidth) {
+          banner.style.transform = "";
+        } else {
+          ctx.font = `800 ${fittedSize}px ${family}`;
+          const aIndex = text.toLowerCase().indexOf("a");
+          if (aIndex !== -1) {
+            const upToAndIncludingA = text.slice(0, aIndex + 1);
+            const aRightWidth = ctx.measureText(upToAndIncludingA).width;
+            const wordmarkBox = el.getBoundingClientRect();
+            // the wordmark's rendered glyph run is exactly containerWidth
+            // * 0.94 wide (that's what fittedSize was solved for above),
+            // centered within the full-width box via text-align: center
+            const renderedTextWidth = containerWidth * 0.94;
+            const textLeft = wordmarkBox.left + (wordmarkBox.width - renderedTextWidth) / 2;
+            const aRightAbs = textLeft + aRightWidth;
 
-          banner.style.transform = "translateX(0px)";
-          const headingRight = heading.getBoundingClientRect().right;
-          const shift = aRightAbs - headingRight;
-          banner.style.transform = `translateX(${shift}px)`;
+            banner.style.transform = "translateX(0px)";
+            const headingRight = heading.getBoundingClientRect().right;
+            const shift = aRightAbs - headingRight;
+            banner.style.transform = `translateX(${shift}px)`;
+          }
         }
       }
     }
