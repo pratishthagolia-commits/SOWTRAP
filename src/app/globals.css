@@ -3375,7 +3375,9 @@ h2 {
   background: #ffffff;
   max-width: 1300px;
   margin: 0 auto;
-  padding: 0 0 120px;
+  /* was 120px — trimmed a bit, the gap before "Materials that shape
+     delivery" below read as slightly too much */
+  padding: 0 0 80px;
 }
 .tech-encap-banner {
   margin-left: calc(50% - 50vw);
@@ -3476,6 +3478,11 @@ h2 {
   width: 50%;
   height: 1px;
   background: rgba(13, 21, 38, 0.15);
+}
+/* the last item's own divider was left floating on its own in the
+   blank space below it, with nothing below it to separate from */
+.tech-encap-item:last-child::after {
+  display: none;
 }
 .tech-encap-item-head {
   display: flex;
