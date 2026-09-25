@@ -519,16 +519,19 @@ body {
 .hero-banner-container { max-width: 1400px; }
 .hero-about h2 {
   color: #ffffff;
-  /* 0.25x smaller than before (clamp(1.9rem,3.4vw,2.7rem) * 0.75) */
-  font-size: clamp(1.425rem, 2.55vw, 2.025rem);
+  /* was cut to 0.75x of the original clamp(1.9rem,3.4vw,2.7rem) a few
+     turns back, then reported as too small to read comfortably —
+     nudged back up to 0.9x of that original (still a bit smaller than
+     the very first size, but readable) */
+  font-size: clamp(1.71rem, 3.06vw, 2.43rem);
   line-height: 1.25;
   white-space: nowrap;
   margin: 0 0 22px;
 }
 .hero-about .lead {
   color: rgba(255, 255, 255, 0.92);
-  /* 0.25x smaller than before (clamp(1.05rem,1.6vw,1.35rem) * 0.75) */
-  font-size: clamp(0.7875rem, 1.2vw, 1.0125rem);
+  /* same 0.9x-of-original nudge as the heading above */
+  font-size: clamp(0.945rem, 1.44vw, 1.215rem);
   line-height: 1.6;
   max-width: 1000px;
   /* was 28vh — staggered the lead (and the CTA row right after it)
@@ -546,12 +549,12 @@ body {
   justify-content: center;
   margin-top: 10px;
 }
-/* the "Explore Technology"/"View Products" buttons are part of the same
-   quoted block asked to shrink 0.25x — scoped to just this row (not the
-   shared .btn class, which is used all over the site) */
+/* the "Explore Technology"/"View Products" buttons — scoped to just
+   this row (not the shared .btn class, which is used all over the
+   site). Same 0.9x-of-original nudge as the heading/lead above. */
 .hero-banner-cta .btn {
-  font-size: 0.7125rem;
-  padding: 10.5px 21px;
+  font-size: 0.855rem;
+  padding: 12.6px 25.2px;
 }
 
 .btn {
@@ -2949,7 +2952,11 @@ h2 {
    hero and getting cut off mid-scroll */
 .tech-hero-tab {
   position: absolute;
-  right: 0;
+  /* left, not right, matching .bioactives-title (Science's own tab) —
+     a right-anchored tab here sat directly under the fixed chat
+     button's bottom-right corner, with the button's circle covering
+     the last few letters of "TECHNOLOGY" */
+  left: 0;
   top: -84px;
   margin: 0;
   background: #ffffff;
@@ -3252,7 +3259,7 @@ h2 {
 }
 
 @media (max-width: 900px) {
-  .tech-hero-tab { right: 0; padding: 14px 28px; }
+  .tech-hero-tab { left: 0; padding: 14px 28px; }
   .tech-intro { padding: 70px 24px 100px; }
   .tech-philosophy { padding: 30px 24px 80px; }
   .tech-philosophy-body { flex-direction: column; gap: 24px; }
@@ -3973,7 +3980,8 @@ h2 {
    rides up together with the panel's wrap animation */
 .partnership-hero-tab {
   position: absolute;
-  right: 0;
+  /* left, not right — see .tech-hero-tab's comment */
+  left: 0;
   top: -84px;
   margin: 0;
   background: #ffffff;
@@ -4025,7 +4033,7 @@ h2 {
 
 @media (max-width: 900px) {
   .partnership-intro { padding: 200px 24px 90px; }
-  .partnership-hero-tab { right: 0; padding: 14px 28px; }
+  .partnership-hero-tab { left: 0; padding: 14px 28px; }
   .partnership-what { flex-direction: column; gap: 24px; }
   .partnership-what-heading { flex: none; text-align: left; margin: 0; }
 }
@@ -4417,7 +4425,8 @@ h2 {
    rides up together with the panel's wrap animation */
 .contact-hero-tab {
   position: absolute;
-  right: 0;
+  /* left, not right — see .tech-hero-tab's comment */
+  left: 0;
   top: -84px;
   margin: 0;
   background: #003366;
@@ -4796,7 +4805,7 @@ h2 {
 
 @media (max-width: 900px) {
   .contact-hero { padding: 200px 24px 70px; }
-  .contact-hero-tab { right: 0; padding: 14px 28px; }
+  .contact-hero-tab { left: 0; padding: 14px 28px; }
   .contact-form-section { padding: 70px 24px; }
   .contact-form { grid-template-columns: 1fr; }
 }
@@ -5500,7 +5509,8 @@ h2 {
    with the panel's wrap animation */
 .products-hero-tab {
   position: absolute;
-  right: 0;
+  /* left, not right — see .tech-hero-tab's comment */
+  left: 0;
   top: -84px;
   margin: 0;
   background: #003366;
@@ -5954,7 +5964,7 @@ h2 {
 
 @media (max-width: 900px) {
   .products-hero { padding: 200px 24px 70px; }
-  .products-hero-tab { right: 0; padding: 14px 28px; }
+  .products-hero-tab { left: 0; padding: 14px 28px; }
   .products-browser { flex-direction: column; padding: 50px 24px 90px; gap: 40px; }
   .products-filters { position: static; width: 100%; }
   .products-filter-list { display: flex; flex-wrap: wrap; gap: 0 20px; }
