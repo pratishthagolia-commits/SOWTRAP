@@ -6564,6 +6564,48 @@ h2 {
     width: 125px;
     height: 125px;
   }
+  /* six per-card logo size bumps below, phone only — carry more classes
+     than the uniform rule just above so they win on specificity
+     regardless of source order (same reasoning as the desktop bumps'
+     own comment). Sports Nutrition (slide 2, left) is deliberately left
+     untouched here — its logo and white notch/panel box stay on the
+     shared uniform rules above, the same "L"-shaped folder-tab silhouette
+     every other card uses, rather than getting its own override. */
+  /* Nutraceutical & Dietary Supplements logo only — 1x bigger (125px * 2 = 250px) */
+  .ind-slide:nth-child(1) .ind-slide-half:first-child .ind-slide-logo {
+    width: 250px;
+    height: 250px;
+  }
+  /* Functional Foods & Beverages logo only — 1x bigger (125px * 2 = 250px) */
+  .ind-slide:nth-child(1) .ind-slide-half:last-child .ind-slide-logo {
+    width: 250px;
+    height: 250px;
+  }
+  /* Pharmaceutical & Healthcare logo only — 1x bigger (125px * 2 = 250px) */
+  .ind-slide:nth-child(2) .ind-slide-half:last-child .ind-slide-logo {
+    width: 250px;
+    height: 250px;
+  }
+  /* Beauty & Nutricosmetics logo only — 0.5x bigger (125px * 1.5 = 188px) */
+  .ind-slide:nth-child(3) .ind-slide-half:first-child .ind-slide-logo {
+    width: 188px;
+    height: 188px;
+  }
+  /* Ingredient Manufacturers & Suppliers logo only — 0.5x bigger (125px * 1.5 = 188px) */
+  .ind-slide:nth-child(3) .ind-slide-half:last-child .ind-slide-logo {
+    width: 188px;
+    height: 188px;
+  }
+  /* Botanical Growers & Extract Producers logo only — 0.5x bigger (125px * 1.5 = 188px) */
+  .ind-slide:nth-child(4) .ind-slide-half:first-child .ind-slide-logo {
+    width: 188px;
+    height: 188px;
+  }
+  /* Contract Manufacturers & Formulators logo only — 0.5x bigger (125px * 1.5 = 188px) */
+  .ind-slide:nth-child(4) .ind-slide-half:last-child .ind-slide-logo {
+    width: 188px;
+    height: 188px;
+  }
   /* smaller title: long names like "Botanical Growers & Extract
      Producers" were wrapping to four lines, running the tab far taller
      than the folder-tab silhouette wants */
