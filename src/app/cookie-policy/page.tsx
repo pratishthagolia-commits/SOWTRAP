@@ -157,11 +157,11 @@ export default function CookiePolicyPage() {
         </p>
         <p>For questions regarding this Cookie Policy or our use of cookies, please contact:</p>
         <p>
-          Email: —
+          Email: <a href="mailto:sowtrap@scienceonwheels.in">sowtrap@scienceonwheels.in</a>
           <br />
           Website: <a href="https://sowtrap.in/">sowtrap.in</a>
           <br />
-          Registered Office: —
+          Registered Office: 10th floor, 83 Avenue, Sector 83, Gurugram, Haryana, Pincode &ndash; 122004
         </p>
       </section>
 

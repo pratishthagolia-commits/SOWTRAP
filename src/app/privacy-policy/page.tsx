@@ -144,11 +144,11 @@ export default function PrivacyPolicyPage() {
           personal information, please contact us.
         </p>
         <p>
-          Email: —
+          Email: <a href="mailto:sowtrap@scienceonwheels.in">sowtrap@scienceonwheels.in</a>
           <br />
           Website: <a href="https://sowtrap.in/">sowtrap.in</a>
           <br />
-          Address: —
+          Address: 10th floor, 83 Avenue, Sector 83, Gurugram, Haryana, Pincode &ndash; 122004
         </p>
       </section>
 

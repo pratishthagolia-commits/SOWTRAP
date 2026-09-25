@@ -31,10 +31,10 @@ function InstagramIcon() {
     </svg>
   );
 }
-function FacebookIcon() {
+function YouTubeIcon() {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5 3.66 9.15 8.44 9.94v-7.03H7.9v-2.9h2.54V9.85c0-2.51 1.49-3.9 3.77-3.9 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.44 2.9h-2.34V22c4.78-.79 8.44-4.94 8.44-9.94z" />
+      <path d="M23.5 6.5s-.23-1.64-.94-2.36c-.9-.94-1.9-.95-2.36-1C16.9 3 12 3 12 3h-.01s-4.89 0-8.19.14c-.46.05-1.46.06-2.36 1C.73 4.86.5 6.5.5 6.5S.27 8.42.27 10.34v1.8c0 1.92.23 3.84.23 3.84s.23 1.64.94 2.36c.9.94 2.08.91 2.6 1.01C5.9 19.5 12 19.55 12 19.55s4.9-.01 8.2-.15c.46-.05 1.46-.06 2.36-1 .71-.72.94-2.36.94-2.36s.23-1.92.23-3.84v-1.8c0-1.92-.23-3.84-.23-3.84zM9.55 14.5v-6l6.27 3.02-6.27 2.98z" />
     </svg>
   );
 }
@@ -145,9 +145,16 @@ export default function FooterCTA() {
               </li>
             </ul>
             <div className="footer-social">
-              <a href="#" aria-label="LinkedIn"><LinkedInIcon /></a>
+              <a
+                href="https://www.linkedin.com/in/sow-trap-ab6a65439/"
+                aria-label="LinkedIn"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <LinkedInIcon />
+              </a>
               <a href="#" aria-label="Instagram"><InstagramIcon /></a>
-              <a href="#" aria-label="Facebook"><FacebookIcon /></a>
+              <a href="#" aria-label="YouTube"><YouTubeIcon /></a>
             </div>
           </div>
         </div>

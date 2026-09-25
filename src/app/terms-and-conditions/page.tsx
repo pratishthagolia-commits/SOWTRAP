@@ -230,7 +230,7 @@ export default function TermsAndConditionsPage() {
         <h2>15. Governing Law</h2>
         <p>
           These Terms shall be governed by the laws of India. Subject to applicable law, disputes shall
-          be subject to the jurisdiction of the competent courts at Gurugram, Haryana.
+          be subject to the jurisdiction of the Supreme Court of India.
         </p>
 
         <h2>16. Contact Information</h2>
@@ -240,11 +240,11 @@ export default function TermsAndConditionsPage() {
         </p>
         <p>For questions regarding these Terms &amp; Conditions, please contact:</p>
         <p>
-          Email: —
+          Email: <a href="mailto:sowtrap@scienceonwheels.in">sowtrap@scienceonwheels.in</a>
           <br />
           Website: <a href="https://sowtrap.in/">sowtrap.in</a>
           <br />
-          Registered Office: —
+          Registered Office: 10th floor, 83 Avenue, Sector 83, Gurugram, Haryana, Pincode &ndash; 122004
         </p>
       </section>
 

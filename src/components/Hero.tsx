@@ -11,6 +11,8 @@ export default function Hero() {
   const heroRef = useRef<HTMLElement>(null);
   const wordRef = useRef<HTMLHeadingElement>(null);
   const aboutRef = useRef<HTMLDivElement>(null);
+  const bannerRef = useRef<HTMLDivElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
     function fitWordmark() {
@@ -22,14 +24,16 @@ export default function Hero() {
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
       const family = getComputedStyle(el).fontFamily;
+      const text = el.textContent || "SowTrap";
       // weight must match .hero-wordmark's actual font-weight (800) —
       // measuring at a different weight than what's rendered throws the
       // fit off, since bolder/lighter glyphs measure different widths
       ctx.font = `800 ${probeSize}px ${family}`;
-      const textWidth = ctx.measureText(el.textContent || "SowTrap").width;
+      const textWidth = ctx.measureText(text).width;
       // 0.94x container width — fills edge to edge with just a small
       // margin, was 0.78 which left a lot of unused space on both sides
-      el.style.fontSize = `${probeSize * ((containerWidth * 0.94) / textWidth)}px`;
+      const fittedSize = probeSize * ((containerWidth * 0.94) / textWidth);
+      el.style.fontSize = `${fittedSize}px`;
 
       // .hero-about used to close the gap to this wordmark with a flat
       // -168px CSS margin, tuned by eye on one screen. That only holds
@@ -52,6 +56,36 @@ export default function Hero() {
         const gap = 32;
         about.style.marginTop = `${wordmarkBottom + gap - aboutTop}px`;
       }
+
+      // shift the "Elevating Nutrition..." block (heading + lead + CTA
+      // row move together, as one unit) so the heading's own right edge
+      // — the "e" that ends "...Delivery Science" — lands under the "a"
+      // in "SowTrap" above. Measured with canvas the same way the
+      // wordmark's own size is, instead of a guessed offset, since the
+      // "a"'s position shifts with the wordmark's fitted size on every
+      // screen.
+      const heading = headingRef.current;
+      const banner = bannerRef.current;
+      if (heading && banner) {
+        ctx.font = `800 ${fittedSize}px ${family}`;
+        const aIndex = text.toLowerCase().indexOf("a");
+        if (aIndex !== -1) {
+          const upToAndIncludingA = text.slice(0, aIndex + 1);
+          const aRightWidth = ctx.measureText(upToAndIncludingA).width;
+          const wordmarkBox = el.getBoundingClientRect();
+          // the wordmark's rendered glyph run is exactly containerWidth
+          // * 0.94 wide (that's what fittedSize was solved for above),
+          // centered within the full-width box via text-align: center
+          const renderedTextWidth = containerWidth * 0.94;
+          const textLeft = wordmarkBox.left + (wordmarkBox.width - renderedTextWidth) / 2;
+          const aRightAbs = textLeft + aRightWidth;
+
+          banner.style.transform = "translateX(0px)";
+          const headingRight = heading.getBoundingClientRect().right;
+          const shift = aRightAbs - headingRight;
+          banner.style.transform = `translateX(${shift}px)`;
+        }
+      }
     }
 
     document.fonts.ready.then(fitWordmark);
@@ -73,8 +107,8 @@ export default function Hero() {
       </div>
 
       <div className="hero-about reveal" id="about" ref={aboutRef}>
-        <div className="container hero-banner-container center">
-          <h2>Elevating Nutrition Through Intelligent Delivery Science</h2>
+        <div className="container hero-banner-container center" ref={bannerRef}>
+          <h2 ref={headingRef}>Elevating Nutrition Through Intelligent Delivery Science</h2>
           <p className="lead">
             Scientifically engineered micronutrients for better absorption and performance.
           </p>

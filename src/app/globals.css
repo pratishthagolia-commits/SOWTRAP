@@ -343,14 +343,16 @@ body {
 .hero-banner-container { max-width: 1400px; }
 .hero-about h2 {
   color: #ffffff;
-  font-size: clamp(1.9rem, 3.4vw, 2.7rem);
+  /* 0.25x smaller than before (clamp(1.9rem,3.4vw,2.7rem) * 0.75) */
+  font-size: clamp(1.425rem, 2.55vw, 2.025rem);
   line-height: 1.25;
   white-space: nowrap;
   margin: 0 0 22px;
 }
 .hero-about .lead {
   color: rgba(255, 255, 255, 0.92);
-  font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+  /* 0.25x smaller than before (clamp(1.05rem,1.6vw,1.35rem) * 0.75) */
+  font-size: clamp(0.7875rem, 1.2vw, 1.0125rem);
   line-height: 1.6;
   max-width: 1000px;
   /* was 28vh — staggered the lead (and the CTA row right after it)
@@ -367,6 +369,13 @@ body {
   gap: 16px;
   justify-content: center;
   margin-top: 10px;
+}
+/* the "Explore Technology"/"View Products" buttons are part of the same
+   quoted block asked to shrink 0.25x — scoped to just this row (not the
+   shared .btn class, which is used all over the site) */
+.hero-banner-cta .btn {
+  font-size: 0.7125rem;
+  padding: 10.5px 21px;
 }
 
 .btn {
@@ -6413,9 +6422,21 @@ h2 {
      rule (and .fail-v2-chamber's own padding-bottom below) really is
      shipped and active — the combined 40px + 48px gap it left was just
      still visible as a block of blank navy, not literally broken.
-     Cut both down much further here. */
-  .pillars-heading-slide { min-height: 0; padding: 16px 0 16px; }
-  .fail-v2-chamber { padding-bottom: 12px; }
+     Cut both down much further here.
+     That cut landed too far the other way — 12px + 16px (28px total)
+     read as no gap at all between the last accordion card and this
+     heading. Nudged both back up to a standard ~48px combined, the same
+     gap this file now uses at the other section boundaries below. */
+  .pillars-heading-slide { min-height: 0; padding: 24px 0 16px; }
+  .fail-v2-chamber { padding-bottom: 24px; }
+  /* .pillars-chamber's 220px bottom padding is a desktop-only buffer —
+     room for Comparison's own scroll-driven overlap to animate in
+     before it starts eating into "Systemic Bioavailability" text. The
+     mobile accordion it's reserving that room for is a short, compact
+     list (ChamberAccordion), not the tall grid+card layout, so 220px of
+     blank navy was left sitting between it and "Make Every Molecule
+     Work Smarter" below regardless. Same ~48px standard gap as above. */
+  .pillars-chamber { padding-bottom: 48px; }
 
   /* the timeline's little connector dashes off the side of each box */
   .dt-row.is-left .dt-box::after,
@@ -6581,6 +6602,13 @@ h2 {
      headings and bullets sit flush against both screen edges (and the
      longer bullets run off the right) */
   .tech-encap-list { padding: 0 20px; }
+  /* .tech-encap's 120px bottom padding is desktop-only clearance for the
+     photo gallery column (hidden on phone) — with no gallery to clear,
+     that same 120px was just sitting as blank white space after the
+     last accordion item ("Liposomal Encapsulation"), on top of
+     .tech-materials's own 70px top padding right after it. Same ~48px
+     standard gap used at the other section boundaries in this file. */
+  .tech-encap { padding-bottom: 24px; }
 
   /* partnership engagement models runs the exact same navy/white band
      mechanic as tech stages above, and had the same squeezed two-column
