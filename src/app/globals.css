@@ -7227,7 +7227,14 @@ h2 {
   .science-hero,
   .tech-hero,
   .contact-hero-photo,
-  .partnership-touch-hero {
+  .partnership-touch-hero,
+  /* the Products and Partnership pages' own top hero photos were still
+     full height:100vh here — never included in this reduction even
+     though they're the exact same "full-bleed photo behind a folder-
+     tab" pattern as the four above, which is why they visibly towered
+     over Science/Technology's shorter proportions on phone */
+  .products-hero-photo,
+  .partnership-hero {
     height: 65vh;
   }
 }
