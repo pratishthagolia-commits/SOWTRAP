@@ -2949,7 +2949,10 @@ h2 {
   position: relative;
   z-index: 2;
   background: #ffffff;
-  padding: 90px 60px 140px;
+  /* bottom was 140px, on top of .tech-approach's own 90px top padding
+     right after it — a noticeably bigger gap below this paragraph than
+     above it. Trimmed a bit, not all the way down to match. */
+  padding: 90px 60px 100px;
   text-align: center;
 }
 /* the "TECHNOLOGY" title tab is anchored to this panel (not the hero
@@ -3990,7 +3993,10 @@ h2 {
   position: relative;
   z-index: 2;
   background: #ffffff;
-  padding: 260px 60px 120px;
+  /* bottom was 120px, on top of .partnership-who's own 100px top
+     padding right after it — trimmed a bit, same as .tech-intro's
+     matching fix */
+  padding: 260px 60px 70px;
 }
 /* folder-notch tab, same motif as .tech-hero-tab/.bioactives-title —
    anchored to this panel and poking up above its own top edge, so it
@@ -6082,7 +6088,13 @@ h2 {
 
 @media (max-width: 900px) {
   .indication-products { flex-direction: column; gap: 24px; }
-  .indication-products-filters { position: static; width: 100%; max-height: none; }
+  /* flex:0 0 220px (base rule) sizes along the main axis — a fixed
+     220px WIDTH in the desktop row layout, but once flex-direction
+     flips to column above, that same flex-basis instead forces a fixed
+     220px HEIGHT regardless of how few category buttons this
+     indication actually has, leaving blank space in the box below
+     them. flex:none lets it size to its own content instead. */
+  .indication-products-filters { position: static; width: 100%; max-height: none; flex: none; }
 }
 
 .product-detail-top {
@@ -7016,6 +7028,15 @@ h2 {
      whatever came after it) between the tabs and the open panel */
   .products-filter-tabs-wrap { position: relative; }
   .products-filter-group { display: none; }
+  /* IndicationProductsGrid (the "Ingredients for <benefit>" page)
+     reuses this same .products-filter-group class for its own single
+     always-visible category filter, but has no tab to click that ever
+     adds .is-mobile-open — so on phone the filter was just permanently
+     hidden by the rule above, with nothing left to fill the gap where
+     it used to sit. Force it back to visible specifically within this
+     page's own filter wrapper, without touching the main /products
+     browser's intentional tap-to-open behaviour above. */
+  .indication-products-filters .products-filter-group { display: block; }
   /* floats over the search bar/sort control/grid below instead of
      pushing them down the page or being fixed full-screen — a normal
      dropdown-menu pattern. max-height + inner scroll is back (safe
