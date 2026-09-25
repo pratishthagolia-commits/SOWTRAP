@@ -5,10 +5,9 @@ import Link from "next/link";
 
 // persistent bottom-right entry point into Contact, mounted once in the
 // root layout (same as CookieConsent) so it's present on every page.
-// Clicking it opens a small panel with the two ways to reach the
-// Contact page's actual forms — "Contact Us" (ContactProjectForm,
-// id="contact-form") and "Speak to Us Directly" (ContactDirectForm,
-// id="direct-form") — rather than just dropping the visitor at the top
+// Clicking it opens a small panel with a "Speak to Us Directly" option
+// that deep-links straight to ContactDirectForm (id="direct-form") on
+// the Contact page, rather than just dropping the visitor at the top
 // of the page to go hunting for the right form themselves.
 export default function ChatButton() {
   const [open, setOpen] = useState(false);
@@ -98,13 +97,9 @@ export default function ChatButton() {
         </button>
         <p className="chat-panel-title">How can we help?</p>
         <div className="chat-panel-options">
-          <Link href="/contact#contact-form" className="chat-panel-option" onClick={() => setOpen(false)}>
-            <span className="chat-panel-option-title">Contact Us</span>
-            <span className="chat-panel-option-desc">Tell us about your project</span>
-          </Link>
           <Link href="/contact#direct-form" className="chat-panel-option" onClick={() => setOpen(false)}>
             <span className="chat-panel-option-title">Speak to Us Directly</span>
-            <span className="chat-panel-option-desc">Prefer to speak directly? Get in touch with our team</span>
+            <span className="chat-panel-option-desc">Get in touch with our team</span>
           </Link>
         </div>
       </div>
