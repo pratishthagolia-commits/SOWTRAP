@@ -33,13 +33,30 @@
    iOS Safari's horizontal rubber-band/bounce on a left-right drag from
    revealing whatever's behind the page, regardless of whether there's
    any residual sub-pixel horizontal overflow left to trigger it */
-html { scroll-behavior: smooth; overflow-x: hidden; overscroll-behavior-x: none; }
+/* overscroll-behavior-x only stops the BOUNCE past the scroll boundary
+   — it doesn't stop a left-right drag from panning TO that boundary in
+   the first place if any residual horizontal overflow still exists
+   somewhere on the page (every fix so far closed specific sources of
+   that, but a mobile browser can still find a sub-pixel one). touch-
+   action is a different, more direct layer: it tells the browser's own
+   gesture recognizer to only ever treat a drag as vertical scrolling,
+   so a horizontal swipe has nothing to grab onto regardless of
+   whether overflow exists underneath. pan-y here is restored back to
+   pan-x on the page's few genuine horizontal-scroll strips below
+   (.tech-philo-cards, .portfolio-mobile-scroller) so they don't break. */
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  overscroll-behavior-x: none;
+  touch-action: pan-y;
+}
 
 body {
   font-family: var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
   color: var(--ink);
   background: var(--white);
   overscroll-behavior-x: none;
+  touch-action: pan-y;
 }
 
 .container {
@@ -2843,6 +2860,10 @@ h2 {
   overflow-x: auto;
   padding: 70px 60px 20px;
   scrollbar-width: thin;
+  /* the page-wide touch-action:pan-y (html/body) would otherwise block
+     a horizontal swipe here too — this is one of the two genuine
+     horizontal-scroll strips it needs restoring on */
+  touch-action: pan-x;
 }
 .tech-philo-card {
   flex: 0 0 420px;
@@ -6326,6 +6347,10 @@ h2 {
   scroll-snap-type: x proximity;
   -webkit-overflow-scrolling: touch;
   padding: 0 4px 4px;
+  /* the page-wide touch-action:pan-y (html/body) would otherwise block
+     a horizontal swipe here too — this is the other genuine horizontal-
+     scroll strip it needs restoring on */
+  touch-action: pan-x;
 }
 .portfolio-mobile-scroller::-webkit-scrollbar { display: none; }
 .portfolio-mobile-arrows {
