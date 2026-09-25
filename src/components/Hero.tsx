@@ -51,7 +51,10 @@ export default function Hero() {
         about.style.marginTop = "0px";
         const wordmarkBottom = el.getBoundingClientRect().bottom;
         const aboutTop = about.getBoundingClientRect().top;
-        const gap = 32;
+        // was 32 — read as too tight against the "p"'s descender once
+        // the heading below it got bigger (the 0.75x -> 0.9x bump a few
+        // turns back)
+        const gap = 56;
         about.style.marginTop = `${wordmarkBottom + gap - aboutTop}px`;
       }
 
