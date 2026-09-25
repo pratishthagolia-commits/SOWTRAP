@@ -36,10 +36,18 @@ export const metadata: Metadata = {
 // background as a white margin around the shrunk page, which looks
 // identical to a horizontal-overflow bug but isn't fixable with any
 // amount of overflow-x tightening.
+// maximumScale alone only caps zooming IN past 1x — the browser's
+// default minimum (as low as 0.25x on some mobile browsers) was still
+// wide open, so pinching OUT still shrank the page and exposed that
+// same white margin. minimumScale (and userScalable:false as a second
+// belt-and-braces layer for older/inconsistent browsers) closes that
+// off in both directions.
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  minimumScale: 1,
   maximumScale: 1,
+  userScalable: false,
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
