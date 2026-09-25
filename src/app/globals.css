@@ -196,6 +196,50 @@ body {
 .nav-hamburger span { width: 18px; height: 1.5px; background: #000000; }
 .nav-hamburger:focus-visible { box-shadow: 0 0 0 3px rgba(0, 51, 102, 0.35); }
 
+/* persistent bottom-right entry point into Contact, mounted once in the
+   root layout so it's present on every page — both bottom corners were
+   free (top-left/top-right are already the watermark and hamburger),
+   z-index 55 sits above the nav bar/watermark (40/50) but below the
+   hamburger drawer (60/65/70) so opening the mobile menu naturally
+   covers it instead of the two overlapping awkwardly. */
+.chat-button {
+  position: fixed;
+  right: 32px;
+  bottom: 32px;
+  z-index: 55;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #003366;
+  color: #ffffff;
+  border-radius: 100px;
+  padding: 16px;
+  text-decoration: none;
+  box-shadow: 0 12px 30px -8px rgba(13, 21, 38, 0.45);
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+.chat-button:hover {
+  background: #04407a;
+  box-shadow: 0 16px 36px -8px rgba(13, 21, 38, 0.55);
+}
+.chat-button svg { flex-shrink: 0; }
+/* collapsed to just the icon by default — expands to reveal the label
+   on hover/focus, same "pill grows out of a circle" motif the site
+   already uses for the industry cards' folder-tab reveal elsewhere */
+.chat-button-label {
+  max-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  font-family: var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: max-width 0.25s ease;
+}
+.chat-button:hover .chat-button-label,
+.chat-button:focus-visible .chat-button-label {
+  max-width: 200px;
+}
+
 .nav-drawer-scrim {
   position: fixed;
   inset: 0;
@@ -6404,6 +6448,11 @@ h2 {
     padding: 3px 12px;
   }
 
+  /* tighter corner margin on phone, matching the smaller screen — the
+     label never shows here anyway (no hover on touch), so this stays a
+     plain icon circle */
+  .chat-button { right: 20px; bottom: 20px; padding: 14px; }
+
   /* the shared fade/slide-in reveal system (26 files) stays mounted (its
      observer is harmless either way) but is visually a no-op on phone —
      content just shows immediately instead of animating in */
@@ -6480,6 +6529,17 @@ h2 {
   /* the timeline's little connector dashes off the side of each box */
   .dt-row.is-left .dt-box::after,
   .dt-row.is-right .dt-box::after { display: none; }
+  /* the 860px block's padding-left:50px on every row (room for the
+     connector dash pointing at the central line) is still inherited
+     here even though that connector is hidden above, so every card sat
+     with ~50px more empty space on its left than its right — reading
+     as shifted off-center rather than centred in the section's own
+     24px side padding. The central line itself is dropped too, not
+     just repositioned — at dead-centre under a now-centred card it
+     would run straight down through the middle of the text instead of
+     beside it, which is worse than just not showing it. */
+  .dt-row.is-left, .dt-row.is-right { padding-left: 0; }
+  .dt-timeline-line { display: none; }
   /* .dt-box's fixed height:260px (desktop) was sized for short copy —
      longer entries like "Application-Ready Ingredient Systems" overflow
      past the box's bottom edge uncontained at phone width. The fixed
@@ -6625,20 +6685,23 @@ h2 {
      untouched here — its logo and white notch/panel box stay on the
      shared uniform rules above, the same "L"-shaped folder-tab silhouette
      every other card uses, rather than getting its own override. */
-  /* Nutraceutical & Dietary Supplements logo only — 1x bigger (125px * 2 = 250px) */
+  /* Nutraceutical & Dietary Supplements logo only — was 250px (1x bigger
+     than base), now decreased 0.65x further (250px * 0.35 = 88px) */
   .ind-slide:nth-child(1) .ind-slide-half:first-child .ind-slide-logo {
-    width: 250px;
-    height: 250px;
+    width: 88px;
+    height: 88px;
   }
-  /* Functional Foods & Beverages logo only — 1x bigger (125px * 2 = 250px) */
+  /* Functional Foods & Beverages logo only — was 250px, decreased 0.65x
+     further (250px * 0.35 = 88px) */
   .ind-slide:nth-child(1) .ind-slide-half:last-child .ind-slide-logo {
-    width: 250px;
-    height: 250px;
+    width: 88px;
+    height: 88px;
   }
-  /* Pharmaceutical & Healthcare logo only — 1x bigger (125px * 2 = 250px) */
+  /* Pharmaceutical & Healthcare logo only — was 250px, decreased 0.65x
+     further (250px * 0.35 = 88px) */
   .ind-slide:nth-child(2) .ind-slide-half:last-child .ind-slide-logo {
-    width: 250px;
-    height: 250px;
+    width: 88px;
+    height: 88px;
   }
   /* Beauty & Nutricosmetics logo only — 0.5x bigger (125px * 1.5 = 188px) */
   .ind-slide:nth-child(3) .ind-slide-half:first-child .ind-slide-logo {
@@ -6650,10 +6713,11 @@ h2 {
     width: 188px;
     height: 188px;
   }
-  /* Botanical Growers & Extract Producers logo only — 0.5x bigger (125px * 1.5 = 188px) */
+  /* Botanical Growers & Extract Producers logo only — was 188px (0.5x
+     bigger than base), now decreased 0.65x further (188px * 0.35 = 66px) */
   .ind-slide:nth-child(4) .ind-slide-half:first-child .ind-slide-logo {
-    width: 188px;
-    height: 188px;
+    width: 66px;
+    height: 66px;
   }
   /* Contract Manufacturers & Formulators logo only — 0.5x bigger (125px * 1.5 = 188px) */
   .ind-slide:nth-child(4) .ind-slide-half:last-child .ind-slide-logo {

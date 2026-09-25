@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Playfair_Display, Montserrat, Prata } from "next/font/google";
 import ScrollToTop from "@/components/ScrollToTop";
 import CookieConsent from "@/components/CookieConsent";
+import ChatButton from "@/components/ChatButton";
 import "./globals.css";
 
 const inter = Inter({
@@ -59,6 +60,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body>
         <ScrollToTop />
         {children}
+        <ChatButton />
         <CookieConsent />
       </body>
     </html>
