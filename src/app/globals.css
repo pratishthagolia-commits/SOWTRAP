@@ -16,6 +16,15 @@
 
   --border: rgba(13, 21, 38, 0.08);
   --radius: 18px;
+
+  /* the site-wide switch away from the serif Prata display font: every
+     one of the ~190 "font-family: var(--font-prata), serif" rules
+     across this file (headings, kickers, section titles everywhere)
+     picks up whatever this resolves to, with no changes needed at each
+     call site. Prata itself is no longer loaded in layout.tsx — this
+     points at the same Montserrat already loaded there for body text,
+     so nothing extra downloads either. */
+  --font-prata: var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }

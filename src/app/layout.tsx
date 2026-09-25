@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Playfair_Display, Montserrat, Prata } from "next/font/google";
+import { Inter, Playfair_Display, Montserrat } from "next/font/google";
 import ScrollToTop from "@/components/ScrollToTop";
 import CookieConsent from "@/components/CookieConsent";
 import ChatButton from "@/components/ChatButton";
@@ -20,11 +20,12 @@ const montserrat = Montserrat({
   variable: "--font-montserrat",
 });
 
-const prata = Prata({
-  subsets: ["latin"],
-  weight: "400",
-  variable: "--font-prata",
-});
+// Prata (the site's former serif display font, used in ~190 places
+// across globals.css via var(--font-prata)) is no longer loaded here —
+// --font-prata itself is redefined in globals.css to point at this same
+// Montserrat font instead, so every one of those existing rules picks
+// up the new font automatically with zero changes needed at each call
+// site, and switches the whole site over in one place.
 
 export const metadata: Metadata = {
   title: "SowTrap™ | ScienceOnWheels",
@@ -55,7 +56,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${playfair.variable} ${montserrat.variable} ${prata.variable}`}
+      className={`${inter.variable} ${playfair.variable} ${montserrat.variable}`}
     >
       <body>
         <ScrollToTop />
