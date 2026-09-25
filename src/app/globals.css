@@ -508,7 +508,19 @@ h2 {
   position: absolute;
   left: 0;
   bottom: 0;
-  width: 100vw;
+  /* was 100vw — a viewport-relative unit, not a size relative to this
+     element's own containing block (.about-v2-sticky, which is already
+     exactly full-bleed width with no side padding). On some mobile
+     browsers 100vw and the containing block's actual rendered width
+     don't quite agree (dynamic address-bar chrome, scrollbar handling,
+     etc.), so this could render a few pixels wider than the real
+     viewport — a page-wide horizontal overflow that showed up as a
+     persistent strip of empty space down the right edge, home-page-only
+     since this component (and its two siblings below using the same
+     100vw pattern) only appears there. 100% ties it exactly to its own
+     container instead, which is already the full-bleed width wanted,
+     with no viewport-unit mismatch possible. */
+  width: 100%;
   z-index: 1;
   will-change: transform;
 }
@@ -602,7 +614,8 @@ h2 {
   position: absolute;
   left: 0;
   bottom: 0;
-  width: 100vw;
+  /* same 100vw -> 100% fix as .about-v2-slide above — see its comment */
+  width: 100%;
   z-index: 1;
   will-change: transform;
 }
@@ -1516,7 +1529,8 @@ h2 {
   position: absolute;
   left: 0;
   bottom: 0;
-  width: 100vw;
+  /* same 100vw -> 100% fix as .about-v2-slide above — see its comment */
+  width: 100%;
   z-index: 1;
   will-change: transform;
 }
