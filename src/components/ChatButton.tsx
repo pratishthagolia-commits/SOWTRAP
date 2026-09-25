@@ -32,23 +32,39 @@ export default function ChatButton() {
         const x = Math.max(1, rect.left - 14);
         const y = rect.top + rect.height / 2;
         let el = document.elementFromPoint(x, y) as HTMLElement | null;
-        let bg: string | null = null;
+        let resolved: "light" | "dark" | null = null;
         while (el && el !== document.documentElement) {
-          const c = getComputedStyle(el).backgroundColor;
+          // photos and the canvas-based matrix-rain background (Hero)
+          // don't carry a CSS background-color at all — only checking
+          // backgroundColor walked straight past .hero's navy gradient
+          // and kept climbing all the way to <body>'s white background,
+          // misreading the hero as "light" and rendering an invisible
+          // navy-on-navy button there. Every dark section on this site
+          // is either a solid navy background-color, a navy gradient, or
+          // a photo — all three are treated as dark here.
+          const tag = el.tagName;
+          if (tag === "IMG" || tag === "CANVAS" || tag === "VIDEO") {
+            resolved = "dark";
+            break;
+          }
+          const cs = getComputedStyle(el);
+          if (cs.backgroundImage && cs.backgroundImage !== "none") {
+            resolved = "dark";
+            break;
+          }
+          const c = cs.backgroundColor;
           if (c && c !== "rgba(0, 0, 0, 0)" && c !== "transparent") {
-            bg = c;
+            const rgb = c.match(/[\d.]+/g);
+            if (rgb) {
+              const [r, g, b] = rgb.map(Number);
+              const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
+              resolved = luminance < 140 ? "dark" : "light";
+            }
             break;
           }
           el = el.parentElement;
         }
-        if (bg) {
-          const rgb = bg.match(/[\d.]+/g);
-          if (rgb) {
-            const [r, g, b] = rgb.map(Number);
-            const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
-            setTheme(luminance > 170 ? "light" : "dark");
-          }
-        }
+        if (resolved) setTheme(resolved);
       }
       frameId = requestAnimationFrame(sample);
     }

@@ -21,6 +21,39 @@ export default function ScrollToTop() {
   const pathname = usePathname();
 
   useIsomorphicLayoutEffect(() => {
+    // a URL hash (e.g. the chat button's popup linking to
+    // /contact#contact-form or #direct-form) means the visitor wants a
+    // specific section, not the top of the page — this used to force a
+    // top-0 reset unconditionally, racing the browser's own native
+    // hash-scroll (this is a layout effect, so it runs first) and
+    // leaving the page wherever that race happened to land, which is
+    // exactly why the two chat-panel links were landing at inconsistent
+    // wrong spots instead of the target section.
+    const hash = window.location.hash;
+    if (hash) {
+      const id = hash.slice(1);
+      let attempts = 0;
+      let frameId = 0;
+      // the target element may not exist in the DOM yet the instant
+      // this fires on a fresh route change (client component mounting),
+      // so retry across a few frames instead of giving up on one lookup
+      const tryScroll = () => {
+        const el = document.getElementById(id);
+        if (el) {
+          // matches .contact-form-section's own scroll-margin-top —
+          // clearance for the fixed nav bar sitting on top of the page
+          const navOffset = 100;
+          const top = el.getBoundingClientRect().top + window.scrollY - navOffset;
+          window.scrollTo({ top: Math.max(0, top), left: 0, behavior: "instant" });
+          return;
+        }
+        attempts += 1;
+        if (attempts < 60) frameId = requestAnimationFrame(tryScroll);
+      };
+      tryScroll();
+      return () => cancelAnimationFrame(frameId);
+    }
+
     // an explicit "instant" behavior is required here — the global
     // `html { scroll-behavior: smooth }` (for in-page anchor links)
     // would otherwise animate this reset into a visible scroll-up flash
