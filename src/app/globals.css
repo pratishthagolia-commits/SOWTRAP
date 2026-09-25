@@ -6678,15 +6678,13 @@ h2 {
      here even though that connector is hidden above, so every card sat
      with ~50px more empty space on its left than its right — reading
      as shifted off-center rather than centred in the section's own
-     24px side padding.
-     The central line was dropped here too at first — at dead-centre
-     under a now-centred card it'd run straight through the text — but
-     it turns out the line itself is wanted, just not through the
-     middle of the copy. A much smaller left margin than the old 50px
-     brings it back as a slim rail running down the left edge, behind
-     the cards, without cutting through any text. */
-  .dt-row.is-left, .dt-row.is-right { padding-left: 24px; }
-  .dt-timeline-line { left: 8px; }
+     24px side padding. Zeroed out so every card centers evenly.
+     The line itself stays dead-center (the base rule's left:50%,
+     unoverridden here) — cards are opaque white and come later in the
+     DOM than the line, so normal paint order already covers the line
+     wherever a card sits over it; it's only visible in the gaps
+     between cards, running centered behind them, not through any text. */
+  .dt-row.is-left, .dt-row.is-right { padding-left: 0; }
   /* .dt-box's fixed height:260px (desktop) was sized for short copy —
      longer entries like "Application-Ready Ingredient Systems" overflow
      past the box's bottom edge uncontained at phone width. The fixed
