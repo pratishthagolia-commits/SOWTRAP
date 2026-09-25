@@ -28,7 +28,7 @@ export default function ContactDirectForm() {
   }
 
   return (
-    <section className="contact-form-section contact-form-section--alt">
+    <section className="contact-form-section contact-form-section--alt" id="direct-form">
       <p className="contact-form-kicker">Prefer to speak directly?</p>
       <h2 className="contact-form-heading">Don&apos;t Know Where to Start? Speak to Our Experts.</h2>
       <p className="contact-form-intro">

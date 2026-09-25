@@ -37,7 +37,7 @@ export default function ContactProjectForm() {
   }
 
   return (
-    <section className="contact-form-section">
+    <section className="contact-form-section" id="contact-form">
       <p className="contact-form-kicker">Tell us about your project</p>
       <p className="contact-form-intro">
         Help us understand your requirement so our team can connect you with the appropriate

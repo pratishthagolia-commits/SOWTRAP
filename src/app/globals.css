@@ -201,43 +201,149 @@ body {
    free (top-left/top-right are already the watermark and hamburger),
    z-index 55 sits above the nav bar/watermark (40/50) but below the
    hamburger drawer (60/65/70) so opening the mobile menu naturally
-   covers it instead of the two overlapping awkwardly. */
-.chat-button {
+   covers it instead of the two overlapping awkwardly.
+   .chat-button-circle is a fixed 56x56 box regardless of anything else
+   on the page — the label sits in its own sibling span, absolutely
+   positioned to the left, so it can never distort the circle into an
+   oval the way it did when both shared one flex row with a live gap. */
+.chat-button-wrap {
   position: fixed;
   right: 32px;
   bottom: 32px;
   z-index: 55;
   display: flex;
   align-items: center;
-  gap: 10px;
-  background: #003366;
-  color: #ffffff;
-  border-radius: 100px;
-  padding: 16px;
-  text-decoration: none;
+  justify-content: flex-end;
+}
+.chat-button-circle {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 auto;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   box-shadow: 0 12px 30px -8px rgba(13, 21, 38, 0.45);
-  transition: background 0.2s ease, box-shadow 0.2s ease;
+  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
-.chat-button:hover {
-  background: #04407a;
-  box-shadow: 0 16px 36px -8px rgba(13, 21, 38, 0.55);
-}
-.chat-button svg { flex-shrink: 0; }
-/* collapsed to just the icon by default — expands to reveal the label
-   on hover/focus, same "pill grows out of a circle" motif the site
-   already uses for the industry cards' folder-tab reveal elsewhere */
+.chat-button-circle:hover { transform: translateY(-2px); box-shadow: 0 16px 36px -8px rgba(13, 21, 38, 0.55); }
+/* over a dark section (navy, photos), the circle itself goes white so
+   it reads clearly against the dark backdrop; over a light/white
+   section it flips to the brand navy instead — see ChatButton.tsx's
+   own per-frame background sampling for how "light"/"dark" is decided */
+.chat-button-circle--dark { background: #ffffff; color: #003366; }
+.chat-button-circle--light { background: #003366; color: #ffffff; }
+/* collapsed to nothing by default — expands to reveal the label on
+   hover/focus, positioned so it grows out from behind the circle
+   rather than pushing the circle itself sideways */
 .chat-button-label {
+  position: absolute;
+  right: 68px;
   max-width: 0;
   overflow: hidden;
   white-space: nowrap;
+  background: #003366;
+  color: #ffffff;
+  border-radius: 100px;
+  padding: 0;
   font-family: var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 600;
-  transition: max-width 0.25s ease;
+  line-height: 40px;
+  box-shadow: 0 8px 20px -6px rgba(13, 21, 38, 0.4);
+  transition: max-width 0.25s ease, padding 0.25s ease;
 }
-.chat-button:hover .chat-button-label,
-.chat-button:focus-visible .chat-button-label {
-  max-width: 200px;
+.chat-button-circle:hover ~ .chat-button-label,
+.chat-button-circle:focus-visible ~ .chat-button-label {
+  max-width: 220px;
+  padding: 0 18px;
+}
+
+/* the popup panel listing the two ways into Contact — a small anchored
+   panel on desktop/tablet (roughly a quarter of the viewport, not a
+   full-screen takeover), a near-full bottom sheet on phone where a
+   small anchored panel would be too cramped to comfortably tap */
+.chat-panel-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 56;
+  background: rgba(13, 21, 38, 0.35);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+.chat-panel-scrim.is-open { opacity: 1; pointer-events: auto; }
+.chat-panel {
+  position: fixed;
+  right: 32px;
+  bottom: 104px;
+  z-index: 57;
+  width: min(25vw, 380px);
+  min-width: 300px;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 28px 24px 24px;
+  box-shadow: 0 24px 60px -12px rgba(13, 21, 38, 0.4);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(16px);
+  transition: opacity 0.25s ease, transform 0.25s ease, visibility 0s linear 0.25s;
+}
+.chat-panel.is-open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  transition: opacity 0.25s ease, transform 0.25s ease, visibility 0s linear 0s;
+}
+.chat-panel-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 1.4rem;
+  line-height: 1;
+  color: var(--ink-soft);
+}
+.chat-panel-title {
+  font-family: var(--font-prata), serif;
+  font-size: 1.2rem;
+  color: var(--ink);
+  margin: 0 0 16px;
+}
+.chat-panel-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.chat-panel-option {
+  display: block;
+  text-decoration: none;
+  background: var(--bg-soft);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  padding: 14px 18px;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.chat-panel-option:hover { border-color: #003366; background: #ffffff; }
+.chat-panel-option-title {
+  display: block;
+  font-family: var(--font-prata), serif;
+  font-size: 1rem;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.chat-panel-option-desc {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
 }
 
 .nav-drawer-scrim {
@@ -4346,6 +4452,10 @@ h2 {
   z-index: 2;
   background: #ffffff;
   padding: 100px 60px;
+  /* the chat button's popup panel deep-links here (#contact-form /
+     #direct-form) — without this, the fixed nav bar sits on top of
+     whatever the hash-jump landed on */
+  scroll-margin-top: 100px;
 }
 .contact-form-section--alt { background: #003366; }
 .contact-form-kicker {
@@ -6449,9 +6559,24 @@ h2 {
   }
 
   /* tighter corner margin on phone, matching the smaller screen — the
-     label never shows here anyway (no hover on touch), so this stays a
-     plain icon circle */
-  .chat-button { right: 20px; bottom: 20px; padding: 14px; }
+     label never shows here anyway (no hover on touch) */
+  .chat-button-wrap { right: 20px; bottom: 20px; }
+  .chat-button-circle { width: 50px; height: 50px; }
+  /* the small anchored panel (roughly a quarter of a desktop viewport)
+     would be too cramped to comfortably tap on a phone — full-width
+     bottom sheet instead, sliding up from the bottom edge rather than
+     floating detached above the corner button */
+  .chat-panel {
+    right: 0;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    min-width: 0;
+    border-radius: 20px 20px 0 0;
+    padding: 24px 20px 32px;
+    transform: translateY(100%);
+  }
+  .chat-panel.is-open { transform: translateY(0); }
 
   /* the shared fade/slide-in reveal system (26 files) stays mounted (its
      observer is harmless either way) but is visually a no-op on phone —
