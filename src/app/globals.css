@@ -6810,23 +6810,23 @@ h2 {
      untouched here — its logo and white notch/panel box stay on the
      shared uniform rules above, the same "L"-shaped folder-tab silhouette
      every other card uses, rather than getting its own override. */
-  /* Nutraceutical & Dietary Supplements logo only — was 250px (1x bigger
-     than base), now decreased 0.65x further (250px * 0.35 = 88px) */
+  /* Nutraceutical & Dietary Supplements logo only — was 88px, increased
+     0.5x further (88px * 1.5 = 132px) */
   .ind-slide:nth-child(1) .ind-slide-half:first-child .ind-slide-logo {
-    width: 88px;
-    height: 88px;
+    width: 132px;
+    height: 132px;
   }
-  /* Functional Foods & Beverages logo only — was 250px, decreased 0.65x
-     further (250px * 0.35 = 88px) */
+  /* Functional Foods & Beverages logo only — was 88px, increased 0.5x
+     further (88px * 1.5 = 132px) */
   .ind-slide:nth-child(1) .ind-slide-half:last-child .ind-slide-logo {
-    width: 88px;
-    height: 88px;
+    width: 132px;
+    height: 132px;
   }
-  /* Pharmaceutical & Healthcare logo only — was 250px, decreased 0.65x
-     further (250px * 0.35 = 88px) */
+  /* Pharmaceutical & Healthcare logo only — was 88px, increased 0.5x
+     further (88px * 1.5 = 132px) */
   .ind-slide:nth-child(2) .ind-slide-half:last-child .ind-slide-logo {
-    width: 88px;
-    height: 88px;
+    width: 132px;
+    height: 132px;
   }
   /* Beauty & Nutricosmetics logo only — 0.5x bigger (125px * 1.5 = 188px) */
   .ind-slide:nth-child(3) .ind-slide-half:first-child .ind-slide-logo {
@@ -6838,11 +6838,11 @@ h2 {
     width: 188px;
     height: 188px;
   }
-  /* Botanical Growers & Extract Producers logo only — was 188px (0.5x
-     bigger than base), now decreased 0.65x further (188px * 0.35 = 66px) */
+  /* Botanical Growers & Extract Producers logo only — was 66px, increased
+     0.5x further (66px * 1.5 = 99px) */
   .ind-slide:nth-child(4) .ind-slide-half:first-child .ind-slide-logo {
-    width: 66px;
-    height: 66px;
+    width: 99px;
+    height: 99px;
   }
   /* Contract Manufacturers & Formulators logo only — 0.5x bigger (125px * 1.5 = 188px) */
   .ind-slide:nth-child(4) .ind-slide-half:last-child .ind-slide-logo {
