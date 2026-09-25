@@ -2778,13 +2778,23 @@ h2 {
   .bioactives-title { left: 0; padding: 14px 28px; }
   .bioactives-what { flex-direction: column; gap: 24px; }
   .bioactives-what-heading { flex: none; text-align: left; margin: 0; }
-  /* the desktop calc (margin-left: calc(50% - 50vw); width: calc(50vw +
-     50% - 150px)) breaks out to the true left edge but stays shortened
-     150px from the right — on a narrow phone screen that 150px eats a
-     huge chunk of the box, stopping it well short of the right edge
-     instead of running the full width. Same fix as .tech-encap-banner's
-     own version of this exact box. */
-  .bioactives-classes-banner { padding: 24px; margin-left: 0; width: 100%; }
+  /* margin-left:0; width:100% only reaches the edge of this banner's
+     own parent (.bioactives-classes) — but .bioactives-intro (its own
+     parent, one level up) carries 24px of horizontal padding at this
+     width, so "100%" was only ever 100% of that already-inset box,
+     leaving a visible 24px gap on each side. .tech-encap-banner's
+     matching parent (.tech-encap) has zero horizontal padding, which
+     is the only reason its own version of this fix reached the true
+     edge — not something to do with the banner rule itself. Breaking
+     all the way out to the actual viewport edge (the same technique
+     .cta-wordmark already uses) fixes that regardless of what any
+     ancestor's own padding happens to be. */
+  .bioactives-classes-banner {
+    padding: 24px;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    width: 100vw;
+  }
   .bioactives-classes-body { flex-direction: column; }
   .bioactives-list { flex: none; padding: 0; width: 100%; }
   .bioactives-gallery { position: static; width: 100%; height: 320px; margin-top: 20px; }
@@ -3870,11 +3880,18 @@ h2 {
 
 @media (max-width: 900px) {
   .tech-materials { padding: 70px 24px 90px; }
-  /* same fix as .bioactives-classes-banner / .tech-encap-banner — the
-     desktop calc's 150px right-side shortfall eats a huge chunk of a
-     narrow phone screen, stopping the box well short of the right
-     edge instead of running the full width */
-  .tech-materials-banner { padding: 24px; margin-left: 0; width: 100%; }
+  /* margin-left:0; width:100% only reached the edge of .tech-materials
+     itself, which carries its own 24px horizontal padding right above
+     (this same rule) — so the banner stopped 24px short of the true
+     screen edge on each side, unlike .tech-encap-banner's matching
+     parent (.tech-encap), which has zero horizontal padding. Same true
+     viewport breakout as .bioactives-classes-banner's fix. */
+  .tech-materials-banner {
+    padding: 24px;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    width: 100vw;
+  }
   .tech-materials-list { padding: 0; }
 }
 
