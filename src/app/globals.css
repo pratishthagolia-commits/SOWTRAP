@@ -2190,6 +2190,12 @@ h2 {
   gap: 16px 28px;
   justify-content: space-between;
   align-items: center;
+  /* nothing sat between .footer-grid and this row before — the divider
+     line (this box's own top border) landed right against whatever the
+     grid's tallest column ended on, which was the social icons row
+     when the Contact Us column ran shorter that stretch, reading as
+     the line crowding/overlapping the icons */
+  margin-top: 32px;
   padding-top: 28px;
   border-top: 1px solid rgba(255, 255, 255, 0.2);
   color: rgba(255, 255, 255, 0.65);
