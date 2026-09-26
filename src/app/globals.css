@@ -6041,7 +6041,13 @@ h2 {
   .products-hero { padding: 70px 24px 70px; }
   .products-hero-tab { left: 0; padding: 14px 28px; }
   .products-browser { flex-direction: column; padding: 50px 24px 90px; gap: 40px; }
-  .products-filters { position: static; width: 100%; }
+  /* flex:0 0 220px (base rule) is a fixed WIDTH for the desktop
+     side-by-side row layout — never reset once .products-browser
+     switches to a stacked column above, so that same flex-basis
+     silently becomes a forced 220px HEIGHT instead, regardless of how
+     little content (two tab buttons + the clear-filters link) is
+     actually in the box. flex:none lets it size to its own content. */
+  .products-filters { position: static; width: 100%; flex: none; }
   .products-filter-list { display: flex; flex-wrap: wrap; gap: 0 20px; }
   .products-filter-item { width: auto; padding: 6px 0; }
   .products-filter-list--checkbox { flex-direction: row; flex-wrap: wrap; gap: 0 20px; }
@@ -7112,6 +7118,11 @@ h2 {
     box-shadow: 0 16px 40px -12px rgba(13, 21, 38, 0.3);
   }
   .products-filter-group:last-of-type { margin-bottom: 0; }
+  /* sat flush against the tab bar right above it with no breathing
+     room of its own, and (being just an inline text link) read as
+     stranded off to the left of an otherwise full-width card — spaced
+     off and centered instead */
+  .products-filter-clear { display: block; width: fit-content; margin: 20px auto 0; }
   /* Indications is multi-select, so there's no single tap that closes
      it the way picking an Ingredient Category option does — this is
      what lets you collapse it back up once you're done checking boxes */
