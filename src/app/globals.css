@@ -6899,8 +6899,16 @@ h2 {
   }
   /* the notch holds a fixed single-line 52px height and lets extra lines
      spill past its own background onto the panel below — fine for a wide
-     desktop column, messy at 170px wide where every title wraps */
-  .ind-slide-notch { height: auto; padding: 14px 18px 16px; }
+     desktop column, messy at 170px wide where every title wraps.
+     height:auto (letting each card's own title length decide) is now
+     fixed instead — a 1-line title like "Sports Nutrition" and a
+     wrapped one like "Contract Manufacturers & Formulators" gave every
+     card a different notch height, same shape-consistency issue as the
+     "L" cut fixed above. align-items:center (overriding the base
+     rule's flex-start) keeps shorter titles vertically centered in the
+     taller box instead of stuck at the top. Logo/panel sizes below are
+     untouched — only this text tab's own height changes. */
+  .ind-slide-notch { height: 78px; align-items: center; padding: 14px 18px 16px; }
   .ind-slide-panel { height: 92px; }
 
   /* was 50px, bumped 2.5x — taller than the panel's own 92px height
@@ -6969,7 +6977,12 @@ h2 {
      the L cut — line up at the same point regardless of title length,
      at the cost of some short titles having empty space in the box. */
   .ind-slide-notch { width: 190px; }
-  .ind-slide-notch p { font-size: 0.92rem; }
+  /* nudged down from 0.92rem and tightened line-height so the longest
+     titles ("Contract Manufacturers & Formulators", "Botanical Growers
+     & Extract Producers") comfortably wrap within the notch's new
+     fixed 78px height instead of needing more room than the shorter
+     titles get */
+  .ind-slide-notch p { font-size: 0.82rem; line-height: 1.2; }
 
   /* tech stages keeps its desktop two-column split at phone width (photo
      45vw on the left, copy crammed into the ~45vw beside it), and the
