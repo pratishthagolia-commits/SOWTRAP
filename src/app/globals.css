@@ -2888,7 +2888,7 @@ h2 {
 .sci-factors-list .sci-factors-item:last-child { border-bottom: 1px solid rgba(255, 255, 255, 0.18); }
 .sci-factors-item-title {
   font-family: var(--font-prata), serif;
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   color: rgba(255, 255, 255, 0.75);
   transition: color 0.2s ease;
 }
@@ -3259,13 +3259,13 @@ h2 {
 }
 .tech-stages-evaluate-heading {
   font-family: var(--font-prata), serif;
-  font-size: 1rem;
+  font-size: 1.1rem;
   color: var(--ink);
   margin: 0 0 14px;
 }
 .tech-stages-evaluate-list {
   font-family: var(--font-prata), serif;
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   line-height: 1.7;
   color: var(--ink-soft);
   margin: 0;
@@ -4347,13 +4347,13 @@ h2 {
 }
 .partnership-stages-evaluate-heading {
   font-family: var(--font-prata), serif;
-  font-size: 1rem;
+  font-size: 1.1rem;
   color: var(--ink);
   margin: 0 0 14px;
 }
 .partnership-stages-evaluate-desc {
   font-family: var(--font-prata), serif;
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   line-height: 1.7;
   color: var(--ink-soft);
   margin: 0;
