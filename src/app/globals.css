@@ -6960,7 +6960,15 @@ h2 {
   /* smaller title: long names like "Botanical Growers & Extract
      Producers" were wrapping to four lines, running the tab far taller
      than the folder-tab silhouette wants */
-  .ind-slide-notch { max-width: 190px; }
+  /* was max-width (shrink-to-fit) — the notch's own box, and so the
+     "L" cut where its right edge meets the panel below, landed at a
+     different spot on every card depending on how long that card's
+     title happened to be (a short one-word title like "Sports
+     Nutrition" made a narrow notch, a long one stretched close to the
+     full 190px). Fixed width instead makes every card's notch — and
+     the L cut — line up at the same point regardless of title length,
+     at the cost of some short titles having empty space in the box. */
+  .ind-slide-notch { width: 190px; }
   .ind-slide-notch p { font-size: 0.92rem; }
 
   /* tech stages keeps its desktop two-column split at phone width (photo
