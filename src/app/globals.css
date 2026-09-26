@@ -4467,7 +4467,10 @@ h2 {
   position: relative;
   z-index: 2;
   background: #003366;
-  padding: 260px 60px 100px;
+  /* top was 260px vs 100px at the bottom — same oversized, lopsided
+     gap as .bioactives-intro had above "What are bioactive
+     ingredients?", matched here too */
+  padding: 100px 60px 100px;
   text-align: center;
 }
 /* folder-notch tab, same motif as .tech-hero-tab/.partnership-hero-tab —
@@ -4866,7 +4869,7 @@ h2 {
 .otp-gate--dark .otp-status--error { color: #ffb4a8; }
 
 @media (max-width: 900px) {
-  .contact-hero { padding: 200px 24px 70px; }
+  .contact-hero { padding: 70px 24px 70px; }
   .contact-hero-tab { left: 0; padding: 14px 28px; }
   .contact-form-section { padding: 70px 24px; }
   .contact-form { grid-template-columns: 1fr; }

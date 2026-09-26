@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import useIsMobile from "@/lib/useIsMobile";
 
 const QUOTE =
-  "“Most nutrients don’t fail because they are ineffective— they fail because they never reach where they’re needed.”";
+  "“Most nutrients don’t fail because they are ineffective, they fail because they never reach where they’re needed.”";
 const PARAGRAPH =
   "Despite advances in nutrition science, micronutrient deficiencies continue to affect billions of people worldwide. Addressing this challenge requires scientifically developed, bioavailable nutrient solutions that complement a balanced diet and support long-term health, wellness, and disease prevention.";
 
