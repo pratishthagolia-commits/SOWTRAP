@@ -4888,7 +4888,9 @@ h2 {
   background: #ffffff;
   max-width: 1300px;
   margin: 0 auto;
-  padding: 100px 60px 140px;
+  /* top trimmed a bit — same size cut as the footer divider's spacing
+     added a couple turns back, just in the other direction */
+  padding: 65px 60px 140px;
 }
 .partnership-eval-heading {
   max-width: 640px;
