@@ -4604,6 +4604,18 @@ h2 {
 .contact-field input[type="email"],
 .contact-field input[type="tel"],
 .contact-field textarea {
+  /* these were relying on .contact-field's flex-stretch to fill its
+     width, which normally works but flex items default to
+     min-width:auto — for a text input, some browsers resolve that
+     "auto" minimum off the field's own intrinsic character-based
+     sizing instead of letting it shrink to fit, so the stretch loses
+     and the box renders wider than its container on some phones
+     (reported as the input's right border/edge getting cropped off-
+     screen). Explicit width+box-sizing+min-width:0 removes the
+     ambiguity instead of depending on stretch behavior at all. */
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   font-family: var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
   font-size: 0.95rem;
   padding: 12px 16px;
