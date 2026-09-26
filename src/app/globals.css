@@ -2550,9 +2550,14 @@ h2 {
   position: relative;
   z-index: 2;
   background: #ffffff;
-  /* extra top padding to make up for .bioactives-title no longer taking
-     up flow space now that it's an absolutely positioned tab */
-  padding: 260px 60px 120px;
+  /* top was 260px — much more than the ~110px gap below
+     .bioactives-what's own paragraph before Key Classes of Bioactives
+     begins, reading as an oversized, lopsided gap above "What are
+     bioactive ingredients?" compared to below it. .bioactives-title's
+     tab pokes up -84px into the hero photo and is only ~90px tall
+     itself, so there's still comfortable clearance below it at 110px —
+     matched to the bottom gap instead of guessing a separate number. */
+  padding: 110px 60px 120px;
 }
 /* folder-notch tab, same motif as .tech-hero-tab on the Technology page —
    anchored to this panel and poking up above its own top edge, so it
@@ -2810,7 +2815,11 @@ h2 {
   position: relative;
   z-index: 4;
   background: #ffffff;
-  padding: 90px 60px 120px;
+  /* bottom was 120px, on top of .science-intro's own 130px top padding
+     right after it — trimmed modestly (not all the way down, just
+     enough to stop reading as an oversized gap while still keeping the
+     two sections clearly separated) */
+  padding: 90px 60px 80px;
 }
 .sci-factors-kicker {
   font-family: var(--font-prata), serif;
@@ -2929,7 +2938,8 @@ h2 {
 }
 
 @media (max-width: 900px) {
-  .sci-factors { padding: 70px 24px 90px; }
+  /* bottom trimmed modestly too, same reasoning as the desktop rule above */
+  .sci-factors { padding: 70px 24px 65px; }
   .sci-factors-intro { text-align: left; margin: 0 0 40px; }
   .sci-factors-chamber { flex-direction: column; min-height: auto; }
   .sci-factors-list { padding: 40px 28px; }
@@ -7197,7 +7207,6 @@ h2 {
   .partnership-what-heading,
   .partnership-who-heading,
   .partnership-models-title,
-  .partnership-models-heading,
   .contact-hero-heading,
   .contact-form-heading,
   .partnership-brands-heading,
@@ -7211,6 +7220,14 @@ h2 {
   .product-detail-tag-list--info .product-detail-section-heading,
   .product-detail-related-heading {
     font-size: 1.8rem;
+  }
+  /* was grouped with the major headings above (also 1.8rem) — sitting
+     right under .partnership-models-title (itself 1.8rem here) with an
+     identical size read as two stacked headings instead of a title and
+     its own sub-heading, the way the desktop sizes (2.8rem/2.3rem)
+     already make clear */
+  .partnership-models-heading {
+    font-size: 1.4rem;
   }
 
   /* -- subheadings (card/item titles, FAQ questions, modal titles) -- */
