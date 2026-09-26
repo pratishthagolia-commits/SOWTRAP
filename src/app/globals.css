@@ -5575,7 +5575,9 @@ h2 {
   position: relative;
   z-index: 2;
   background: #003366;
-  padding: 260px 40px 90px 16px;
+  /* top was 260px vs 90px at the bottom — same lopsided gap as
+     .contact-hero/.bioactives-intro had, matched here too */
+  padding: 90px 40px 90px 16px;
 }
 /* folder-notch tab, same motif as .contact-hero-tab — anchored to this
    panel and poking up above its own top edge, so it rides up together
@@ -6036,7 +6038,7 @@ h2 {
 .product-card:hover .product-card-name { color: #003366; }
 
 @media (max-width: 900px) {
-  .products-hero { padding: 200px 24px 70px; }
+  .products-hero { padding: 70px 24px 70px; }
   .products-hero-tab { left: 0; padding: 14px 28px; }
   .products-browser { flex-direction: column; padding: 50px 24px 90px; gap: 40px; }
   .products-filters { position: static; width: 100%; }
