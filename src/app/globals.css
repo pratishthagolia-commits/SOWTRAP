@@ -6907,8 +6907,12 @@ h2 {
      "L" cut fixed above. align-items:center (overriding the base
      rule's flex-start) keeps shorter titles vertically centered in the
      taller box instead of stuck at the top. Logo/panel sizes below are
-     untouched — only this text tab's own height changes. */
-  .ind-slide-notch { height: 78px; align-items: center; padding: 14px 18px 16px; }
+     untouched — only this text tab's own height changes.
+     60px — as close to Sports Nutrition's own original ~48-50px
+     (single-line) height as the longest titles below can still fit at
+     a genuinely readable size; going all the way down to 48-50px would
+     force those titles to a ~7-8px font, below readable on any screen. */
+  .ind-slide-notch { height: 60px; align-items: center; padding: 14px 18px 16px; }
   .ind-slide-panel { height: 92px; }
 
   /* was 50px, bumped 2.5x — taller than the panel's own 92px height
@@ -6979,10 +6983,11 @@ h2 {
   .ind-slide-notch { width: 190px; }
   /* nudged down from 0.92rem and tightened line-height so the longest
      titles ("Contract Manufacturers & Formulators", "Botanical Growers
-     & Extract Producers") comfortably wrap within the notch's new
-     fixed 78px height instead of needing more room than the shorter
-     titles get */
-  .ind-slide-notch p { font-size: 0.82rem; line-height: 1.2; }
+     & Extract Producers") still fit within the notch's new 60px
+     height at a size that's still comfortably readable — this is
+     close to the practical floor; going any smaller starts reading as
+     genuinely hard to read rather than just compact */
+  .ind-slide-notch p { font-size: 0.75rem; line-height: 1.15; }
 
   /* tech stages keeps its desktop two-column split at phone width (photo
      45vw on the left, copy crammed into the ~45vw beside it), and the
