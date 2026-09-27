@@ -2975,10 +2975,9 @@ h2 {
   position: relative;
   z-index: 2;
   background: #ffffff;
-  /* bottom was 140px, on top of .tech-approach's own 90px top padding
-     right after it — a noticeably bigger gap below this paragraph than
-     above it. Trimmed a bit, not all the way down to match. */
-  padding: 90px 60px 100px;
+  /* top/bottom evened out to the same 95px — was 90px/100px, close but
+     not quite matching, reading as the text sitting slightly high */
+  padding: 95px 60px 95px;
   text-align: center;
 }
 /* the "TECHNOLOGY" title tab is anchored to this panel (not the hero
@@ -3295,7 +3294,8 @@ h2 {
 
 @media (max-width: 900px) {
   .tech-hero-tab { left: 0; padding: 14px 28px; }
-  .tech-intro { padding: 70px 24px 100px; }
+  /* top/bottom evened out to the same 85px — was 70px/100px */
+  .tech-intro { padding: 85px 24px 85px; }
   .tech-philosophy { padding: 30px 24px 80px; }
   .tech-philosophy-body { flex-direction: column; gap: 24px; }
   .tech-philosophy-heading { flex: none; text-align: left; }
