@@ -1432,8 +1432,15 @@ h2 {
   .cmp-row-pro .cmp-row-banner { margin-left: 0; padding-left: 24px; }
   .cmp-row { flex-direction: column; padding: 0 24px; margin: 0 0 0 0 !important; }
   .cmp-row-image { flex: none; width: 100%; }
+  /* zero bottom padding here was fine on desktop, where this pills
+     list and the row's own image sit side by side as separate columns
+     (no vertical relationship between them) — stacked into one column
+     on phone, that meant the image (or, for the very last pill in the
+     very last row, whatever comes right after) started immediately
+     with no gap, reading as the last pill's own text being cropped
+     against it. */
   .cmp-row-content,
-  .cmp-row-pro .cmp-row-content { padding: 24px 0 0; }
+  .cmp-row-pro .cmp-row-content { padding: 24px 0 24px; }
 }
 
 /* ---------- ingredient portfolio — horizontal scroll-jacking cards ----------
