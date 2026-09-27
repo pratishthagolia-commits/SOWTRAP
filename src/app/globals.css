@@ -6989,6 +6989,9 @@ h2 {
      the L cut — line up at the same point regardless of title length,
      at the cost of some short titles having empty space in the box. */
   .ind-slide-notch { width: 190px; }
+  /* Sports Nutrition's notch only — reads slightly shorter than every
+     other card's at the shared 190px width, nudged up a bit to match */
+  .ind-slide:nth-child(2) .ind-slide-half:first-child .ind-slide-notch { width: 210px; }
   /* nudged down from 0.92rem and tightened line-height so the longest
      titles ("Contract Manufacturers & Formulators", "Botanical Growers
      & Extract Producers") still fit within the notch's new 60px
