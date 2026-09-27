@@ -2983,9 +2983,9 @@ h2 {
   position: relative;
   z-index: 2;
   background: #ffffff;
-  /* top/bottom evened out to the same 95px — was 90px/100px, close but
-     not quite matching, reading as the text sitting slightly high */
-  padding: 95px 60px 95px;
+  /* top increased further (was evened out to 95/95) to shift the text
+     down a bit more */
+  padding: 120px 60px 95px;
   text-align: center;
 }
 /* the "TECHNOLOGY" title tab is anchored to this panel (not the hero
@@ -3303,7 +3303,7 @@ h2 {
 @media (max-width: 900px) {
   .tech-hero-tab { left: 0; padding: 14px 28px; }
   /* top/bottom evened out to the same 85px — was 70px/100px */
-  .tech-intro { padding: 85px 24px 85px; }
+  .tech-intro { padding: 105px 24px 85px; }
   .tech-philosophy { padding: 30px 24px 80px; }
   .tech-philosophy-body { flex-direction: column; gap: 24px; }
   .tech-philosophy-heading { flex: none; text-align: left; }
