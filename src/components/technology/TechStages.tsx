@@ -22,7 +22,7 @@ const STAGES: Stage[] = [
   {
     name: "Sensory Challenges",
     image: "/images/tech-stage-understand-active.jpeg",
-    evaluateHeading: "Taste-masked and sensory-optimised formats",
+    evaluateHeading: "Taste-masked and sensory-optimized formats",
     evaluate: ["Reduced bitterness, metallic notes and undesirable odour."],
   },
   {
