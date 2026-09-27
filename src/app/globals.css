@@ -2792,7 +2792,8 @@ h2 {
 }
 
 @media (max-width: 900px) {
-  .bioactives-intro { padding: 200px 24px 90px; }
+  /* same fix as the desktop rule above — top was 200px vs 90px bottom */
+  .bioactives-intro { padding: 90px 24px 90px; }
   .bioactives-title { left: 0; padding: 14px 28px; }
   .bioactives-what { flex-direction: column; gap: 24px; }
   .bioactives-what-heading { flex: none; text-align: left; margin: 0; }
