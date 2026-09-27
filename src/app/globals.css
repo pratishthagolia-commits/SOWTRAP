@@ -1912,6 +1912,20 @@ h2 {
 .ind-slide:nth-child(4) .ind-slide-half:last-child .ind-slide-card {
   top: calc(38% - 48px);
 }
+/* Sports Nutrition's notch only — desktop/tablet (explicit min-width
+   guard, so this doesn't leak into the phone breakpoint below, which
+   already fixes every card's notch to one shared uniform width and
+   doesn't need or want this rule at all). This box shrinks to fit its
+   own title (max-width below, not a fixed width), so a short two-word
+   title like "Sports Nutrition" renders visibly narrower than every
+   other card's, reading as a shorter "L" tab. min-width forces it to
+   at least this width to match, while still letting longer titles on
+   other cards grow past it via their own max-width. */
+@media (min-width: 641px) {
+  .ind-slide:nth-child(2) .ind-slide-half:first-child .ind-slide-notch {
+    min-width: 230px;
+  }
+}
 .ind-slide-notch {
   display: inline-flex;
   align-items: flex-start;
@@ -6989,9 +7003,6 @@ h2 {
      the L cut — line up at the same point regardless of title length,
      at the cost of some short titles having empty space in the box. */
   .ind-slide-notch { width: 190px; }
-  /* Sports Nutrition's notch only — reads slightly shorter than every
-     other card's at the shared 190px width, nudged up a bit to match */
-  .ind-slide:nth-child(2) .ind-slide-half:first-child .ind-slide-notch { width: 210px; }
   /* nudged down from 0.92rem and tightened line-height so the longest
      titles ("Contract Manufacturers & Formulators", "Botanical Growers
      & Extract Producers") still fit within the notch's new 60px
