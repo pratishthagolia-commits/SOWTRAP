@@ -1923,7 +1923,8 @@ h2 {
    other cards grow past it via their own max-width. */
 @media (min-width: 641px) {
   .ind-slide:nth-child(2) .ind-slide-half:first-child .ind-slide-notch {
-    min-width: 230px;
+    /* was 230px, increased 0.25x further (230px * 1.25 = 288px) */
+    min-width: 288px;
   }
 }
 .ind-slide-notch {
