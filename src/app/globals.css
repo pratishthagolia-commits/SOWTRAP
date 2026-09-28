@@ -3318,7 +3318,9 @@ h2 {
 @media (max-width: 900px) {
   .tech-hero-tab { left: 0; padding: 14px 28px; }
   /* top/bottom evened out to the same 85px — was 70px/100px */
-  .tech-intro { padding: 105px 24px 85px; }
+  /* bottom trimmed a bit — was 85px, read as a bit much before the
+     next section on mobile specifically (desktop stays untouched) */
+  .tech-intro { padding: 105px 24px 60px; }
   .tech-philosophy { padding: 30px 24px 80px; }
   .tech-philosophy-body { flex-direction: column; gap: 24px; }
   .tech-philosophy-heading { flex: none; text-align: left; }
