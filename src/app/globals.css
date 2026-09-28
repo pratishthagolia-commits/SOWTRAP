@@ -4051,10 +4051,9 @@ h2 {
   position: relative;
   z-index: 2;
   background: #ffffff;
-  /* bottom was 120px, on top of .partnership-who's own 100px top
-     padding right after it — trimmed a bit, same as .tech-intro's
-     matching fix */
-  padding: 260px 60px 70px;
+  /* top matched to the already-trimmed 70px bottom, instead of the
+     260px it was still carrying — equal space above and below now */
+  padding: 70px 60px 70px;
 }
 /* folder-notch tab, same motif as .tech-hero-tab/.bioactives-title —
    anchored to this panel and poking up above its own top edge, so it
@@ -4113,7 +4112,9 @@ h2 {
 }
 
 @media (max-width: 900px) {
-  .partnership-intro { padding: 200px 24px 90px; }
+  /* both trimmed — was 200px/90px, read as too much space both above
+     and below the text on mobile */
+  .partnership-intro { padding: 90px 24px 60px; }
   .partnership-hero-tab { left: 0; padding: 14px 28px; }
   .partnership-what { flex-direction: column; gap: 24px; }
   .partnership-what-heading { flex: none; text-align: left; margin: 0; }
