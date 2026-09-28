@@ -3317,10 +3317,10 @@ h2 {
 
 @media (max-width: 900px) {
   .tech-hero-tab { left: 0; padding: 14px 28px; }
-  /* top/bottom evened out to the same 85px — was 70px/100px */
-  /* bottom trimmed a bit — was 85px, read as a bit much before the
-     next section on mobile specifically (desktop stays untouched) */
-  .tech-intro { padding: 105px 24px 60px; }
+  /* top/bottom evened out again to 85px/85px — was 105px/60px after a
+     couple of separate one-sided tweaks left them mismatched again;
+     desktop's own rule is untouched */
+  .tech-intro { padding: 85px 24px 85px; }
   .tech-philosophy { padding: 30px 24px 80px; }
   .tech-philosophy-body { flex-direction: column; gap: 24px; }
   .tech-philosophy-heading { flex: none; text-align: left; }
@@ -4051,16 +4051,16 @@ h2 {
   position: relative;
   z-index: 2;
   background: #ffffff;
-  /* bottom padding here and .partnership-who's own 100px top padding
-     right after it were BOTH contributing to the same visual gap
-     (paragraph -> "Who We Partner With"), stacking to 170px total —
-     nearly 2.5x the 70px gap above this section's own heading, despite
-     the previous fix having equalized this rule's own top/bottom.
-     Dropped the redundant bottom padding entirely; .partnership-who's
-     own top padding (reduced to match, see that rule) now carries the
-     whole visual gap on its own, making it truly equal to the 70px
-     above. */
-  padding: 70px 60px 0;
+  /* bottom padding here and .partnership-who's own top padding right
+     after it were both contributing to the same visual gap, stacking
+     to more than either one alone — dropped the redundant bottom
+     padding entirely, .partnership-who's own top padding (matched to
+     this rule's 110px, see that rule) now carries the whole visual gap
+     on its own. 110px matches the equivalent gap on the Science page
+     (.bioactives-intro's own top padding, itself matched to the ~110px
+     gap below .bioactives-what) — was cut to 70px in an earlier pass,
+     too aggressive next to that reference. */
+  padding: 110px 60px 0;
 }
 /* folder-notch tab, same motif as .tech-hero-tab/.bioactives-title —
    anchored to this panel and poking up above its own top edge, so it
@@ -4133,10 +4133,10 @@ h2 {
   position: relative;
   z-index: 2;
   background: #ffffff;
-  /* top matched to .partnership-intro's own 70px top padding, now that
-     it's the only thing left carrying the gap above this heading —
-     see that rule's comment */
-  padding: 70px 60px 120px;
+  /* top matched to .partnership-intro's own 110px top padding, now
+     that it's the only thing left carrying the gap above this heading
+     — see that rule's comment */
+  padding: 110px 60px 120px;
   text-align: center;
 }
 .partnership-who-heading {
