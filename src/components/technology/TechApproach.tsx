@@ -20,7 +20,7 @@ const STAGES: Stage[] = [
   {
     num: "03",
     title: "Performance Optimization",
-    desc: "Each system is carefully engineered to achieve the right balance of protection, active loading, release, dispersibility and sensory performance. Key formulation and process parameters are optimised to maximise functionality while maintaining the integrity of the active.",
+    desc: "Each system is carefully engineered to achieve the right balance of protection, active loading, release, dispersibility and sensory performance. Key formulation and process parameters are optimized to maximise functionality while maintaining the integrity of the active.",
   },
   {
     num: "04",

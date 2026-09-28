@@ -4051,9 +4051,16 @@ h2 {
   position: relative;
   z-index: 2;
   background: #ffffff;
-  /* top matched to the already-trimmed 70px bottom, instead of the
-     260px it was still carrying — equal space above and below now */
-  padding: 70px 60px 70px;
+  /* bottom padding here and .partnership-who's own 100px top padding
+     right after it were BOTH contributing to the same visual gap
+     (paragraph -> "Who We Partner With"), stacking to 170px total —
+     nearly 2.5x the 70px gap above this section's own heading, despite
+     the previous fix having equalized this rule's own top/bottom.
+     Dropped the redundant bottom padding entirely; .partnership-who's
+     own top padding (reduced to match, see that rule) now carries the
+     whole visual gap on its own, making it truly equal to the 70px
+     above. */
+  padding: 70px 60px 0;
 }
 /* folder-notch tab, same motif as .tech-hero-tab/.bioactives-title —
    anchored to this panel and poking up above its own top edge, so it
@@ -4126,7 +4133,10 @@ h2 {
   position: relative;
   z-index: 2;
   background: #ffffff;
-  padding: 100px 60px 120px;
+  /* top matched to .partnership-intro's own 70px top padding, now that
+     it's the only thing left carrying the gap above this heading —
+     see that rule's comment */
+  padding: 70px 60px 120px;
   text-align: center;
 }
 .partnership-who-heading {
