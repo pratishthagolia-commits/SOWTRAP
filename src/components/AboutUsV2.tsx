@@ -101,12 +101,11 @@ export default function AboutUsV2() {
   // spot). One shape, one value — nothing can move independently.
   const slideOffset = (1 - eased) * 100; // 100% (hidden) -> 0% (in place)
 
-  // words go grey -> black starting right as the panel becomes legible and
-  // finishing well before the pinned section's scroll range ends — was
-  // 0.55-1.0, which (combined with the ease-out slide-in curve visually
-  // settling by ~0.6-0.7) left the text still mostly grey for a long
-  // stretch after the panel already looked fully arrived
-  const wordProgress = Math.min(1, Math.max(0, (progress - 0.2) / 0.4));
+  // words go grey -> black starting once the panel has scrolled up to
+  // roughly the middle of the screen (not right as it first appears), then
+  // spread across a wider scroll range so each word's flip is visible
+  // rather than the whole paragraph snapping over a couple of scroll ticks
+  const wordProgress = Math.min(1, Math.max(0, (progress - 0.5) / 0.45));
   const activeCount = Math.round(wordProgress * TOTAL_WORDS);
 
   return (
