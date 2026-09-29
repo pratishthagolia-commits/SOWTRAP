@@ -4117,9 +4117,12 @@ h2 {
 }
 
 @media (max-width: 900px) {
-  /* both trimmed — was 200px/90px, read as too much space both above
-     and below the text on mobile */
-  .partnership-intro { padding: 90px 24px 60px; }
+  /* bottom padding here and .partnership-who's own top padding right
+     after it were both contributing to the same gap below this text,
+     same double-stacking that desktop had — dropped this side's bottom
+     entirely so .partnership-who's own top (also trimmed) carries it
+     alone; top here trimmed to match */
+  .partnership-intro { padding: 65px 24px 0; }
   .partnership-hero-tab { left: 0; padding: 14px 28px; }
   .partnership-what { flex-direction: column; gap: 24px; }
   .partnership-what-heading { flex: none; text-align: left; margin: 0; }
@@ -4192,7 +4195,9 @@ h2 {
 }
 
 @media (max-width: 900px) {
-  .partnership-who { padding: 70px 24px 90px; }
+  /* top matched to .partnership-intro's own trimmed 65px top — see that
+     rule's comment, same "one side carries the gap" fix as desktop */
+  .partnership-who { padding: 65px 24px 90px; }
   .partnership-who-subheading { margin-bottom: 50px; }
   .partnership-who-body { flex-direction: column; gap: 40px; }
   .partnership-who-points { flex: none; width: 100%; }
