@@ -19,7 +19,7 @@ export default function PrivacyPolicyPage() {
       <section className="legal-page">
         <p className="legal-page-eyebrow">Legal</p>
         <h1>Privacy Policy</h1>
-        <p className="legal-page-meta">Effective Date: October 3, 2026 &nbsp;·&nbsp; Last Updated: October 3, 2026</p>
+        <p className="legal-page-meta">Effective Date: September 15, 2026 &nbsp;·&nbsp; Last Updated: September 15, 2026</p>
 
         <p>
           SowTrap&trade; (referred to as &ldquo;we&rdquo;, &ldquo;us&rdquo;, or &ldquo;our&rdquo;)

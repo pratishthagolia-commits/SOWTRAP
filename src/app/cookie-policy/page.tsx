@@ -19,7 +19,7 @@ export default function CookiePolicyPage() {
       <section className="legal-page">
         <p className="legal-page-eyebrow">Legal</p>
         <h1>Cookie Policy</h1>
-        <p className="legal-page-meta">Effective Date: October 3, 2026 &nbsp;·&nbsp; Last Updated: October 3, 2026</p>
+        <p className="legal-page-meta">Effective Date: September 15, 2026 &nbsp;·&nbsp; Last Updated: September 15, 2026</p>
 
         <p>
           SowTrap&trade;, a division of ScienceOnWheels Bio Pvt. Ltd., (referred to as &ldquo;we&rdquo;,
