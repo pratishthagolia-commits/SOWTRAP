@@ -19,7 +19,7 @@ export default function WhistleblowingPage() {
       <section className="legal-page">
         <p className="legal-page-eyebrow">Legal</p>
         <h1>Whistleblowing</h1>
-        <p className="legal-page-meta">Effective Date: — &nbsp;·&nbsp; Last Updated: —</p>
+        <p className="legal-page-meta">Effective Date: October 3, 2026 &nbsp;·&nbsp; Last Updated: October 3, 2026</p>
 
         <p>
           ScienceOnWheels Bio Pvt. Ltd. guarantees its maximum internal and external dissemination, while

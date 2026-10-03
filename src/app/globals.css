@@ -4136,8 +4136,10 @@ h2 {
   background: #ffffff;
   /* top matched to .partnership-intro's own 110px top padding, now
      that it's the only thing left carrying the gap above this heading
-     — see that rule's comment */
-  padding: 110px 60px 120px;
+     — see that rule's comment — plus one extra line-height on top of
+     that, desktop only (mobile has its own padding below, untouched),
+     since the heading read as cramped right under the paragraph above */
+  padding: 138px 60px 120px;
   text-align: center;
 }
 .partnership-who-heading {
@@ -4151,7 +4153,9 @@ h2 {
   font-family: var(--font-prata), serif;
   font-size: 1.15rem;
   color: var(--ink-soft);
-  margin: 0 0 80px;
+  /* one extra line-height below, desktop only — mobile's own 50px
+     override further down is untouched */
+  margin: 0 0 108px;
 }
 .partnership-who-body {
   display: flex;
