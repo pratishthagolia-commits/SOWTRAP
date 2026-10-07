@@ -702,6 +702,12 @@ h2 {
   width: 100%;
   z-index: 1;
   will-change: transform;
+  /* the translateY above comes from a continuously-recalculated
+     percentage, which almost never lands on a whole pixel — Chrome
+     leaves the text on that layer looking soft/blurry (both mid-scroll
+     and once settled) unless the layer is pinned to its own stable
+     compositing surface */
+  backface-visibility: hidden;
 }
 .about-v2-notch {
   width: min(46vw, 620px);
@@ -1499,6 +1505,9 @@ h2 {
      pin duration tight instead. */
   padding: 0 60px;
   will-change: transform;
+  /* paired with rounding the translateX source value in
+     PortfolioCarousel.tsx — see .about-v2-slide's comment for why */
+  backface-visibility: hidden;
 }
 .pf-card {
   flex: 0 0 var(--pf-card-w);
@@ -2283,6 +2292,15 @@ h2 {
 }
 
 /* ---------- scroll reveal ---------- */
+.reveal,
+.reveal-left,
+.reveal-right,
+.reveal-up {
+  /* text on an element mid-transform (or just settled off a fractional
+     frame) can render soft/blurry in Chrome unless the layer is pinned
+     to its own stable compositing surface for the whole transition */
+  backface-visibility: hidden;
+}
 .reveal {
   opacity: 0;
   transform: translateY(28px);

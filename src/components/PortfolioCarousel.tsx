@@ -68,7 +68,13 @@ export default function PortfolioCarousel() {
       const el = wrapperRef.current;
       if (el) {
         const rect = el.getBoundingClientRect();
-        const scrolled = Math.min(maxTranslate, Math.max(0, -rect.top));
+        // getBoundingClientRect() returns fractional (subpixel) values,
+        // which fed straight into translateX left the card text soft/
+        // blurry while scrolling (and often still blurry once settled,
+        // whenever the final value wasn't a whole pixel) — rounding here
+        // keeps the track on whole-pixel positions the browser can
+        // rasterize text on crisply
+        const scrolled = Math.round(Math.min(maxTranslate, Math.max(0, -rect.top)));
         setX(scrolled);
       }
       frameId = requestAnimationFrame(tick);
