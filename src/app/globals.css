@@ -708,6 +708,7 @@ h2 {
      and once settled) unless the layer is pinned to its own stable
      compositing surface */
   backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 .about-v2-notch {
   width: min(46vw, 620px);
@@ -1508,6 +1509,7 @@ h2 {
   /* paired with rounding the translateX source value in
      PortfolioCarousel.tsx — see .about-v2-slide's comment for why */
   backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 .pf-card {
   flex: 0 0 var(--pf-card-w);
@@ -2298,8 +2300,14 @@ h2 {
 .reveal-up {
   /* text on an element mid-transform (or just settled off a fractional
      frame) can render soft/blurry in Chrome unless the layer is pinned
-     to its own stable compositing surface for the whole transition */
+     to its own stable compositing surface for the whole transition —
+     will-change promotes the layer before the transition starts
+     (instead of Chrome creating/destroying it mid-animation, which is
+     itself a common source of a blurry repaint), backface-visibility
+     keeps it pinned throughout */
+  will-change: transform, opacity;
   backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 .reveal {
   opacity: 0;
