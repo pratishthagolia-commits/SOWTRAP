@@ -101,11 +101,13 @@ export default function AboutUsV2() {
   // spot). One shape, one value — nothing can move independently.
   const slideOffset = (1 - eased) * 100; // 100% (hidden) -> 0% (in place)
 
-  // words go grey -> black starting once the panel has scrolled up to
-  // roughly the middle of the screen (not right as it first appears), then
-  // spread across a wider scroll range so each word's flip is visible
-  // rather than the whole paragraph snapping over a couple of scroll ticks
-  const wordProgress = Math.min(1, Math.max(0, (progress - 0.5) / 0.45));
+  // was 0.5-0.95 — needed several more scrolls after the panel arrived
+  // before the lower lines ever turned black, which read as "stuck grey"
+  // rather than a quick reveal. Narrowed so the whole paragraph finishes
+  // turning black within about a third of the section's scroll range,
+  // right as the panel itself is still sliding into place — one or two
+  // scrolls, not several.
+  const wordProgress = Math.min(1, Math.max(0, (progress - 0.2) / 0.15));
   const activeCount = Math.round(wordProgress * TOTAL_WORDS);
 
   return (
