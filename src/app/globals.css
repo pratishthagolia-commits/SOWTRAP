@@ -1513,6 +1513,15 @@ h2 {
      fixed, modest inset matching the section's other padding keeps the
      pin duration tight instead. */
   padding: 0 60px;
+  /* without this, the track (a flex item of .pf-sticky's column flex,
+     align-items: flex-start) shrinks to fit its own content instead of
+     being constrained to the viewport — meaning its OWN scrollWidth
+     always equalled its own clientWidth (nothing to scroll internally;
+     the visible clipping was actually happening one level up, at
+     .pf-sticky's overflow: hidden). scrollLeft had nothing to move.
+     width: 100% constrains it so it genuinely overflows itself. */
+  width: 100%;
+  box-sizing: border-box;
   /* native scroll, driven by scrollLeft from PortfolioCarousel.tsx's
      page-scroll rAF loop — same no-transform technique as
      .portfolio-mobile-scroller below, which is what's actually crisp.
