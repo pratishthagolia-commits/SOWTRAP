@@ -1,7 +1,8 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import useIsMobile from "@/lib/useIsMobile";
 
 type PortfolioItem = { title: string; body: string };
 
@@ -36,20 +37,60 @@ const ITEMS: PortfolioItem[] = [
   },
 ];
 
-// previously a scroll-jacked slider: page scroll drove a JS-computed
-// translateX on the card track every animation frame. That fractional,
-// continuously-recalculated transform is exactly what left the card text
-// soft/blurry while scrolling (and often still blurry once settled) on
-// displays with fractional device-pixel ratios (Windows 125%/150% scaling
-// in particular) — any element pinned to its own GPU-composited layer via
-// a per-frame transform gets rasterized at a scale that doesn't match the
-// page's own DPI, so the browser resamples it instead of drawing crisp
-// text. Native horizontal scrolling never puts the text on a transformed
-// layer at all, so there's no DPI mismatch to resample — this now uses
-// the exact same plain overflow-x scroller + arrow-button pattern the
-// phone layout already used successfully, just sized for desktop.
+// same horizontal scroll-jacking mechanic as before — page scroll drives
+// the card track while the section stays pinned. The one change from the
+// original version: the track's position is now set via the track's own
+// native scrollLeft (a real scroll position, which the browser keeps
+// snapped to the page's actual pixel grid) instead of a CSS
+// transform: translateX computed from a fractional getBoundingClientRect()
+// value. A JS-driven transform left the card text soft/blurry on
+// fractional-DPI displays (Windows 125%/150% scaling) because it put the
+// text on its own GPU-composited layer that never quite lined up with the
+// page's real pixels; native scrollLeft never creates that layer, so the
+// exact same pinned/scroll-driven interaction stays pixel-crisp instead.
+// overflow-x is hidden (not auto) so this is still purely scroll-driven,
+// not manually draggable — same as the original.
 export default function PortfolioCarousel() {
+  const isMobile = useIsMobile();
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
+  const [maxTranslate, setMaxTranslate] = useState(0);
+
+  useEffect(() => {
+    // phone swaps the scroll-jack for a plain native-scroll strip, so none
+    // of this measuring or the permanent rAF loop below is needed there
+    if (isMobile) return;
+    function measure() {
+      const track = trackRef.current;
+      if (!track) return;
+      setMaxTranslate(Math.max(0, track.scrollWidth - window.innerWidth));
+    }
+    measure();
+
+    const ro = new ResizeObserver(measure);
+    if (trackRef.current) ro.observe(trackRef.current);
+    window.addEventListener("resize", measure);
+
+    let frameId = 0;
+    function tick() {
+      const el = wrapperRef.current;
+      const track = trackRef.current;
+      if (el && track) {
+        const rect = el.getBoundingClientRect();
+        const scrolled = Math.round(Math.min(maxTranslate, Math.max(0, -rect.top)));
+        // native scrollLeft, not a transform — see the comment above
+        track.scrollLeft = scrolled;
+      }
+      frameId = requestAnimationFrame(tick);
+    }
+    frameId = requestAnimationFrame(tick);
+
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", measure);
+      cancelAnimationFrame(frameId);
+    };
+  }, [maxTranslate, isMobile]);
 
   function scrollByCard(direction: 1 | -1) {
     const track = trackRef.current;
@@ -59,39 +100,68 @@ export default function PortfolioCarousel() {
     track.scrollBy({ left: step * direction, behavior: "smooth" });
   }
 
-  return (
-    <div id="portfolio-carousel" className="pf-wrapper">
-      <div className="pf-arrows">
-        <button
-          type="button"
-          className="pf-arrow-btn"
-          aria-label="Previous ingredient categories"
-          onClick={() => scrollByCard(-1)}
-        >
-          &#8249;
-        </button>
-        <button
-          type="button"
-          className="pf-arrow-btn"
-          aria-label="Next ingredient categories"
-          onClick={() => scrollByCard(1)}
-        >
-          &#8250;
-        </button>
-      </div>
-
-      <div className="pf-track" ref={trackRef}>
-        {ITEMS.map((item) => (
-          <div className="pf-card" key={item.title}>
-            <div className="pf-card-tab">{item.title}</div>
-            <div className="pf-card-body">
-              <p>{item.body}</p>
+  if (isMobile) {
+    return (
+      <div id="portfolio-carousel" className="pf-wrapper pf-wrapper--mobile">
+        <div className="portfolio-mobile-arrows">
+          <button
+            type="button"
+            className="portfolio-mobile-arrow"
+            aria-label="Previous ingredient categories"
+            onClick={() => scrollByCard(-1)}
+          >
+            &#8249;
+          </button>
+          <button
+            type="button"
+            className="portfolio-mobile-arrow"
+            aria-label="Next ingredient categories"
+            onClick={() => scrollByCard(1)}
+          >
+            &#8250;
+          </button>
+        </div>
+        <div className="portfolio-mobile-scroller" ref={trackRef}>
+          {ITEMS.map((item) => (
+            <div className="pf-card" key={item.title}>
+              <div className="pf-card-tab">{item.title}</div>
+              <div className="pf-card-body">
+                <p>{item.body}</p>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+        <Link href="/products" className="btn btn-lime pf-cta">Explore Our Products</Link>
       </div>
+    );
+  }
 
-      <Link href="/products" className="btn btn-lime pf-cta">Explore Our Products</Link>
+  return (
+    <div
+      id="portfolio-carousel"
+      className="pf-wrapper"
+      ref={wrapperRef}
+      style={{ height: `calc(100vh + ${maxTranslate}px)` }}
+    >
+      {/* CTA lives inside the pinned sticky content (below the track),
+          not as a sibling after the tall scroll-jack wrapper — it used to
+          only appear once the user had scrolled all the way through the
+          horizontal card travel and the pin released, instead of being
+          reachable at any point mid-scroll. */}
+      <div className="pf-sticky">
+        <div className="pf-track" ref={trackRef}>
+          {ITEMS.map((item) => (
+            <div className="pf-card" key={item.title}>
+              <div className="pf-card-tab">{item.title}</div>
+              <div className="pf-card-body">
+                <p>{item.body}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+        <span className="pf-arrow" aria-hidden="true">&gt;</span>
+        <Link href="/products" className="btn btn-lime pf-cta">Explore Our Products</Link>
+      </div>
     </div>
   );
 }
