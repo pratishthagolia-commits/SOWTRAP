@@ -32,24 +32,21 @@ export const metadata: Metadata = {
   description: "Elevating nutrition through intelligent delivery science.",
 };
 
-// caps pinch-zoom at 1x — without this, Next.js's default viewport
-// leaves zoom fully open, and a two-finger (or occasionally a fast
-// single-finger) gesture reading as "zoom out" shows the browser's own
-// background as a white margin around the shrunk page, which looks
-// identical to a horizontal-overflow bug but isn't fixable with any
-// amount of overflow-x tightening.
-// maximumScale alone only caps zooming IN past 1x — the browser's
-// default minimum (as low as 0.25x on some mobile browsers) was still
-// wide open, so pinching OUT still shrank the page and exposed that
-// same white margin. minimumScale (and userScalable:false as a second
-// belt-and-braces layer for older/inconsistent browsers) closes that
-// off in both directions.
+// was locked to minimumScale/maximumScale: 1, userScalable: false — that
+// blocked pinch-zoom entirely, which fails WCAG 1.4.4 (content must
+// support zooming to 200%+) and is a real accessibility regression,
+// however useful it was as a workaround. It existed because pinching
+// OUT used to shrink the page and expose the browser's own white
+// background around it (reading like a horizontal-overflow bug) — that
+// was a real symptom at the time, but it traced back to specific
+// 100vw-based elements and the lack of a page-wide touch-action rule,
+// both fixed independently since. Re-test pinch-zoom-out on the Home
+// page after this ships — if the white-margin symptom is back, the fix
+// belongs on whichever element is overflowing again, not back on this
+// viewport lock.
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  minimumScale: 1,
-  maximumScale: 1,
-  userScalable: false,
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

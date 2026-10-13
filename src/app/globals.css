@@ -52,7 +52,7 @@
    so a horizontal swipe has nothing to grab onto regardless of
    whether overflow exists underneath. pan-y here is restored back to
    pan-x on the page's few genuine horizontal-scroll strips below
-   (.tech-philo-cards, .portfolio-mobile-scroller) so they don't break. */
+   (.tech-philo-cards, .pf-track) so they don't break. */
 html {
   scroll-behavior: smooth;
   overflow-x: hidden;
@@ -804,6 +804,11 @@ h2 {
   width: 100%;
   z-index: 1;
   will-change: transform;
+  /* same fractional-pixel-transform blur fix as .about-v2-slide and
+     .portfolio-header-slide — this panel's word-reveal text was equally
+     exposed to it even though it wasn't the one reported */
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 .research-v2-notch {
   width: min(46vw, 620px);
@@ -1450,68 +1455,66 @@ h2 {
   .cmp-row-pro .cmp-row-content { padding: 24px 0 24px; }
 }
 
-/* ---------- ingredient portfolio — horizontal scroll-jacking cards ----------
-   Same mechanic as .pillars-track (see PortfolioCarousel.tsx, unchanged):
-   page scroll drives translateX while the section stays pinned, card 1
-   centered at scroll-progress 0. Each card is now a compact navy ribbon
-   tab over plain, unboxed text — no border/background card shape at all,
-   matching the reference exactly. */
-.pf-wrapper { position: relative; }
-.pf-sticky {
+/* ---------- ingredient portfolio — native horizontal scroll ----------
+   Used to be a scroll-jacked slider: page scroll drove a JS-computed
+   translateX on .pf-track every animation frame while the section stayed
+   pinned. That continuously-recalculated transform is what left the card
+   text soft/blurry while scrolling (and often still blurry once settled)
+   on displays with fractional device-pixel ratios — Windows 125%/150%
+   scaling in particular, which is exactly what kept getting reported.
+   Replaced with plain native horizontal scrolling (the same pattern the
+   phone layout already used successfully): nothing here ever sits on a
+   transformed/composited layer, so there's no DPI mismatch for the
+   browser to resample and the text stays pixel-crisp at every scroll
+   position, every display scale, every time. */
+.pf-wrapper {
   --pf-card-w: 480px;
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  overflow: hidden;
-  display: flex;
-  /* column, not row — stacks .pf-track above .pf-cta so the CTA sits
-     just under the cards and stays on screen (pinned) for the whole
-     horizontal scroll-jack, instead of only appearing once the pin
-     releases at the very end */
-  flex-direction: column;
-  /* was centered in the full 100vh sticky box, leaving as much empty
-     white space above the cards as below — pulling them up toward the
-     top closes the gap right under the header panel */
-  align-items: flex-start;
-  padding-top: 14vh;
-  box-sizing: border-box;
+  position: relative;
   background: #ffffff;
+  padding: 90px 0 110px;
+}
+.pf-arrows {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin: 0 60px 16px;
+}
+.pf-arrow-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 100px;
+  border: 1px solid rgba(13, 21, 38, 0.25);
+  background: #ffffff;
+  color: #003366;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 .pf-cta {
   display: block;
   width: fit-content;
-  margin: 40px auto 60px;
-  text-decoration: none;
-}
-/* desktop only (mobile's .pf-cta sits in normal flow after the whole
-   wrapper, where the 60px bottom margin is still wanted) — inside the
-   height:100vh, overflow:hidden .pf-sticky box, that same bottom margin
-   just risks pushing the button past the box's own clipped edge */
-.pf-sticky .pf-cta {
-  /* auto left/right margins still center it horizontally as a column
-     flex item, regardless of .pf-sticky's own align-items: flex-start */
   margin: 40px auto 0;
+  text-decoration: none;
 }
 .pf-track {
   position: relative;
   display: flex;
   align-items: center;
   gap: 60px;
-  /* was calc((100vw - var(--pf-card-w)) / 2) — centered card 1 at rest,
-     but on a wide viewport that's 400-500px of pure gutter baked into
-     the track's own scrollWidth, which directly inflates maxTranslate
-     (= scrollWidth - innerWidth) by that same amount. That's several
-     hundred extra px of scroll-jack runway for no visual gain — a
-     fixed, modest inset matching the section's other padding keeps the
-     pin duration tight instead. */
-  padding: 0 60px;
-  will-change: transform;
-  /* paired with rounding the translateX source value in
-     PortfolioCarousel.tsx — see .about-v2-slide's comment for why */
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
+  padding: 24px 60px 4px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  /* the page-wide touch-action: pan-y (html/body) would otherwise block
+     a horizontal swipe here too */
+  touch-action: pan-x;
 }
+.pf-track::-webkit-scrollbar { display: none; }
 .pf-card {
+  scroll-snap-align: start;
   flex: 0 0 var(--pf-card-w);
   width: var(--pf-card-w);
   min-width: var(--pf-card-w);
@@ -1581,20 +1584,12 @@ h2 {
   line-height: 1.6;
   color: var(--ink);
 }
-.pf-arrow {
-  position: absolute;
-  right: 24px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 2rem;
-  color: var(--ink);
-  pointer-events: none;
-}
+.pf-arrow-btn:disabled { opacity: 0.35; cursor: default; }
 
 @media (max-width: 860px) {
-  .pf-sticky { --pf-card-w: 78vw; }
-  .pf-track { gap: 30px; padding: 0 24px 0 calc((100vw - var(--pf-card-w)) / 2); }
-  .pf-arrow { display: none; }
+  .pf-wrapper { --pf-card-w: 78vw; padding: 60px 0 90px; }
+  .pf-track { gap: 30px; padding: 24px 24px 4px calc((100vw - var(--pf-card-w)) / 2); }
+  .pf-arrows { margin: 0 24px 16px; }
 }
 
 /* ---------- what makes SowTrap different — molecule + heading, straight timeline ---------- */
@@ -1730,6 +1725,13 @@ h2 {
   width: 100%;
   z-index: 1;
   will-change: transform;
+  /* this was the one sliding panel missed when the rest of the site got
+     the blur fix — same cause as .about-v2-slide: a continuously
+     recalculated, fractional-pixel translateY left the panel's text
+     (the "From essential vitamins..." paragraph) soft/blurry, both
+     mid-scroll and once settled, on fractional-DPI displays */
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 .portfolio-heading {
   /* no white notch box this time (exception to the usual pattern) — plain
@@ -1757,7 +1759,12 @@ h2 {
   background: #ffffff;
   padding: 48px 64px;
   box-sizing: border-box;
-  margin-top: -1px;
+  /* was -1px, meant to erase the seam between this panel and the photo
+     above it — at fractional display scaling (125%/150%) that 1px can
+     itself round away to sub-pixel, leaving a hairline gap showing
+     through as a thin visible line. -2px gives that rounding a full
+     pixel of margin to still close the seam. */
+  margin-top: -2px;
 }
 .portfolio-header-para {
   /* widened so the paragraph wraps to ~2-3 lines instead of many narrow
@@ -1765,10 +1772,10 @@ h2 {
   max-width: 1400px;
   /* centers the block within the panel */
   margin: 0 auto;
-  /* justified so both edges line up evenly, forming a uniform rectangle
-     rather than a ragged edge */
-  text-align: justify;
-  text-align-last: center;
+  /* was justify/text-align-last:center — justifying short lines of body
+     text stretches word spacing unevenly to fill the line, which reads
+     as fuzzy/uneven rather than a deliberate block edge */
+  text-align: left;
   /* pulls a lone trailing word (e.g. "acceptability.") back up into the
      line above instead of leaving it stranded on its own line */
   text-wrap: pretty;
@@ -2748,14 +2755,15 @@ h2 {
   transition: opacity 0.5s ease, filter 0.5s ease;
 }
 .bioactives-gallery-photo--prev {
+  /* was also filter: blur(4px) — decorative blur removed site-wide;
+     reduced opacity + the scale/rotate below still reads as "behind"
+     the active photo without ever blurring actual image content */
   opacity: 0.45;
-  filter: blur(4px);
   transform: translateX(-195px) rotate(-6deg) scale(0.85);
   z-index: 1;
 }
 .bioactives-gallery-photo--next {
   opacity: 0.45;
-  filter: blur(4px);
   transform: translateX(195px) rotate(6deg) scale(0.85);
   z-index: 1;
 }
@@ -3516,14 +3524,13 @@ h2 {
   transition: opacity 0.5s ease, filter 0.5s ease;
 }
 .tech-encap-gallery-photo--prev {
+  /* was also filter: blur(4px) — decorative blur removed site-wide */
   opacity: 0.45;
-  filter: blur(4px);
   transform: translateX(-195px) rotate(-6deg) scale(0.85);
   z-index: 1;
 }
 .tech-encap-gallery-photo--next {
   opacity: 0.45;
-  filter: blur(4px);
   transform: translateX(195px) rotate(6deg) scale(0.85);
   z-index: 1;
 }
@@ -5261,14 +5268,13 @@ h2 {
   transition: opacity 0.5s ease, filter 0.5s ease;
 }
 .partnership-brands-gallery-photo--prev {
+  /* was also filter: blur(4px) — decorative blur removed site-wide */
   opacity: 0.45;
-  filter: blur(4px);
   transform: translateX(-195px) rotate(-6deg) scale(0.85);
   z-index: 1;
 }
 .partnership-brands-gallery-photo--next {
   opacity: 0.45;
-  filter: blur(4px);
   transform: translateX(195px) rotate(6deg) scale(0.85);
   z-index: 1;
 }
@@ -6666,43 +6672,6 @@ h2 {
   color: var(--ink-soft);
 }
 
-/* portfolio carousel's phone stand-in: a plain native-scroll strip (no
-   pinning/scroll-jacking) with arrow buttons instead of relying on the
-   desktop scroll-jack to move it */
-.portfolio-mobile-scroller {
-  display: flex;
-  gap: 16px;
-  overflow-x: auto;
-  scroll-snap-type: x proximity;
-  -webkit-overflow-scrolling: touch;
-  padding: 0 4px 4px;
-  /* the page-wide touch-action:pan-y (html/body) would otherwise block
-     a horizontal swipe here too — this is the other genuine horizontal-
-     scroll strip it needs restoring on */
-  touch-action: pan-x;
-}
-.portfolio-mobile-scroller::-webkit-scrollbar { display: none; }
-.portfolio-mobile-arrows {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-bottom: 16px;
-}
-.portfolio-mobile-arrow {
-  width: 40px;
-  height: 40px;
-  border-radius: 100px;
-  border: 1px solid rgba(13, 21, 38, 0.25);
-  background: #ffffff;
-  color: #003366;
-  font-size: 1.1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-.portfolio-mobile-arrow:disabled { opacity: 0.35; cursor: default; }
-
 @media (max-width: 640px) {
   /* "Enquire About This Ingredient" sat flush left like the heading/body
      text above it (display:inline-block just follows the column's own
@@ -6881,23 +6850,9 @@ h2 {
      centered-box look. */
   .tech-platform { align-items: flex-start; }
 
-  /* the portfolio cards sized off --pf-card-w, which is declared on
-     .pf-sticky — and .pf-sticky doesn't exist in the phone branch, so the
-     variable resolved to nothing and every card collapsed to a sliver.
-     Declare it on the phone scroller instead and let the body grow to fit
-     its copy rather than holding a fixed 320px desktop rectangle. */
-  .portfolio-mobile-scroller {
-    --pf-card-w: 78vw;
-    /* room for the tab, which sits at top:-18px and would otherwise be
-       clipped by the scroller's own overflow */
-    padding-top: 24px;
-  }
   /* kept as a defensive backstop, though the fixed min-heights below
      already make every card's natural height identical on their own */
-  .portfolio-mobile-scroller { align-items: stretch; }
-  .portfolio-mobile-scroller .pf-card {
-    scroll-snap-align: start;
-  }
+  .pf-track { align-items: stretch; }
   /* the tab's own height used to be whatever its title's line count
      needed (1 line for "Encapsulated Minerals", 2 for most others) —
      since .pf-card-body sat right below it in normal flow, that
@@ -6907,12 +6862,12 @@ h2 {
      sized to fit any of this strip's titles at 2 lines, removes that
      variable so every tab (and therefore every body under it) lines up
      the same regardless of how long its own title runs. */
-  .portfolio-mobile-scroller .pf-card-tab {
+  .pf-card-tab {
     min-height: 60px;
     display: flex;
     align-items: center;
   }
-  .portfolio-mobile-scroller .pf-card-body {
+  .pf-card-body {
     /* fixed min-height, not the previous height:auto + flex:1 — sized to
        comfortably fit this strip's longest single body copy ("Speciality
        Functional Ingredient Systems", ~11-12 wrapped lines at this card
@@ -6936,8 +6891,8 @@ h2 {
     flex-direction: column;
     justify-content: center;
   }
-  .portfolio-mobile-scroller .pf-card-body p { font-size: 0.92rem; line-height: 1.6; }
-  .portfolio-mobile-scroller .pf-card-tab { font-size: 0.9rem; padding: 10px 16px; }
+  .pf-card-body p { font-size: 0.92rem; line-height: 1.6; }
+  .pf-card-tab { font-size: 0.9rem; padding: 10px 16px; }
 
   /* .about-v2-panel is a FIXED 78vh box, and at phone width its three
      paragraphs run far taller than that — the overflow was painting
