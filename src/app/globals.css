@@ -1512,7 +1512,11 @@ h2 {
      hundred extra px of scroll-jack runway for no visual gain — a
      fixed, modest inset matching the section's other padding keeps the
      pin duration tight instead. */
-  padding: 0 60px;
+  /* top padding added (was 0) — see the overflow-x comment below: giving
+     .pf-card-tab's -18px "poke above the card" overhang 20px of padding
+     to retreat into keeps it from getting clipped now that overflow-y
+     is no longer visible. */
+  padding: 20px 60px 0;
   /* without this, the track (a flex item of .pf-sticky's column flex,
      align-items: flex-start) shrinks to fit its own content instead of
      being constrained to the viewport — meaning its OWN scrollWidth
@@ -1608,8 +1612,11 @@ h2 {
 .pf-arrow {
   position: absolute;
   right: 24px;
-  top: 50%;
-  transform: translateY(-50%);
+  /* was top: 50% + translateY(-50%) — centered on the whole pinned
+     viewport, which landed it mid-way down the card body text. Aligned
+     with the card row's own top (tab height) instead, so it reads as a
+     hint near the cards rather than floating in the middle of the copy. */
+  top: 14vh;
   font-size: 2rem;
   color: var(--ink);
   pointer-events: none;
