@@ -1456,22 +1456,14 @@ h2 {
 }
 
 /* ---------- ingredient portfolio — horizontal scroll-jacking cards ----------
-   page scroll drives the card track while the section stays pinned, card 1
-   centered at scroll-progress 0 — restored after a brief stint as a plain
-   native-scroll strip. The thing that actually caused the reported blur
-   wasn't the pinned/scroll-driven interaction itself, it was HOW the
-   track's position was being set: a CSS transform: translateX computed
-   from a fractional getBoundingClientRect() value every animation frame.
-   That puts the card text on its own GPU-composited layer, which gets
-   resampled against the page's real pixel grid on fractional-DPI displays
-   (Windows 125%/150% scaling) — soft during scroll, often still soft once
-   settled. PortfolioCarousel.tsx now drives the exact same pinned/
-   scroll-driven motion via the track's own native scrollLeft instead of a
-   transform — scrollLeft is a real scroll position, which the browser
-   keeps snapped to the page's actual pixel grid, so nothing here ever
-   lands on a mismatched fractional layer. overflow-x: hidden below (not
-   auto) keeps it scroll-driven only, not manually draggable — same as
-   the original design. */
+   page scroll drives translateX on the card track while the section stays
+   pinned, card 1 centered at scroll-progress 0. Went through two other
+   variants chasing the blurry-text report — a plain native-scroll strip,
+   then a scrollLeft-driven version — before landing back here: the
+   interaction itself was never the problem, it was the un-rounded
+   fractional translateX value. See PortfolioCarousel.tsx's top comment
+   for the full history; .pf-track's backface-visibility below is the
+   actual fix, paired with rounding that value before it's applied. */
 .pf-wrapper { position: relative; }
 .pf-sticky {
   --pf-card-w: 480px;
@@ -1521,13 +1513,13 @@ h2 {
      fixed, modest inset matching the section's other padding keeps the
      pin duration tight instead. */
   padding: 0 60px;
-  /* hidden, not auto — scrollLeft is still driven programmatically by
-     the page-scroll rAF loop in PortfolioCarousel.tsx, this just keeps
-     it from being independently mouse/touch-draggable too */
-  overflow-x: hidden;
+  will-change: transform;
+  /* paired with rounding the translateX source value in
+     PortfolioCarousel.tsx — see .about-v2-slide's comment for why */
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 .pf-card {
-  scroll-snap-align: start;
   flex: 0 0 var(--pf-card-w);
   width: var(--pf-card-w);
   min-width: var(--pf-card-w);
@@ -1566,10 +1558,14 @@ h2 {
   font-size: 0.98rem;
   line-height: 1.3;
   padding: 12px 20px;
-  /* sharp (not rounded) at bottom-left — that's the corner touching the
-     card, so the box's own rounded corner reads as the boundary there
-     instead of the tab having a second, competing curve */
-  border-radius: 10px 10px 10px 0;
+  /* was 10px 10px 10px 0 (sharp bottom-left) so the box's own rounded
+     corner underneath would "read as the boundary" there — in practice
+     .pf-card-body's z-index: 1 paints its white rounded corner over the
+     tab's sharp one, which looked like a bite taken out of the tab
+     instead of a deliberate boundary. Rounding all four corners keeps
+     the tab looking like one complete shape regardless of what's
+     underneath it. */
+  border-radius: 10px;
 }
 .pf-card-body {
   position: relative;

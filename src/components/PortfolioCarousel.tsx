@@ -37,24 +37,24 @@ const ITEMS: PortfolioItem[] = [
   },
 ];
 
-// same horizontal scroll-jacking mechanic as before — page scroll drives
-// the card track while the section stays pinned. The one change from the
-// original version: the track's position is now set via the track's own
-// native scrollLeft (a real scroll position, which the browser keeps
-// snapped to the page's actual pixel grid) instead of a CSS
-// transform: translateX computed from a fractional getBoundingClientRect()
-// value. A JS-driven transform left the card text soft/blurry on
-// fractional-DPI displays (Windows 125%/150% scaling) because it put the
-// text on its own GPU-composited layer that never quite lined up with the
-// page's real pixels; native scrollLeft never creates that layer, so the
-// exact same pinned/scroll-driven interaction stays pixel-crisp instead.
-// overflow-x is hidden (not auto) so this is still purely scroll-driven,
-// not manually draggable — same as the original.
+// same horizontal scroll-jacking mechanic as before: page scroll drives
+// translateX on the card track while the section stays pinned. A
+// scrollLeft-based version (no transform at all) was tried here briefly to
+// rule out blur more completely, but there's no way to verify in this
+// environment whether programmatic scrollLeft actually renders motion in
+// every real browser/config, and it reportedly didn't move the cards at
+// all — so this reverts to the proven mechanism (translateX, which
+// definitely worked) with the blur mitigation instead: the value is
+// rounded to the nearest whole pixel before it reaches the transform, and
+// .pf-track carries backface-visibility: hidden, so the track stays
+// pinned to one stable compositing layer instead of being resampled at a
+// fractional position on fractional-DPI displays.
 export default function PortfolioCarousel() {
   const isMobile = useIsMobile();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const [maxTranslate, setMaxTranslate] = useState(0);
+  const [x, setX] = useState(0);
 
   useEffect(() => {
     // phone swaps the scroll-jack for a plain native-scroll strip, so none
@@ -74,12 +74,13 @@ export default function PortfolioCarousel() {
     let frameId = 0;
     function tick() {
       const el = wrapperRef.current;
-      const track = trackRef.current;
-      if (el && track) {
+      if (el) {
         const rect = el.getBoundingClientRect();
+        // getBoundingClientRect() returns fractional (subpixel) values —
+        // rounding here keeps the track on whole-pixel positions so the
+        // browser can rasterize the card text crisply at every frame
         const scrolled = Math.round(Math.min(maxTranslate, Math.max(0, -rect.top)));
-        // native scrollLeft, not a transform — see the comment above
-        track.scrollLeft = scrolled;
+        setX(scrolled);
       }
       frameId = requestAnimationFrame(tick);
     }
@@ -149,7 +150,7 @@ export default function PortfolioCarousel() {
           horizontal card travel and the pin released, instead of being
           reachable at any point mid-scroll. */}
       <div className="pf-sticky">
-        <div className="pf-track" ref={trackRef}>
+        <div className="pf-track" ref={trackRef} style={{ transform: `translateX(-${x}px)` }}>
           {ITEMS.map((item) => (
             <div className="pf-card" key={item.title}>
               <div className="pf-card-tab">{item.title}</div>
