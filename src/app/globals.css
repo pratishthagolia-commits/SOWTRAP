@@ -1513,12 +1513,15 @@ h2 {
      fixed, modest inset matching the section's other padding keeps the
      pin duration tight instead. */
   padding: 0 60px;
-  will-change: transform;
-  /* paired with rounding the translateX source value in
-     PortfolioCarousel.tsx — see .about-v2-slide's comment for why */
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
+  /* native scroll, driven by scrollLeft from PortfolioCarousel.tsx's
+     page-scroll rAF loop — same no-transform technique as
+     .portfolio-mobile-scroller below, which is what's actually crisp.
+     auto (not hidden) so scrollLeft reliably has something to move;
+     the scrollbar itself is hidden just below. */
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
+.pf-track::-webkit-scrollbar { display: none; }
 .pf-card {
   flex: 0 0 var(--pf-card-w);
   width: var(--pf-card-w);
